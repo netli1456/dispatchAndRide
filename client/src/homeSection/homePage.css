@@ -1,0 +1,51 @@
+.box {
+  width: 300px !important;
+}
+
+.box img {
+  width: 100% !important;
+  min-height: 60% !important;
+  max-height: 60% !important;
+  object-fit: cover !important;
+}
+
+.carouselItem img {
+  /* width: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  height: 80%; */
+}
+
+.rowParent2 {
+  width: 100%;
+  margin: auto;
+  background-color: rgba(245, 238, 238, 0.789);
+}
+
+.rowfirstcol {
+  height: 98%;
+  align-items: center;
+}
+.rowfirstcol ul {
+  border-left: 1px green solid;
+  list-style-type: none;
+}
+
+.rowfirstcol ul li::before {
+  content: '\2022';
+  color: green;
+  margin-right: 8px;
+}
+
+.suggetWidth {
+  width: fit-content;
+}
+
+.icons {
+  position: absolute;
+  width:100%;
+  top: 30%;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}

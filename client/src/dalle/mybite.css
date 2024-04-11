@@ -1,0 +1,99 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: lightgray;
+  padding: 10px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.input1 {
+  width: 50%;
+  height: 30px;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+.input2 {
+  width: 98%;
+  margin: auto;
+  height: 35px;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+
+.search-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  background-color: lightgray;
+}
+.search-results1 {
+  border-radius: 5px;
+  background-color: lightgray;
+  width: fit-content;
+}
+
+.listings {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.listing {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.listing-image {
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.listing-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.navigation-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  background-color: lightgray;
+}
+
+.button1 {
+  width: 100px;
+  height: 30px;
+  border: none;
+  border-radius: 15px;
+  background-color: orange;
+  color: white;
+  font-size: 16px;
+}
+
+.greyish {
+  background-color: lightgray;
+}

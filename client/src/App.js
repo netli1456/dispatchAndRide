@@ -1,0 +1,50 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import './App.css';
+import HomePage from './homeSection/HomePage';
+import Product from './singlePageSection/Product';
+import Cart from './cartSection/Cart';
+import Kitchen from './kitchenSection/Kitchen';
+import SearchScreen from './dalle/SearchScreen';
+import RidersPage from './dispatchRiders/RidersPage';
+import RiderCard from './dispatchRiders/RiderCard';
+import Profile from './profile/Profile';
+import Order from './orderPage/Order';
+import SignIn from './signIn/SignIn';
+import SignUp from './signUp/Signup';
+import { ToastContainer } from 'react-toastify';
+import Testss from './component/Testss';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <div>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          pauseOnHover
+        />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/kitchen/:id" element={<Kitchen />} />
+          <Route path="/search" element={<SearchScreen />} />
+          <Route path="/riders" element={<RidersPage />} />
+          <Route path="/rider/:id" element={<RiderCard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/order/:id" element={<Order />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/test" element={<Testss/>} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
