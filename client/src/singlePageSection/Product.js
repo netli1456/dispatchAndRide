@@ -74,7 +74,7 @@ function Product() {
           product: product,
         });
        
-        setAvalaibleProduct(data);
+       setAvailableProduct(data);
         setLoadings(false)
         console.log('items:', data)
       } catch (error) {
@@ -90,7 +90,7 @@ function Product() {
   return (
     <div >
       <NavSearch />
-    {loadings ? <div></div> :
+    {loadings ? <div>loading</div> :
       <div >
         <div
           
