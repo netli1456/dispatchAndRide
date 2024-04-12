@@ -7,35 +7,15 @@ import axios from 'axios';
 import { api } from '../utils/apiConfig';
 
 function Recommended(props) {
-  const { product, } = props;
+  const { product, availableProduct } = props;
   const [loadings, setLoading] = useState(false);
 
-  const { cartItems } = useSelector((state) => state.cart);
-  const [availableProduct, setAvalaibleProduct] = useState([]);
+  
+  
 
-  const location = useLocation();
 
-  useEffect(() => {
-    const relatedProducts = async () => {
-      setLoading(true)
-      try {
-        const { data } = await axios.post(`${api}/api/products/recommended`, {
-          cartItems: cartItems,
-          product: product,
-        });
-       
-        setAvalaibleProduct(data);
-        setLoading(false)
-        console.log('items:', data)
-      } catch (error) {
-        setLoading(false)
-        console.log(error);
-      }
-    };
-    if (product?.type || cartItems?.length !== 0) {
-      relatedProducts();
-    }
-  }, [cartItems, product, location,]);
+
+  
 
   return (
     <div>
