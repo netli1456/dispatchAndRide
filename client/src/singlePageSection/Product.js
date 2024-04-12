@@ -29,6 +29,9 @@ function Product() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { cartItems } = useSelector((state) => state.cart);
   const [currentImage, setCurrentImage] = useState(null);
+  const [availableProfuct, setAvailableProduct]=useState([])
+
+  const location = useLocation()
 
   useEffect(() => {
     const productHandler = async () => {
@@ -61,6 +64,28 @@ function Product() {
       window.removeEventListener('resize', checkScreenSize);
     };
   }, []);
+
+  useEffect(() => {
+    const relatedProducts = async () => {
+      setLoading(true)
+      try {
+        const { data } = await axios.post(`${api}/api/products/recommended`, {
+          cartItems: cartItems,
+          product: product,
+        });
+       
+        setAvalaibleProduct(data);
+        setLoading(false)
+        console.log('items:', data)
+      } catch (error) {
+        setLoading(false)
+        console.log(error);
+      }
+    };
+    if (product?.type || cartItems?.length !== 0) {
+      relatedProducts();
+    }
+  }, [cartItems, product, location,]);
 
   return (
     <div >
@@ -108,7 +133,7 @@ function Product() {
         </div>
 
         <div>
-          <Recommended product={product} />
+          <Recommended availableProduct={availableProduct} product={product} />
         </div>
 
         <Footer />
