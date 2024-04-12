@@ -9,14 +9,6 @@ import { api } from '../utils/apiConfig';
 function Recommended(props) {
   const {  availableProduct } = props;
 
-
-  
-  
-
-
-
-  
-
   return (
     <div>
       <div className=" my-3 ">
@@ -36,7 +28,7 @@ function Recommended(props) {
             >
               {' '}
               
-                <Cards loading={loadings} item={item} />
+                <Cards item={item} />
               
               
 
