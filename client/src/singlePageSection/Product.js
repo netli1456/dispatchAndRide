@@ -71,10 +71,7 @@ function Product() {
     <div >
       <NavSearch />
       <div
-        style={{
-          height: isSmallScreen ? '85vh' : 'auto',
-          overflow: isSmallScreen ? 'scroll' : 'visible',
-        }}
+        
       >
         <div
           style={{
