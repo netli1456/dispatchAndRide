@@ -29,7 +29,7 @@ function Product() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { cartItems } = useSelector((state) => state.cart);
   const [currentImage, setCurrentImage] = useState(null);
-  const [availableProfuct, setAvailableProduct]=useState([])
+  const [availableProduct, setAvailableProduct]=useState([])
 
   const location = useLocation()
 
