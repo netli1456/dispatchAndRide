@@ -73,7 +73,7 @@ function Product() {
       <div
         style={{
           height: isSmallScreen ? '85vh' : 'auto',
-          overflowY: isSmallScreen ? 'scroll' : 'visible',
+          overflow: isSmallScreen ? 'scroll' : 'visible',
         }}
       >
         <div
