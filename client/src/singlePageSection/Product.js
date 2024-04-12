@@ -48,12 +48,7 @@ function Product() {
     productHandler();
   }, [id]);
 
-  useEffect(() => {
-    if (loadings === true) {
-      document.body.style.height = '0px';
-      window.scrollTo(0, 0);
-    }
-  });
+  
 
   useEffect(() => {
     const checkScreenSize = () => {
