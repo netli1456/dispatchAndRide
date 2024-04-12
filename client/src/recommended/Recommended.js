@@ -7,8 +7,8 @@ import axios from 'axios';
 import { api } from '../utils/apiConfig';
 
 function Recommended(props) {
-  const { product, availableProduct } = props;
-  const [loadings, setLoading] = useState(false);
+  const {  availableProduct } = props;
+
 
   
   
@@ -27,27 +27,19 @@ function Recommended(props) {
         )}
 
         <div className="grid-container ">
-          {(loadings
-            ? Array.from(new Array(5))
-            : availableProduct && availableProduct
-          )?.map((item, index) => (
+          {availableProduct && availableProduct
+          ?.map((item, index) => (
             <Link
               to={`/product/${item?._id}`}
               key={`${index}`}
               className="box text-decoration-none mb-2 grid-item"
             >
               {' '}
-              {item ? (
+              
                 <Cards loading={loadings} item={item} />
-              ) : (
-                <div>
-                  <Skeleton variant="rectangular" width={210} height={118} />
-                  <Box sx={{ pt: 0.5 }}>
-                    <Skeleton />
-                    <Skeleton width="60%" />
-                  </Box>
-                </div>
-              )}
+              
+              
+
             </Link>
           ))}
         </div>
