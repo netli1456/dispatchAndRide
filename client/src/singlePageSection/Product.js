@@ -25,7 +25,7 @@ function Product() {
   const params = useParams();
   const { id } = params;
   const [product, setProduct] = useState({});
-  const [loadings, setLoading] = useState(false);
+  const [loadings, setLoadings] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { cartItems } = useSelector((state) => state.cart);
   const [currentImage, setCurrentImage] = useState(null);
@@ -35,17 +35,17 @@ function Product() {
 
   useEffect(() => {
     const productHandler = async () => {
-      setLoading(true);
+      setLoadings(true);
       try {
         const { data } = await axios.get(`${api}/api/products/find/${id}`);
         setProduct(data);
-        setLoading(false);
+        setLoadings(false);
         if (data.imgs) {
           setCurrentImage(data.imgs[0]);
         }
       } catch (error) {
         console.log(error);
-        setLoading(false);
+        setLoadings(false);
       }
     };
     productHandler();
@@ -67,7 +67,7 @@ function Product() {
 
   useEffect(() => {
     const relatedProducts = async () => {
-      setLoading(true)
+      setLoadings(true)
       try {
         const { data } = await axios.post(`${api}/api/products/recommended`, {
           cartItems: cartItems,
@@ -75,10 +75,10 @@ function Product() {
         });
        
         setAvalaibleProduct(data);
-        setLoading(false)
+        setLoadings(false)
         console.log('items:', data)
       } catch (error) {
-        setLoading(false)
+        setLoadings(false)
         console.log(error);
       }
     };
@@ -90,14 +90,10 @@ function Product() {
   return (
     <div >
       <NavSearch />
-      <div
-        
-      >
+    {loadings ? <div></div> :
+      <div >
         <div
-          style={{
-            width: !isSmallScreen ? '80vw' : '',
-            margin: isSmallScreen ? '' : 'auto',
-          }}
+          
         >
           <Row className="">
             <Col
@@ -137,7 +133,7 @@ function Product() {
         </div>
 
         <Footer />
-      </div>
+      
 
       {isSmallScreen && cartItems.length > 0 && (
         <Card>
@@ -160,6 +156,8 @@ function Product() {
         </Card>
       )}
     </div>
+}
+ </div>
   );
 }
 
