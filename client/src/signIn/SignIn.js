@@ -96,7 +96,7 @@ function SignIn() {
                   {' '}
                   We are one of the fastest growing online market <br /> you can
                   buy and sell your products.
-                  <br /> create a store today in a reliable enviroment tp sell
+                  <br /> create a store today in a reliable enviroment to sell
                   your products{' '}
                 </p>
               </div>
