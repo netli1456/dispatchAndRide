@@ -139,19 +139,13 @@ function SignIn() {
                   />
                 </InputGroup>
 
-                <div className="d-grid my-3" style={{ position: 'relative' }}>
+                <div className="d-grid my-3 fw-bold" style={{ position: 'relative' }}>
                   <Button
                     variant="success"
                     className="bg-success border rounded-5"
                     type="submit"
                   >
-                    <div className="d-flex align-items-center justify-items-center">
-                      {loading ? (
-                        <Spinner animation="border" role="status"></Spinner>
-                      ) : (
-                        'Login'
-                      )}
-                    </div>
+                   Login
                   </Button>
                   {loading && (
                     <div style={{ position: 'absolute', top: 2, left: '45%' }}>
