@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import NavSearch from '../navSection/NavSearch';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import './product.css';
