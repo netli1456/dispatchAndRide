@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { clearCart } from '../redux/cartSlice';
 import { api } from '../utils/apiConfig';
 import Recommended from '../recommended/Recommended';
+import Spinners from '../utils/Spinner';
 
 function Cart() {
   const { cartItems } = useSelector((state) => state.cart);
@@ -34,10 +35,12 @@ function Cart() {
   const navigate = useNavigate();
   const [order, setOrder] = useState({});
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false)
 
   const product=cartItems[0]
 
   const handleOrder = async () => {
+    setLoading(true)
     try {
       if (userInfo?.user?._id) {
         const { data } = await axios.post(
@@ -53,28 +56,38 @@ function Cart() {
         setOrder(data);
         dispatch(clearCart());
         toast.success('order completed successfully');
+        setLoading(false)
       } else {
         navigate('/signin');
       }
     } catch (error) {
       if (
         error.response.data.message === 'sorry! you can not buy from yourself'
+     
       ) {
         toast.error(error.response.data.message, {
           autoClose: false,
           theme: 'colored',
+          toastId:"unique-toast-id",
         });
+      
       } else if (error.response.data.message === 'Insufficient funds') {
         toast.error(error.response.data.message, {
           autoClose: false,
           theme: 'colored',
+          toastId:"unique-toast-id",
+
         });
+       
       } else {
         toast.error('please fill the shipping address',error.response.data.message, {
           autoClose: false,
           theme: 'colored',
+          toastId:"unique-toast-id",
+
         });
       }
+      setLoading(false)
     }
   };
 
@@ -93,6 +106,9 @@ function Cart() {
       window.document.body.style.height = 'scroll';
     }
   }, [shipOpen]);
+
+
+  console.log(shipping)  
 
   return (
     <div>
@@ -167,7 +183,7 @@ function Cart() {
                 <CartCard />
               </div>
             </Col>
-            <Col md={6} className="">
+            <Col md={6} >
               <div style={{ width: '80%', margin: 'auto' }}>
                 <Card className="border-">
                   <Card.Body>
@@ -204,7 +220,7 @@ function Cart() {
                         >
                           Total Amount :{`N${total.toFixed(2)}`}
                         </Button>{' '}
-                        <div className="d-grid">
+                        <div className="d-grid" style={{ position: 'relative' }}>
                           <Button
                             style={{ width: '100%' }}
                             variant="success"
@@ -213,6 +229,12 @@ function Cart() {
                           >
                             CheckOut({cartItems?.length})
                           </Button>{' '}
+                          {loading && (
+                    <div style={{ position: 'absolute', top: 2, left: '45%' }}>
+                      {' '}
+                      <Spinners />
+                    </div>
+                  )}
                         </div>
                       </div>
                     </div>

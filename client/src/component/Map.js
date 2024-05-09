@@ -11,9 +11,10 @@ const Map = () => {
 
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
+  const [error, setError] =useState('');
 
   useEffect(() => {
-    if (!isSmallScreen) {
+    
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -22,17 +23,18 @@ const Map = () => {
             const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
 
             document.getElementById('map-iframe').src = mapUrl;
+            console.log('mapUrl', mapUrl)
           },
 
           (error) => {
-            console.error('Error getting user location:', error);
+            setError("Error getting user location", error);
           }
         );
       } else {
-        console.error('Geolocation is not supported by this browser.');
+        setError('Geolocation is not supported by this browser.');
       }
-    }
-  }, [isSmallScreen]);
+    
+  }, []);
 
   const data = [
     {
@@ -90,9 +92,11 @@ const Map = () => {
     };
   }, []);
 
+  console.log('error', error)
+
   return (
     <div style={{ width: '100%' }}>
-      {!isSmallScreen ? (
+      {!error ? (
         <Form className="searchP">
           <iframe
             width="100%"
@@ -110,11 +114,18 @@ const Map = () => {
           </div>
         </Form>
       ) : (
-        <Row
-          className={!isSmallScreen ? `bgg  rounded p-5 ` : 'bgg pt-2'}
+        <div>
+        {<div className='d-flex gap-4 align-items-center px-3 py-1' style={{fontSize:"10px"}}>
+        <span>powered by META</span> 
+        <span>BDC approved</span> 
+        <span>logistics</span> 
+       </div>}
+        <div
+          className={!isSmallScreen ? `bgg  rounded p-4 ` : 'bgg pt-2'}
           style={{ width: '100%', margin: 'auto' }}
         >
-          <Col md={6} className="">
+          <Row className='bg-white py-2 rounded'>
+          <Col md={6} >
             <Carousel>
               {data.map((item, index) => (
                 <Carousel.Item key={index}>
@@ -133,7 +144,7 @@ const Map = () => {
                       <Button
                         variant="success"
                         onClick={() => navigate('/search')}
-                        className=""
+                        
                       >
                         Order Now
                       </Button>
@@ -149,7 +160,7 @@ const Map = () => {
           >
             <h1 className="text-center mb-4">Discover Delicious Deals</h1>
             <p className="text-center">
-              Welcome to our food app! Indulge your cravings with our
+              Welcome to M-bite food app! Indulge your cravings with our
               mouthwatering dishes while enjoying amazing discounts. Explore a
               world of flavors right at your fingertips.
             </p>
@@ -157,7 +168,9 @@ const Map = () => {
               Order Now
             </Button>
           </Col>
-        </Row>
+          </Row>
+        </div>
+        </div>
       )}
     </div>
   );

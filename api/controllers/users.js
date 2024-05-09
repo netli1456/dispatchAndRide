@@ -123,7 +123,7 @@ export const userLogin = async (req, res) => {
 
 export const getRandomKitchens = async (req, res) => {
   try {
-    const { query, page = 1, pageSize = 1 } = req.query;
+    const { query, page = 1, pageSize = 10 } = req.query;
     const aggregationPipeline = [];
     aggregationPipeline.push([
       {
@@ -191,19 +191,15 @@ export const Riders = async (req, res) => {
 export const getRiderAndReviews = async (req, res) => {
   try {
     const { id } = req.params;
-    const { page = 1, pageSize = 10 } = req.query;
-    const fetchReviews = new Set();
+
     const reviews = [];
-    const skip = (page - 1) * pageSize;
-    const aggregationPipeline = [
-      { $match: { _id: { $nin: Array.from(fetchReviews) } } },
-      { $skip: skip },
-      { $limit: parseInt(pageSize) },
-      { $match: { userId: id } },
-    ];
+
     const user = await User.findById(id);
     if (user) {
-      const review = await Review.aggregate(aggregationPipeline);
+      const review = await Review.find({ userId: id });
+      if (!review) {
+        return res.status(500).json({ message: 'no reviews' });
+      }
       for (const reviewws of review) {
         const reviewerData = await User.findById(reviewws.reviewerId);
         const reviewss = {
@@ -212,6 +208,7 @@ export const getRiderAndReviews = async (req, res) => {
           msg: reviewws.msg,
           reviewerId: reviewws.reviewerId,
           _id: reviewws._id,
+          positive: reviewws.positive,
         };
         reviews.push(reviewss);
       }
@@ -221,15 +218,68 @@ export const getRiderAndReviews = async (req, res) => {
         km: user.km,
         deliveryRate: user.deliveryRate,
         rating: user.rating,
-        balance: user?._id.toString() === id ? user.balance : '',
+        balance:
+          user?._id.toString() === id && user.isDispatcher ? user.balance : '',
       };
 
-      res.status(200).json({ reviews, user: userData });
+      const positiveReviews = reviews
+        .filter((review) => review.positive === false)
+        .slice(0, 2);
+      const negativeReviews = reviews
+        .filter((review) => review.positive === true)
+        .slice(0, 2);
+
+      const allReviews = [...positiveReviews, ...negativeReviews];
+
+      return res.status(200).json({ allReviews, user: userData });
     } else {
       return res.status(404).json({ message: 'no user available' });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserReviews = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const reviews = [];
+    console.log('reviews', reviews)
+
+    const review = await Review.find({ userId: id });
+
+    if (!review) {
+      return res.status(500).json({ message: 'no reviews' });
+    }
+if(review.length > 0) {
+    for (const reviewws of review) {
+      const reviewerData = await User.findById(reviewws.reviewerId);
+      const reviewss = {
+        reviewerName: reviewerData.name,
+        reviewerImg: reviewerData.img,
+        msg: reviewws.msg,
+        reviewerId: reviewws.reviewerId,
+        _id: reviewws._id,
+        positive: reviewws.positive,
+      };
+      reviews.push(reviewss);
+    }
+
+    const positiveReviews = reviews
+      .filter((rev) => rev.positive === true).slice(0, 2)
+      
+    const negativeReviews = reviews
+      .filter((rev) => rev.positive === false).sort((a, b) => b.createdAt - a.createdAt).slice(0, 1)
+      
+
+    const allReviews = [...positiveReviews, ...negativeReviews];
+
+    return res.status(200).json(allReviews);
+  }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log(error);
   }
 };
 
@@ -256,7 +306,7 @@ export const userBalance = async (req, res) => {
       return res.status(404).json({ message: 'something went wrong' });
     }
 
-    res.status(200).json(user.balance);
+    res.status(200).json(user.balance.toFixed(2));
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

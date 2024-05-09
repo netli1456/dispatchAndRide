@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema(
   {
     name: { type: String,  },
-    surname:{ type: String, },
+    surname:{ type: String,},
     firstname:{ type: String, },
     password: { type: String, required: true },
     businessName: { type: String },
@@ -21,9 +21,9 @@ const userSchema = new mongoose.Schema(
     balance: { type: Number, default: 0 },
     isDispatcher: { type: Boolean, default: false },
     age: { type: Date,  },
-    state: { type: String,  },
-    country: { type: String,},
-    email: { type: String,  },
+    state: { type: String,},
+    country: { type: String, },
+    email: { type: String,  required: true},
     isBusinessOwner: { type: Boolean, default: false}
     
   },

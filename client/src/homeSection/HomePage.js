@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { api } from '../utils/apiConfig';
 
 import { Box, Skeleton } from '@mui/material';
+import NavSearch from '../navSection/NavSearch';
 
 function HomePage(props) {
   const [data, setData] = useState([]);
@@ -25,6 +26,8 @@ function HomePage(props) {
   const userId = cartItems.length > 0 ? cartItems[0].userId : '';
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,9 +72,23 @@ function HomePage(props) {
     setCurrentSlide(currentSlide === data.length - 1 ? 0 : currentSlide + 1);
   };
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 1200);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+
   return (
     <div style={{width:"100%"}}>
-      <Navbar />
+     {!isSmallScreen ?  <Navbar /> : <NavSearch/>}
+    
       <Map />
       <div className="my-5 d-flex justify-content-center">
         {' '}
@@ -107,7 +124,7 @@ function HomePage(props) {
               <Cards loading={loading} item={item} />
             ) : (
               <div>
-                <Skeleton variant="rectangular" width={210} height={118} />
+                <Skeleton variant="rectangular" width={"100%"} height={118} />
                 <Box sx={{ pt: 0.5 }}>
                   <Skeleton />
                   <Skeleton width="60%" />
@@ -133,7 +150,7 @@ function HomePage(props) {
           >
             See all available kitchens
           </Link>
-          <span className="">
+          <span>
             {carouselData.length < 50
               ? carouselData.length + randomNum
               : carouselData}{' '}

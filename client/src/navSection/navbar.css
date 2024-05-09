@@ -15,6 +15,7 @@
   position: absolute;
   top: 15%;
   left: 30%;
+  
 }
 .Navsearchparent {
   position: relative;
@@ -22,7 +23,8 @@
 .searchOpenIcon {
   position: absolute;
   top: 15%;
-  left: 55%;
+  left: 45%;
+ 
   
 }
 

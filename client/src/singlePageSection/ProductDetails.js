@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -12,11 +12,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addCart } from '../redux/cartSlice';
 import CartError from '../utils/CartError';
 import { toast } from 'react-toastify';
-import { Box, Skeleton } from '@mui/material';
+import Reviews from '../reviews/Reviews';
+
 
 function ProductDetails(props) {
-  const { product, loading , isSmallScreen, currentImage, setCurrentImage} = props;
-  
+  const { product,  isSmallScreen, currentImage, setCurrentImage, id } =
+    props;
+
   const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
@@ -48,36 +50,20 @@ function ProductDetails(props) {
     }
   };
 
-  useEffect(() => {
-    if (currentImage === null && product.imgs) {
-      setCurrentImage(product?.imgs[0]);
-    }
-  }, [currentImage, product]);
-
   return (
     <Row>
-      <Col md={9} className={isSmallScreen ? "" :"rounded mt-5"}>
+      <Col md={9} className={isSmallScreen ? '' : 'rounded mt-5'}>
         <div style={{ height: '60vh' }}>
-          {loading ? (
-            <div>
-              <Skeleton variant="rectangular" height={400} />
-              <Box sx={{ pt: 0.5 }}>
-                <Skeleton />
-                <Skeleton width="60%" />
-              </Box>
-            </div>
-          ) : (
-            <img
-              src={currentImage}
-              alt=""
-              className="rounded"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          )}
+          <img
+            src={currentImage}
+            alt=""
+            className="rounded"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
         </div>
         <div className="d-flex my-2 gap-2 justify-content-center">
           {product?.imgs?.map((item, index) => (
@@ -101,51 +87,37 @@ function ProductDetails(props) {
           ))}
         </div>
 
-        {loading ? (
-          <Box className="mt-5" sx={{ pt: 0.5 }}>
-            <Skeleton height={200} />
-          </Box>
-        ) : (
-          <div
-            style={{ width: 'fit-content' }}
-            className="bg-success d-flex flex-column my-3  p-2 text-white rounded text-capitalize bg-opacity-"
-          >
-            <strong className="fs-5 fw-bold">
-              {' '}
-              Price:{' '}
-              <span className="border-bottom border-grey">
-                N{product?.price?.toFixed(2)}
-              </span>
-            </strong>
-
-            <strong
-              className="text-capitalize "
-              style={{ width: 'fit-content' }}
-            >
-              Name:{' '}
-              <span className="border-bottom border-grey">
-                {' '}
-                {product?.name}
-              </span>
-            </strong>
-
-            <span style={{ wordBreak: 'break-word' }}>
-              <strong>Description: </strong>
-              {product?.desc}
+        <div
+          style={{ width: 'fit-content' }}
+          className="bg-success d-flex flex-column my-3  p-2 text-white rounded text-capitalize bg-opacity-"
+        >
+          <strong className="fs-5 fw-bold">
+            {' '}
+            Price:{' '}
+            <span className="border-bottom border-grey">
+              N{product?.price?.toFixed(2)}
             </span>
-            <div>
-              <strong>Content: </strong>
-              {product?.content}
-            </div>
+          </strong>
+
+          <strong className="text-capitalize " style={{ width: 'fit-content' }}>
+            Name:{' '}
+            <span className="border-bottom border-grey"> {product?.name}</span>
+          </strong>
+
+          <span style={{ wordBreak: 'break-word' }}>
+            <strong>Description: </strong>
+            {product?.desc}
+          </span>
+          <div>
+            <strong>Content: </strong>
+            {product?.content}
           </div>
-        )}
+        </div>
       </Col>
       <Col md={3} className=" p-0">
         <ListGroup variant="flush">
           <ListGroup.Item>
-            {loading ? (
-              <Skeleton width="100%" />
-            ) : (
+            
               <div className="d-flex align-items-center gap-1">
                 <strong className="text-capitalize text-secondary">
                   {product?.businessName}
@@ -156,76 +128,59 @@ function ProductDetails(props) {
                   style={{ width: '20px' }}
                 />
               </div>
-            )}
+            
           </ListGroup.Item>
           <ListGroup.Item>
-            {loading ? (
-              <Skeleton width="100%" />
-            ) : (
-              <div className="d-flex flex-column">
-                <span>Physical Address: </span>
-                {product?.physicalAddress}
-              </div>
-            )}
+            <div className="d-flex flex-column">
+              <span>Physical Address: </span>
+              {product?.physicalAddress}
+            </div>
           </ListGroup.Item>
           <ListGroup.Item className="d-flex flex-column">
-            {loading ? (
-              <Skeleton width="100%" />
-            ) : (
-              <div>
-                <span>
-                  Rating :{' '}
-                  {product?.businessRating > 0
-                    ? product?.businessRating
-                    : 'none'}
-                </span>
-                <div className="d-flex align-items-center ">
-                  <Rating product={product} />
-                </div>
+            <div>
+              <span>
+                Rating :{' '}
+                {product?.businessRating > 0 ? product?.businessRating : 'none'}
+              </span>
+              <div className="d-flex align-items-center ">
+                <Rating product={product} />
               </div>
-            )}
+            </div>
           </ListGroup.Item>
 
           <ListGroup.Item>
-            {loading ? (
-              <Skeleton width="100%" />
-            ) : (
-              <span className="text-capitalize">
-                {product?.status === 'available' ? (
-                  <span className="d-flex align-items-center gap-1">
-                    online
-                    <CircleIcon
-                      className="text-success "
-                      style={{ width: '13px', height: '13px' }}
-                    />
-                  </span>
-                ) : (
-                  'last seen:  5 minutes ago'
-                )}
-              </span>
-            )}
-            {loading ? (
-              <Box sx={{ pt: 0.5 }}>
-                <Skeleton width="60%"/>
-                <Skeleton width="60%" />
-              </Box>
-            ) : (
-              <div className="rounded  d-flex flex-column">
-                <span className="mb-1 ">
-                  {' '}
-                  {product?.verified
-                    ? 'this user is verified'
-                    : 'this user is not verified'}
+            <span className="text-capitalize">
+              {product?.status === 'available' ? (
+                <span className="d-flex align-items-center gap-1">
+                  online
+                  <CircleIcon
+                    className="text-success "
+                    style={{ width: '13px', height: '13px' }}
+                  />
                 </span>
-                <Button
-                  onClick={() => addToCart(product)}
-                  className="fw-bold"
-                  variant="success"
-                >
-                  Add To Tray
-                </Button>
-              </div>
-            )}
+              ) : (
+                'last seen:  5 minutes ago'
+              )}
+            </span>
+
+            <div className="rounded  d-flex flex-column">
+              <span className="mb-1 ">
+                {' '}
+                {product?.verified
+                  ? 'this user is verified'
+                  : 'this user is not verified'}
+              </span>
+              <Button
+                onClick={() => addToCart(product)}
+                className="fw-bold"
+                variant="success"
+              >
+                Add To Tray
+              </Button>
+            </div>
+          </ListGroup.Item>
+          <ListGroup.Item>
+          
           </ListGroup.Item>
         </ListGroup>
       </Col>

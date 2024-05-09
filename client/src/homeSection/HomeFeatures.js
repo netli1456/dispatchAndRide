@@ -12,7 +12,7 @@ function HomeFeatures({ carouselData, loading }) {
     <Row className=" m-1">
       <Col md={6} className="mt-3 mb-3">
         <div className="d-flex justify-content-center bg-white rowfirstcol ">
-          <ul className="">
+          <ul >
             <li>Budget-friendly options for every customer</li>
             <li>Guaranteed 100% delivery success rate</li>
             <li>Wide variety of cuisines to satisfy diverse tastes</li>
@@ -64,7 +64,7 @@ function HomeFeatures({ carouselData, loading }) {
                           <div>
                             {item ? (
                               <img
-                                className=""
+                                
                                 style={{
                                   width: '100%',
                                   height: '200px',

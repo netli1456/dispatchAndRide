@@ -1,41 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Cards from '../component/Cards';
-import { Box, Skeleton } from '@mui/material';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import { api } from '../utils/apiConfig';
+import Reviews from '../reviews/Reviews';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
 
 function Recommended(props) {
-  const { product, } = props;
-  const [loadings, setLoading] = useState(false);
-
-  const { cartItems } = useSelector((state) => state.cart);
-  const [availableProduct, setAvalaibleProduct] = useState([]);
-
-  const location = useLocation();
-
-  useEffect(() => {
-    const relatedProducts = async () => {
-      setLoading(true)
-      try {
-        const { data } = await axios.post(`${api}/api/products/recommended`, {
-          cartItems: cartItems,
-          product: product,
-        });
-       
-        setAvalaibleProduct(data);
-        setLoading(false)
-        console.log('items:', data)
-      } catch (error) {
-        setLoading(false)
-        console.log(error);
-      }
-    };
-    if (product?.type || cartItems?.length !== 0) {
-      relatedProducts();
-    }
-  }, [cartItems, product, location,]);
+  const { availableProduct, id } = props;
+  const [bgReviews, setBgReviews] = useState(false)
 
   return (
     <div>
@@ -47,31 +19,33 @@ function Recommended(props) {
         )}
 
         <div className="grid-container ">
-          {(loadings
-            ? Array.from(new Array(5))
-            : availableProduct && availableProduct
-          )?.map((item, index) => (
-            <Link
-              to={`/product/${item?._id}`}
-              key={`${index}`}
-              className="box text-decoration-none mb-2 grid-item"
-            >
-              {' '}
-              {item ? (
-                <Cards loading={loadings} item={item} />
-              ) : (
-                <div>
-                  <Skeleton variant="rectangular" width={210} height={118} />
-                  <Box sx={{ pt: 0.5 }}>
-                    <Skeleton />
-                    <Skeleton width="60%" />
-                  </Box>
-                </div>
-              )}
-            </Link>
-          ))}
+          {availableProduct &&
+            availableProduct?.map((item, index) => (
+              <Link
+                to={`/product/${item?._id}`}
+                key={`${index}`}
+                className="box text-decoration-none mb-2 grid-item"
+              >
+                {' '}
+                <Cards item={item} />
+              </Link>
+            ))}
         </div>
       </div>
+     
+      <Row className={bgReviews ? 'my-5  border-top border-grey font1bg' : '   '}>
+        <Col md={1}></Col>
+        <Col md={10} className=''>
+          {' '}
+          {id && (
+            <div className="p-3 m-auto ">
+              {' '}
+              <Reviews bgReviews={bgReviews} setBgReviews={setBgReviews} id={id} />
+            </div>
+          )}
+        </Col>
+        <Col md={1}></Col>
+      </Row>
     </div>
   );
 }

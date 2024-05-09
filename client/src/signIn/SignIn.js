@@ -15,7 +15,6 @@ import { api } from '../utils/apiConfig';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinners from '../utils/Spinner';
-import Spinner from 'react-bootstrap/esm/Spinner';
 
 function SignIn() {
   const [email, setEmail] = useState('');
@@ -55,7 +54,7 @@ function SignIn() {
   };
 
   useEffect(() => {
-    if (userInfo?.user?.firstname) {
+    if (userInfo?.user?._id) {
       navigate('/');
     }
   });
@@ -82,7 +81,7 @@ function SignIn() {
           }}
         />
         <div style={{ position: 'absolute', left: 0, width: '100vw', top: 20 }}>
-          <Row className="">
+          <Row >
             <Col
               md={6}
               className="d-flex mb-3  justify-content-center  flex-column align-items-center"
@@ -142,16 +141,10 @@ function SignIn() {
                 <div className="d-grid my-3" style={{ position: 'relative' }}>
                   <Button
                     variant="success"
-                    className="bg-success border rounded-5"
+                    className="bg-success fw-bold border rounded-5"
                     type="submit"
                   >
-                    <div className="d-flex align-items-center justify-items-center">
-                      {loading ? (
-                        <Spinner animation="border" role="status"></Spinner>
-                      ) : (
-                        'Login'
-                      )}
-                    </div>
+                    Login
                   </Button>
                   {loading && (
                     <div style={{ position: 'absolute', top: 2, left: '45%' }}>

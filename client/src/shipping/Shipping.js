@@ -37,8 +37,8 @@ function Shipping({ setShipOpen }) {
   return (
     <div className="mt-5">
       <Card
-        className=""
-        style={{ maxWidth: '600px', minWidth: '500px', height: '85vh' }}
+       
+        style={{ maxWidth: '600px', minWidth: '400px', height: '85vh' }}
       >
         <Card.Body>
           <div>

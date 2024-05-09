@@ -10,26 +10,21 @@ import SearchBar from '../component/SearchBar';
 import axios from 'axios';
 import { api } from '../utils/apiConfig';
 import Button from 'react-bootstrap/esm/Button';
-import { searchSuccess } from '../redux/searchSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 function SearchScreen() {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const query = sp.get('query') || 'all';
-  // const page = sp.get('page') || 1;
 
-  const [page, setPage]=useState(1)
+  const [page, setPage] = useState(1);
 
   const [products, setProducts] = useState([]);
   const location = useLocation();
   const handlePageChange = () => {
-   
-
-    setPage(page +1)
+    setPage(page + 1);
   };
 
-  const { searchproducts } = useSelector((state) => state.searching);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,18 +34,17 @@ function SearchScreen() {
           const { data } = await axios.get(
             `${api}/api/users?query=${query}&page=${page}`
           );
-          setProducts(data)
+          setProducts(data);
         } catch (error) {
           console.log(error);
         }
       };
       handleSearch();
     }
-  }, [query, page, location, dispatch, ]);
-
+  }, [query, page, location, dispatch]);
 
   return (
-    <div className="">
+    <div>
       <Navbar />
       <SearchBar />
 
@@ -66,22 +60,23 @@ function SearchScreen() {
       <Container>
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 2 }}>
           <Masonry>
-            {products?.length > 0 && products?.map((item, index) => (
-              <Link
-                to={`/kitchen/${item._id}`}
-                className="text-decoration-none listings border-bottom  p-2"
-                key={`${index}-${item._id}`}
-              >
-                {' '}
-                <SearchedItems item={item} />
-              </Link>
-            ))}
+            {products?.length > 0 &&
+              products?.map((item, index) => (
+                <Link
+                  to={`/kitchen/${item._id}`}
+                  className="text-decoration-none listings border-bottom  p-2"
+                  key={`${index}-${item._id}`}
+                >
+                  {' '}
+                  <SearchedItems item={item} />
+                </Link>
+              ))}
           </Masonry>
         </ResponsiveMasonry>
       </Container>
 
       <div className="navigation-button">
-        <Button onClick={() => handlePageChange(page + 1)} className="button1">
+        <Button  className="button1">
           see more
         </Button>
       </div>
@@ -90,4 +85,4 @@ function SearchScreen() {
   );
 }
 
-export default SearchScreen; // Export the component
+export default SearchScreen; 

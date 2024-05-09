@@ -52,8 +52,8 @@ function ProfileHeader(props) {
   return (
     <Row className="balance-inf my-2">
       <Col className=" p-3 border ">
-        <h3>
-          Hello {userInfo?.user?.name ? userInfo?.user?.name.split(' ')[0] : ''}{' '}
+        <h3 className='text-capitalize'>
+          Hello {userInfo?.user?.firstname ? userInfo?.user?.firstname : ''}{' '}
           !
         </h3>
 
@@ -68,7 +68,7 @@ function ProfileHeader(props) {
                 {loadingBalance ? (
                   <Skeleton />
                 ) : (
-                  <strong> N{balance && balance?.toFixed(2)}</strong>
+                  <strong> N{balance && balance}</strong>
                 )}
               </div>
             )}

@@ -6,12 +6,14 @@ import TransactionHistory from '../models/TransactionHistory.js';
 export const CreateOrder = async (req, res) => {
   try {
     const { buyerId, businessId } = req.params;
+    const shippingAddress = req.body.shippingAddress;
     const customer = await User.findById(buyerId);
+
+    
 
     if (!customer) {
       return res.status(404).json({ message: 'not a registered  user' });
     }
-    
 
     const orderedItems = req.body.orderedItems;
     if (customer._id.toString() !== businessId) {
@@ -28,26 +30,34 @@ export const CreateOrder = async (req, res) => {
             };
           });
 
-          const buyer = await User.findById(buyerId);
           const business = await User.findById(businessId);
+          if (!business) {
+            return res.status(404).json({ message: 'no bussiness owner' });
+          }
 
           const order = new Order({
             ...req.body,
             orderedItems: singleItem,
-            shippingAddress: req.body.shippingAddress,
-            buyerId: buyer._id,
+            shippingAddress: shippingAddress,
+            buyerId: customer._id,
             businessId: business._id,
             total: req.body.total,
             subtotal: req.body.subtotal,
             shippingFee: req.body.shippingFee,
           });
 
-          customer.balance = customer.balance - order.total;
-          business.balance = business.balance + order.total;
+          const ordered = await order.save();
+         
 
-          await customer.save();
-          await business.save();
-          await order.save();
+          if (ordered.total) {
+            customer.balance = customer.balance - order.total;
+            business.balance = business.balance + order.total;
+            await customer.save();
+            await business.save();
+          } else {
+            return res.status({ message: 'something went wrong' });
+          }
+
           const transactionHistory = new TransactionHistory({
             businessId: business._id,
             buyerId: customer._id,
@@ -68,6 +78,7 @@ export const CreateOrder = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+    console.log(error.message);
   }
 };
 
@@ -167,7 +178,14 @@ export const getSingleOrder = async (req, res) => {
       if (!business) {
         res.status(404).json({ message: 'user not found' });
       }
-      const others = { ...other, buyerName: buyer.name, businessName: business.name, businessId: business._id, buyerId: buyer._id, rating: business.rating};
+      const others = {
+        ...other,
+        buyerName: buyer.name,
+        businessName: business.name,
+        businessId: business._id,
+        buyerId: buyer._id,
+        rating: business.rating,
+      };
       res.status(200).json({ products: orders, details: others });
     }
   } catch (error) {

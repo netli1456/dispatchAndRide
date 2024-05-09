@@ -110,7 +110,7 @@ const Profile = () => {
   return (
     <div>
       <NavSearch />
-      <Container className="">
+      <Container >
         <ProfileHeader
           userInfo={userInfo}
           open={open}

@@ -53,8 +53,10 @@ border-radius: 5px !important;
   height: 100vh !important;
   align-items: center !important;
   justify-content: center !important;
-  width:100vw !important;
+  width:100% !important;
   z-index: 99;
+  
+
   
 }
 

@@ -138,7 +138,7 @@ function Order() {
                 </Box>
               ) : (
                 <div className="d-flex flex-column ">
-                  <div className="">
+                  <div >
                     <h3 className="d-none d-md-flex">
                       Order ID: {data?.details?._id}
                     </h3>
@@ -323,8 +323,8 @@ function Order() {
                               {userInfo?.user?._id ===
                               data?.details?.buyerId ? (
                                 <div>
-                                  <span className="d-flex flex-column text-start">
-                                    Business Details:
+                                  <div className="d-flex  flex-column text-start">
+                                  <span className='fw-bold'>  Business Details</span>
                                     <span>
                                       Name: {data?.details?.businessName}
                                     </span>
@@ -338,7 +338,7 @@ function Order() {
                                     >
                                       check store{' '}
                                     </Link>
-                                  </span>
+                                  </div>
                                 </div>
                               ) : (
                                 <div>

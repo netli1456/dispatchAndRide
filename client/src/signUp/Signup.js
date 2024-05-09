@@ -9,7 +9,6 @@ import axios from 'axios';
 import HttpsIcon from '@mui/icons-material/Https';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSuccess } from '../redux/userSlice';
-import Error from '../utils/Error';
 import { toast } from 'react-toastify';
 import { api } from '../utils/apiConfig';
 import Col from 'react-bootstrap/esm/Col';
@@ -102,7 +101,7 @@ function SignUp() {
           }}
         />
         <div style={{ position: 'absolute', left: 0, width: '100vw', top: 10 }}>
-          <Row className="">
+          <Row >
             <Col
               md={6}
               className="d-flex mb-3  justify-content-center  flex-column align-items-center"

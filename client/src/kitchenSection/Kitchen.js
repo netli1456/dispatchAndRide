@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect,  useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import './kitchen.css';
 import Cards from '../component/Cards';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import Container from 'react-bootstrap/esm/Container';
 import Navbar from '../navSection/Navbar';
 
 import Col from 'react-bootstrap/Col';
@@ -21,33 +20,10 @@ import { toast } from 'react-toastify';
 import { api } from '../utils/apiConfig';
 import { Box, Skeleton } from '@mui/material';
 
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case 'FETCH_STARTS':
-//       return { ...state, loading: true };
-//     case 'FETCH_SUCCESS':
-//       return {
-//         ...state,
-//         products: action.products,
-//         pages: action.pages,
-//         countProducts: action.countProducts,
-//         loading: false,
-//       };
 
-//     case 'FETCH_FAILURE':
-//       return { ...state, loading: false, error: action.payload };
-//     default:
-//       return;
-//   }
-// };
 
 function Kitchen() {
-  // const [{ products, loading, error, countProducts, pages }, dispatch] =
-  //   useReducer(reducer, {
-  //     products: [],
-  //     loading: false,
-  //     error: null,
-  //   });
+  
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const params = useParams();
@@ -201,7 +177,7 @@ function Kitchen() {
                   top: 0,
                   height: 'calc(100vh -220px',
                 }}
-                className=""
+               
               >
                 <div className={' '}>
                   <ListGroup variant="flush">
@@ -256,7 +232,7 @@ function Kitchen() {
                               />
                             )}
                           </div>
-                          <span className="">
+                          <span >
                             All products here belongs to{' '}
                             {kitchenData?.businessName} stores
                           </span>
@@ -298,7 +274,7 @@ function Kitchen() {
                               <Form className="d-flex flex-column border custom-background">
                                 <InputGroup
                                   variant="light"
-                                  className=""
+                                 
                                   style={{
                                     width: 'fit-content',
                                     border: 'none',
