@@ -95,7 +95,7 @@ function SignIn() {
                   {' '}
                   We are one of the fastest growing online market <br /> you can
                   buy and sell your products.
-                  <br /> create a store today in a reliable enviroment tp sell
+                  <br /> create a store today in a reliable enviroment to sell
                   your products{' '}
                 </p>
               </div>
@@ -138,7 +138,7 @@ function SignIn() {
                   />
                 </InputGroup>
 
-                <div className="d-grid my-3" style={{ position: 'relative' }}>
+                <div className="d-grid my-3 fw-bold" style={{ position: 'relative' }}>
                   <Button
                     variant="success"
                     className="bg-success fw-bold border rounded-5"

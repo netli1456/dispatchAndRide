@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react';
 import NavSearch from '../navSection/NavSearch';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+<<<<<<< HEAD
 import { Link, useLocation, useParams } from 'react-router-dom';
+=======
+import { Link, useParams, useLocation } from 'react-router-dom';
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
 import axios from 'axios';
 
 import './product.css';
@@ -24,29 +28,36 @@ function Product() {
   const params = useParams();
   const { id } = params;
   const [product, setProduct] = useState({});
-  const [loadings, setLoading] = useState(false);
+  const [loadings, setLoadings] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { cartItems } = useSelector((state) => state.cart);
   const [currentImage, setCurrentImage] = useState(null);
+  const [availableProduct, setAvailableProduct]=useState([])
+
+  const location = useLocation()
 
   useEffect(() => {
     const productHandler = async () => {
-      setLoading(true);
+      setLoadings(true);
       try {
         const { data } = await axios.get(`${api}/api/products/find/${id}`);
         setProduct(data);
-        setLoading(false);
+        setLoadings(false);
         if (data.imgs) {
           setCurrentImage(data.imgs[0]);
         }
       } catch (error) {
         console.log(error);
-        setLoading(false);
+        setLoadings(false);
       }
     };
     productHandler();
   }, [id]);
 
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -60,6 +71,7 @@ function Product() {
     };
   }, []);
 
+<<<<<<< HEAD
   const [availableProduct, setAvalaibleProduct] = useState([]);
   const location = useLocation();
 
@@ -67,20 +79,35 @@ function Product() {
 
   useEffect(() => {
     const relatedProducts = async () => {
+=======
+  useEffect(() => {
+    const relatedProducts = async () => {
+      setLoadings(true)
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
       try {
         const { data } = await axios.post(`${api}/api/products/recommended`, {
           cartItems: cartItems,
           product: product,
         });
+<<<<<<< HEAD
 
         setAvalaibleProduct(data);
       } catch (error) {
+=======
+       
+       setAvailableProduct(data);
+        setLoadings(false)
+        console.log('items:', data)
+      } catch (error) {
+        setLoadings(false)
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
         console.log(error);
       }
     };
     if (product?.type || cartItems?.length !== 0) {
       relatedProducts();
     }
+<<<<<<< HEAD
   }, [cartItems, product, location]);
 
 
@@ -90,6 +117,57 @@ function Product() {
       <div style={{ position: 'sticky', top: -3, zIndex: 999 }}>
         <NavSearch />{' '}
       </div>
+=======
+  }, [cartItems, product, location,]);
+
+  return (
+    <div >
+      <NavSearch />
+    {loadings ? <div>loading</div> :
+      <div >
+        <div
+          
+        >
+          <Row className="">
+            <Col
+              md={isSmallScreen ? 12 : cartItems.length > 0 ? 9 : 12}
+              className="product  p-3 "
+            >
+              {
+                <ProductDetails
+                  isSmallScreen={isSmallScreen}
+                  loadings={loadings}
+                  product={product}
+                  currentImage={currentImage}
+                  setCurrentImage={setCurrentImage}
+                />
+              }
+            </Col>
+            {!isSmallScreen && cartItems.length > 0 && (
+              <Col md={3} className="my-3">
+                <CartCard product={product._id} />
+
+                <Link to="/cart" className="d-grid my-2 text-decoration-none">
+                  <Button
+                    to="/cart"
+                    variant="light"
+                    className="text-success border-secondary "
+                  >
+                    See All
+                  </Button>
+                </Link>
+              </Col>
+            )}
+          </Row>
+        </div>
+
+        <div>
+          <Recommended availableProduct={availableProduct} product={product} />
+        </div>
+
+        <Footer />
+      
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
 
       {loadings ? (
         <div style={{ height: '80vh', overflow: 'hidden', width:"95vw", margin:"auto" }}>
@@ -154,6 +232,8 @@ function Product() {
         </div>
       )}
     </div>
+}
+ </div>
   );
 }
 

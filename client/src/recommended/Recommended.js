@@ -6,8 +6,12 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 
 function Recommended(props) {
+<<<<<<< HEAD
   const { availableProduct, id } = props;
   const [bgReviews, setBgReviews] = useState(false)
+=======
+  const {  availableProduct } = props;
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
 
   return (
     <div>
@@ -19,6 +23,7 @@ function Recommended(props) {
         )}
 
         <div className="grid-container ">
+<<<<<<< HEAD
           {availableProduct &&
             availableProduct?.map((item, index) => (
               <Link
@@ -30,6 +35,23 @@ function Recommended(props) {
                 <Cards item={item} />
               </Link>
             ))}
+=======
+          {availableProduct && availableProduct
+          ?.map((item, index) => (
+            <Link
+              to={`/product/${item?._id}`}
+              key={`${index}`}
+              className="box text-decoration-none mb-2 grid-item"
+            >
+              {' '}
+              
+                <Cards item={item} />
+              
+              
+
+            </Link>
+          ))}
+>>>>>>> 7a959091a8b19eea305debe7f50b6a25f22dbb54
         </div>
       </div>
      
