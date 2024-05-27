@@ -98,15 +98,14 @@ function Kitchen() {
   }, [openSort]);
 
   return (
-    <div>
+    <div >
       <Navbar />
 
-     
       <div style={{ position: 'relative' }}>
         <div
           style={{
             width: '100%',
-            height: isSmallScreen ? "200px" : '300px',
+            height: isSmallScreen ? '200px' : '300px',
             position: 'relative',
             top: '0',
           }}
@@ -121,13 +120,19 @@ function Kitchen() {
             }
             alt=""
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            className='blur-on-hover'
+            className="blur-on-hover"
           />
         </div>
 
-        <div style={{ position: 'absolute', top: isSmallScreen ? 20 : 50,  width:"100%" }} >
-        <SearchKitchen searchedQuery={query} id={id} />
-          <div className="  " >
+        <div
+          style={{
+            position: 'absolute',
+            top: isSmallScreen ? 20 : 50,
+            width: '100%',
+          }}
+        >
+          <SearchKitchen searchedQuery={query} id={id} />
+          <div className="  ">
             <div
               style={{ width: '90vw', margin: 'auto', zIndex: 9999 }}
               className="d-md-flex gr d-none align-items-center gap-2"
@@ -183,7 +188,7 @@ function Kitchen() {
             </div>
           </div>
 
-          <div className="">
+          <div style={{ overflowX: 'hidden',  }}>
             <div className={isSmallScreen ? '' : 'small'}>
               <Row>
                 <Col
@@ -193,19 +198,18 @@ function Kitchen() {
                     top: -10,
                     height: 'calc(100vh -220px',
                     backgroundColor: 'lightgrey',
-                    
+                 
                   }}
-                  
                 >
                   <div
                     style={{
                       position: 'sticky',
                       top: 0,
                       height: 'calc(100vh -220px',
+                 
                     }}
-                    
                   >
-                    <div >
+                    <div>
                       <ListGroup variant="flush">
                         <ListGroup.Item
                           className={isSmallScreen ? 'pt-3' : ''}
@@ -221,7 +225,7 @@ function Kitchen() {
                               <Skeleton />
                             </div>
                           ) : (
-                            <div className="search-results1 rounded ">
+                            <div className="search-results1 rounded " >
                               <div className="d-flex align-items-center gap-1 ">
                                 <strong className="text-capitalize d-flex align-items-center gap-1 border-bottom text-dark">
                                   <span
@@ -258,7 +262,10 @@ function Kitchen() {
                                   />
                                 )}
                               </div>
-                              <span style={{fontSize:"11px"}} className='p-2'>
+                              <span
+                                style={{ fontSize: '11px' }}
+                                className="p-2"
+                              >
                                 All products here belongs to{' '}
                                 {kitchenData?.businessName} stores
                               </span>
@@ -325,7 +332,7 @@ function Kitchen() {
                                               isSmallScreen &&
                                               setOpenSort(false)
                                             }
-                                            className='text-decoration-none fw-bold text-capitalize text-secondary'
+                                            className="text-decoration-none fw-bold text-capitalize text-secondary"
                                             to={`/kitchen/${id}?category=${c}`}
                                           >
                                             {' '}
