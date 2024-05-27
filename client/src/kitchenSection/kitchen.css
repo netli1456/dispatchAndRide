@@ -54,3 +54,26 @@ span{font-size: 13px;}
   .lightGrrry{
     background-color: rgb(198, 77, 77) !important;
   }
+
+
+
+  .blur-on-hover {
+    transition: filter 0.3s ease;
+    filter: blur(5px);
+  }
+  
+ .kitchhovering:hover{
+  transform:scale(1.03) !important;
+ }
+  
+ .kitchhovering{
+  transition: transform 0.3s ease !important;
+ }
+
+ .kitchhovering .kitchhov{
+  transition:transform 0.3s ease !important;
+ }
+
+ .kitchhovering .kitchhov:hover{
+  transform: scale(1.03) !important;
+ }

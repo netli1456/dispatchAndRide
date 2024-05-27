@@ -18,7 +18,7 @@ import { api } from '../utils/apiConfig';
 
 import Recommended from '../recommended/Recommended';
 import LoadingBox from '../LoadingBox';
-import Reviews from '../reviews/Reviews';
+
 
 function Product() {
   const params = useParams();

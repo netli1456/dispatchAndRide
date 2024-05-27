@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 function Cards({ item }) {
   const location = useLocation();
   return (
-    <div className="border rounded" style={{ minHeight: '100%', width:"100%" }}>
+    <div className="border rounded kitchhov" style={{ minHeight: '100%', width:"100%" }}>
       
         <div className="cardBox" >
          
@@ -17,7 +17,9 @@ function Cards({ item }) {
                 height: location.pathname === '/kitchen' ? '180px' : '170px',
                 transition: 'ease-in-out',
                 objectFit: 'cover',
+                
               }}
+              className='rounded'
               
             />
          

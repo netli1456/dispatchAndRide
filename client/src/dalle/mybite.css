@@ -31,7 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
+  height: px;
   background-color: lightgray;
 }
 .search-results1 {
@@ -59,13 +59,16 @@
   border-radius: 50%;
 }
 
+
+
 .listing-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-h3 {
+.listing-info h3 {
   font-size: 18px;
   font-weight: bold;
   margin: 0;
@@ -97,3 +100,43 @@ p {
 .greyish {
   background-color: lightgray;
 }
+
+.hovering:hover{
+  background-color: lightgray !important;
+  cursor: pointer !important;
+  
+}
+
+
+/* .kitchenHover:hover{
+  font-weight:bolder !important;
+  transition-duration: 0.3s !important;
+  padding: 30px !important;
+} */
+
+/* .kitchenHover, .listing-image:hover {
+  width: 120px;
+  height: 120px;
+  margin-right: 10px;
+  border-radius: 50%;
+  transition-duration: 0.3s ;
+} */
+
+
+.kitchenHover {
+  transition: transform 0.3s ease;
+}
+
+.kitchenHover:hover {
+  transform: scale(1.02);
+}
+
+.kitchenHover .listing {
+  transition: transform 0.3s ease;
+}
+
+.kitchenHover:hover .listing {
+  transform: scale(1.03);
+}
+
+

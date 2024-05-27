@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -9,17 +9,31 @@ function SearchKitchen(props) {
   const {id} = props;
   const [query, setQuery] = useState( '');
   const navigate = useNavigate();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
 
   const handleQuery = async (e) => {
       e.preventDefault();
         navigate(query ? `/kitchen/${id}?query=${query}` : `/kitchen/${id}`);
     };
+
+    useEffect(() => {
+      const checkScreenSize = () => {
+        setIsSmallScreen(window.innerWidth < 1200);
+      };
+      checkScreenSize();
+      window.addEventListener('resize', checkScreenSize);
+  
+      return () => {
+        window.removeEventListener('resize', checkScreenSize);
+      };
+    }, []);
   return (
     <div>
-         <div className={ "search-bar d-non d-flex justify-content-center"}>
-        <InputGroup className="mb-3 " style={{ width: '80%' }}>
+         <div className={ "search-ba d-non d-flex justify-content-center"}>
+        <InputGroup className="mb-3 " style={{ width: isSmallScreen ? '98%' : '80%' }}>
           <Form.Control
-            placeholder="write your address here!"
+            placeholder="write something here!"
             aria-describedby="search"
             id="search"
             className="border border-success"

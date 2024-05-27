@@ -95,7 +95,7 @@ const Map = () => {
   console.log('error', error)
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', overflow:"hidden" }}>
       {!error ? (
         <Form className="searchP">
           <iframe
@@ -124,9 +124,9 @@ const Map = () => {
           className={!isSmallScreen ? `bgg  rounded p-4 ` : 'bgg pt-2'}
           style={{ width: '100%', margin: 'auto' }}
         >
-          <Row className='bg-white py-2 rounded'>
-          <Col md={6} >
-            <Carousel>
+          <Row className='bg-white py- rounded'>
+          <Col md={6} className='border border-danger' >
+            <Carousel >
               {data.map((item, index) => (
                 <Carousel.Item key={index}>
                   <div style={{ width: '100%', height: '390px' }}>
@@ -151,6 +151,7 @@ const Map = () => {
                     )}
                   </Carousel.Caption>
                 </Carousel.Item>
+                
               ))}
             </Carousel>
           </Col>
