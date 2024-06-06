@@ -23,6 +23,8 @@ function SignIn() {
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -59,6 +61,19 @@ function SignIn() {
     }
   });
 
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 1200);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -81,7 +96,7 @@ function SignIn() {
           }}
         />
         <div style={{ position: 'absolute', left: 0, width: '100vw', top: 20 }}>
-          <Row >
+          <Row>
             <Col
               md={6}
               className="d-flex mb-3  justify-content-center  flex-column align-items-center"
@@ -102,8 +117,9 @@ function SignIn() {
             </Col>
             <Col
               md={6}
-              className="d-flex  justify-content-center  flex-column align-items-center"
+              
             >
+              <div className="d-flex  justify-content-center  flex-column align-items-center m-auto" style={{width:"95%"}}>
               <Button
                 variant="success"
                 className="bg-success opacity-75 p-1"
@@ -112,54 +128,67 @@ function SignIn() {
                 <HttpsIcon />
               </Button>
               <strong className="mb-2">Sign In</strong>
-              <Form
-                onSubmit={handleLogin}
-                className="bg-light px-5 border d-flex flex-column justify-content-center rounded-4"
-                style={{ height: '50vh' }}
+              <div
+                className="bg-light p-3 border d-flex flex-column justify-content-center rounded-4"
+                style={{ height: '50vh', minWidth: !isSmallScreen ?' 60%' : "100%"  }}
               >
-                <InputGroup className="my- ho border border-secondary  ">
-                  <InputGroup.Text className="titl ">Email</InputGroup.Text>
-                  <Form.Control
-                    className=" inpu "
-                    type="text"
-                    required
-                    placeholder="write here"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl ">Password</InputGroup.Text>
-                  <Form.Control
-                    className=" inpu "
-                    type="password"
-                    required
-                    placeholder="write here"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </InputGroup>
+                <Form onSubmit={handleLogin}>
+                  <div>
+                    <strong>Email *</strong>
+                    <InputGroup className="   ">
+                      {/* <InputGroup.Text className=" ">Email</InputGroup.Text> */}
+                      <Form.Control
+                       className=' '
+                        type="text"
+                        required
+                        placeholder="write here"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </InputGroup>
+                  </div>
+                  <div className="my-3   ">
+                    <strong>Password *</strong>
+                    <InputGroup>
+                      <Form.Control className=' '
+                        type="password"
+                        required
+                        placeholder="write here"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </InputGroup>
+                  </div>
 
-                <div className="d-grid my-3 fw-bold" style={{ position: 'relative' }}>
-                  <Button
-                    variant="success"
-                    className="bg-success fw-bold border rounded-5"
-                    type="submit"
+                  <div
+                    className="d-grid my-3 fw-bold"
+                    style={{ position: 'relative' }}
                   >
-                    Login
-                  </Button>
-                  {loading && (
-                    <div style={{ position: 'absolute', top: 2, left: '45%' }}>
-                      {' '}
-                      <Spinners />
-                    </div>
-                  )}
-                </div>
-              </Form>
+                    <Button
+                      variant="success"
+                      className="bg-success fw-bold border rounded-5"
+                      type="submit"
+                    >
+                      Login
+                    </Button>
+                    {loading && (
+                      <div
+                        style={{ position: 'absolute', top: 2, left: '45%' }}
+                      >
+                        {' '}
+                        <Spinners />
+                      </div>
+                    )}
+                  </div>
+                </Form>
+              </div>
               <div className="my-3">
                 <strong>
                   {' '}
                   New customer ? <Link to="/signup"> sign up here</Link>
                 </strong>
               </div>
+              </div>
+             
+              
             </Col>
           </Row>
         </div>

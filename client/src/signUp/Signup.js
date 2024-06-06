@@ -28,7 +28,7 @@ function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.user);
-  
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -79,6 +79,18 @@ function SignUp() {
     }
   });
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 1200);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -101,7 +113,7 @@ function SignUp() {
           }}
         />
         <div style={{ position: 'absolute', left: 0, width: '100vw', top: 10 }}>
-          <Row >
+          <Row>
             <Col
               md={6}
               className="d-flex mb-3  justify-content-center  flex-column align-items-center"
@@ -120,11 +132,12 @@ function SignUp() {
                 </p>
               </div>
             </Col>
-            <Col
-              md={6}
-              className="d-flex  justify-content-center  flex-column align-items-center"
-            >
-              <Button
+            <Col md={6}>
+              <div
+                className=" d-flex  justify-content-center  flex-column align-items-center m-auto"
+                style={{ width: '95%' }}
+              >
+                <Button
                 variant="success"
                 className="bg-success opacity-75 p-1"
                 style={{ borderRadius: '50%' }}
@@ -132,110 +145,141 @@ function SignUp() {
                 <HttpsIcon />
               </Button>
               <strong className="mb-2">Sign Up</strong>
-              <Form
-                onSubmit={handleSignUp}
-                className="bg-light p-2 border rounded-4"
-              >
-                <InputGroup className="my-3 ho border border-secondary ">
-                  <InputGroup.Text className="titl">Surname</InputGroup.Text>
-                  <Form.Control
-                    className="inpu"
-                    type="text"
-                    required
-                    onChange={(e) => setSurname(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl">First-Name</InputGroup.Text>
-                  <Form.Control
-                    className="inpu "
-                    type="text"
-                    required
-                    onChange={(e) => setFirstName(e.target.value)}
-                    placeHolders
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl ">State</InputGroup.Text>
-                  <Form.Control
-                    className="inpu "
-                    type="text"
-                    required
-                    onChange={(e) => setState(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl">Country</InputGroup.Text>
-                  <Form.Control
-                    className="inpu "
-                    type="text"
-                    required
-                    onChange={(e) => setCountry(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl">Age</InputGroup.Text>
-                  <Form.Control
-                    className="inpu "
-                    type="Date"
-                    required
-                    onChange={(e) => setAge(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary ">
-                  <InputGroup.Text className="titl">Email</InputGroup.Text>
-                  <Form.Control
-                    className="inpu "
-                    type="email"
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="my-3 ho border border-secondary  ">
-                  <InputGroup.Text className="titl ">Password</InputGroup.Text>
-                  <Form.Control
-                    className=" inpu "
-                    type="password"
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup className="ho border border-secondary ">
-                  <InputGroup.Text className="titl ">
-                    Comfirm Password
-                  </InputGroup.Text>
-                  <Form.Control
-                    className="inpu"
-                    type="password"
-                    required
-                    onChange={(e) => setComfirmPassword(e.target.value)}
-                  />
-                </InputGroup>
                 <div
-                  className="d-flex align-items-center justify-content-center my-3"
-                  style={{ position: 'relative' }}
+                  className=""
+                  style={{ minWidth: !isSmallScreen ? ' 60%' : '100%' }}
                 >
-                  <Button
-                    variant="success"
-                    className="bg-success border fw-bold rounded-5 px-5"
-                    type="submit"
+                  <Form
+                    onSubmit={handleSignUp}
+                    className="bg-light p-3 border rounded-4"
                   >
-                    Sign Up
-                  </Button>
-
-                  {loading && (
-                    <div style={{ position: 'absolute', top: 2, left: '45%' }}>
-                      {' '}
-                      <Spinners />
+                    <div className="my-2">
+                      <strong>First-Name *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="text"
+                          required
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder='First name '
+                        />
+                      </InputGroup>
                     </div>
-                  )}
+                    <div className="mb-2">
+                      <strong>Last-Name *</strong>
+                      <InputGroup className="">
+                        <Form.Control
+                          type="text"
+                          required
+                          onChange={(e) => setSurname(e.target.value)}
+                          placeholder='Last name '
+
+                        />
+                      </InputGroup>
+                    </div>
+
+                    <div className="mb-2">
+                      <strong>State *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="text"
+                          required
+                          onChange={(e) => setState(e.target.value)}
+                          placeholder='state '
+
+                        />
+                      </InputGroup>
+                    </div>
+                    <div className="mb-2">
+                      <strong>Country *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="text"
+                          required
+                          onChange={(e) => setCountry(e.target.value)}
+                          placeholder='country'
+
+                        />
+                      </InputGroup>
+                    </div>
+                    <div className="mb-2">
+                      <strong>Age *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="Date"
+                          required
+                          onChange={(e) => setAge(e.target.value)}
+                          
+
+                        />
+                      </InputGroup>
+                    </div>
+                    <div className="mb-2">
+                      <strong>Email *</strong>
+                      <InputGroup className=" ">
+                        <Form.Control
+                          type="email"
+                          required
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder='Email'
+
+                        />
+                      </InputGroup>
+                    </div>
+                    <div className="mb-2">
+                      <strong>Password *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="password"
+                          required
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder='Password'
+
+                        />
+                      </InputGroup>
+                    </div>
+                    <div className="mb-2">
+                      <strong>Comfirm Password *</strong>
+                      <InputGroup>
+                        <Form.Control
+                          type="password"
+                          required
+                          onChange={(e) => setComfirmPassword(e.target.value)}
+                          placeholder=' Password'
+
+                        />
+                      </InputGroup>
+                    </div>
+
+                    <div
+                      className="d-flex align-items-center justify-content-center my-3"
+                      style={{ position: 'relative' }}
+                    >
+                      <Button
+                        variant="success"
+                        className="bg-success border fw-bold rounded-5 px-5"
+                        type="submit"
+                      >
+                        Sign Up
+                      </Button>
+
+                      {loading && (
+                        <div
+                          style={{ position: 'absolute', top: 2, left: '45%' }}
+                        >
+                          {' '}
+                          <Spinners />
+                        </div>
+                      )}
+                    </div>
+                  </Form>
+                  
                 </div>
-              </Form>
-              <div className="my-3">
-                <strong>
-                  {' '}
-                  Have an account ? <Link to="/signin"> sign in here</Link>
-                </strong>
+                <div className="my-3">
+                    <strong>
+                      {' '}
+                      Have an account ? <Link to="/signin"> sign in here</Link>
+                    </strong>
+                  </div>
               </div>
             </Col>
           </Row>

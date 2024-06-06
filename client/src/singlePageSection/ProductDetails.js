@@ -31,7 +31,7 @@ function ProductDetails(props) {
       dispatch(addCart({ ...cart, quantity }));
       toast.success('Added', {
         autoClose: 300,
-        theme: 'colored',
+        theme: 'light',
         toastId: 'unique-toast-id',
       });
     } else if (cartItems.length >= 1 && cart?.userId === cartItems[0]?.userId) {
@@ -45,7 +45,7 @@ function ProductDetails(props) {
       });
     } else {
       setError(
-        'You can only add items from same store. this message is showing because you already have an existing item from another store in your cart, it is to enhance the delivery time. Ordering items from different stores at a time will slow down your delivery process. you can make another order after the current order or better still you can clear the cart to begin a new order'
+        'You can only add items from one store at a time. this message is showing because you already have an item from another store in your cart. it is to enhance the delivery time. you can make another order after the current order or better still, you can clear the cart to begin a new order'
       );
     }
   };

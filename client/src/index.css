@@ -9,9 +9,9 @@ body {
 
 .searchbar {
   position: absolute !important;
-  top:40px !important;
+  top: 40px !important;
   width: 85% !important;
-  left:50% !important;
+  left: 50% !important;
 
   transform: translate(-50%, -50%);
   justify-content: center !important;
@@ -19,74 +19,75 @@ body {
   background-color: rgba(255, 255, 255, 0.083) !important;
 }
 
-.searchP{
+.searchP {
   position: relative;
 }
 
-
-.navbarIcon{
-background-color: white !important;
-color: black !important;
-border-radius: 5px !important;
-
-
+.navbarIcon {
+  background-color: white !important;
+  color: black !important;
+  border-radius: 5px !important;
 }
-.navposition{
+.navposition {
   position: fixed !important;
   top: 0px !important;
 }
 
-
-.error{
-  background-color: rgb(225, 80, 80)  !important;
-  color:white !important;
+.error {
+  background-color: rgb(225, 80, 80) !important;
+  color: white !important;
   border-radius: 10px !important;
- 
 }
 
-.ship{
+.ship {
   background-color: rgba(255, 255, 255, 0.302) !important;
   position: absolute !important;
-  top:0 !important;
-  left:0 !important;
+  top: 0 !important;
+  left: 0 !important;
   display: flex !important;
   height: 100vh !important;
   align-items: center !important;
   justify-content: center !important;
-  width:100% !important;
+  width: 100% !important;
   z-index: 99;
-  
-
-  
 }
 
-.titl{
-  border-radius:15px 0px 0px 15px !important;
-  
-  
+.titl {
+  border-radius: 15px 0px 0px 15px !important;
 }
-.inpu{
-  border-radius:0px 15px 15px 0px !important;
-  
-  
+.inpu {
+  border-radius: 0px 15px 15px 0px !important;
 }
- .ho{
-  border-radius: 15px  !important;
- }
+.ho {
+  border-radius: 15px !important;
+}
 
- .bgg{
+.bgg {
   background-color: rgb(233, 232, 232) !important;
- }
+}
 
- .coro{
+.coro {
   background-color: rgba(128, 128, 128, 0.607) !important;
- }
+}
 
- .text-outline {
-  color: white !important; 
-  text-shadow: 
-    -1px -1px 0 black,
-    1px -1px 0 black,
-    -1px 1px 0 black,
-    1px 1px 0 black !important; 
+.text-outline {
+  color: white !important;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black !important;
+}
+
+.picRound {
+  border-radius: 5px 0px 0px 5px !important;
+}
+
+.sponsoredfont {
+  font-size: 10px !important;
+}
+
+
+.locationBg{
+  background-color: rgba(255, 255, 255, 0.721);
+  color:red;
+  z-index: 9999;
+  min-height: 80px;
 }

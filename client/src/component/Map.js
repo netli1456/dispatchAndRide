@@ -8,33 +8,43 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useNavigate } from 'react-router-dom';
 
 const Map = () => {
-
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
-  const [error, setError] =useState('');
+  const [error, setError] = useState('');
+
+  // useEffect(() => {
+  //   if ('geolocation' in navigator) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const { latitude, longitude } = position.coords;
+
+  //         const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
+
+  //         document.getElementById('map-iframe').src = mapUrl;
+  //         console.log('mapUrl', mapUrl);
+  //       },
+
+  //       (error) => {
+  //         setError('Error getting user location', error);
+  //       }
+  //     );
+  //   } else {
+  //     setError('Geolocation is not supported by this browser.');
+  //   }
+  // }, []);
+
 
   useEffect(() => {
-    
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-
-            const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
-
-            document.getElementById('map-iframe').src = mapUrl;
-            console.log('mapUrl', mapUrl)
-          },
-
-          (error) => {
-            setError("Error getting user location", error);
-          }
-        );
-      } else {
-        setError('Geolocation is not supported by this browser.');
-      }
-    
+    const latitude = 6.5244; // Latitude for Lagos
+    const longitude = 3.3792; // Longitude for Lagos
+  
+    const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
+  
+   setError(  mapUrl);
+    // setError(mapUrl)
   }, []);
+
+
 
   const data = [
     {
@@ -47,7 +57,7 @@ const Map = () => {
       title: 'Fast Delivery!',
       desc: ' we prioritize speed as much as we do taste!',
     },
-    
+
     {
       img: '/images/3.jpeg',
       title: 'Join Our Happy Family Today!',
@@ -92,18 +102,18 @@ const Map = () => {
     };
   }, []);
 
-  console.log('error', error)
+  console.log('error', );
 
   return (
-    <div style={{ width: '100%', overflow:"hidden" }}>
-      {!error ? (
+    <div style={{ width: '100%', overflow: 'hidden' }}>
+      {error ? (
         <Form className="searchP">
           <iframe
             width="100%"
             height="300"
             title="Google Map Embed"
             id="map-iframe"
-            src=""
+            src={error}
             style={{ border: '0' }}
             allowFullScreen=""
             loading="lazy"
@@ -115,62 +125,72 @@ const Map = () => {
         </Form>
       ) : (
         <div>
-        {<div className='d-flex gap-4 align-items-center px-3 py-1' style={{fontSize:"10px"}}>
-        <span>powered by META</span> 
-        <span>BDC approved</span> 
-        <span>logistics</span> 
-       </div>}
-        <div
-          className={!isSmallScreen ? `bgg  rounded p-4 ` : 'bgg pt-2'}
-          style={{ width: '100%', margin: 'auto' }}
-        >
-          <Row className='bg-white py- rounded'>
-          <Col md={6} className='border border-danger' >
-            <Carousel >
-              {data.map((item, index) => (
-                <Carousel.Item key={index}>
-                  <div style={{ width: '100%', height: '390px' }}>
-                    <img
-                      src={item?.img}
-                      alt=""
-                      style={{ width: '100%', height: '390px', objectFit: '' }}
-                      className="rounded"
-                    />
-                  </div>
-                  <Carousel.Caption>
-                    <h3 className="text-outline">{item?.title}</h3>
-                    <p className="text-center text-outline">{item?.desc}.</p>
-                    {isSmallScreen && (
-                      <Button
-                        variant="success"
-                        onClick={() => navigate('/search')}
-                        
-                      >
-                        Order Now
-                      </Button>
-                    )}
-                  </Carousel.Caption>
-                </Carousel.Item>
-                
-              ))}
-            </Carousel>
-          </Col>
-          <Col
-            md={6}
-            className=" d-none d-md-flex justify-content-center flex-column align-items-center"
+          {
+            <div
+              className="d-flex gap-4 align-items-center px-3 py-1"
+              style={{ fontSize: '77px' }}
+            >
+              <span className='sponsoredfont'>powered by META</span>
+              <span className='sponsoredfont'>BDC approved</span>
+              <span className='sponsoredfont'>logistics</span>
+            </div>
+          }
+          <div
+            className={!isSmallScreen ? `bgg  rounded p-4 ` : 'bgg pt-2'}
+            style={{ width: '100%', margin: 'auto' }}
           >
-            <h1 className="text-center mb-4">Discover Delicious Deals</h1>
-            <p className="text-center">
-              Welcome to M-bite food app! Indulge your cravings with our
-              mouthwatering dishes while enjoying amazing discounts. Explore a
-              world of flavors right at your fingertips.
-            </p>
-            <Button variant="primary" className="mt-3">
-              Order Now
-            </Button>
-          </Col>
-          </Row>
-        </div>
+            <Row className="bg-white rounded"> 
+              <Col md={6} className="rounded p-0">
+                <Carousel>
+                  {data.map((item, index) => (
+                    <Carousel.Item key={index}>
+                      <div style={{ width: '100%', height: '390px' }} className=''>
+                        <img
+                          src={item?.img}
+                          alt=""
+                          style={{
+                            width: '100%',
+                            height: '390px',
+                            objectFit: 'cover',
+                           
+                          }}
+                          className="picRound"
+                        />
+                      </div>
+                      <Carousel.Caption>
+                        <h3 className="text-outline">{item?.title}</h3>
+                        <p className="text-center text-outline">
+                          {item?.desc}.
+                        </p>
+                        {isSmallScreen && (
+                          <Button
+                            variant="success"
+                            onClick={() => navigate('/search')}
+                          >
+                            Order Now
+                          </Button>
+                        )}
+                      </Carousel.Caption>
+                    </Carousel.Item>
+                  ))}
+                </Carousel>
+              </Col>
+              <Col
+                md={6}
+                className=" d-none d-md-flex justify-content-center flex-column align-items-center"
+              >
+                <h1 className="text-center mb-4">Discover Delicious Deals</h1>
+                <p className="text-center">
+                  Welcome to M-bite food app! Indulge your cravings with our
+                  mouthwatering dishes while enjoying amazing discounts. Explore
+                  a world of flavors right at your fingertips.
+                </p>
+                <Button variant="primary" className="mt-3">
+                  Order Now
+                </Button>
+              </Col>
+            </Row>
+          </div>
         </div>
       )}
     </div>

@@ -94,11 +94,14 @@ function Product() {
       </div>
 
       {loadings ? (
-        <div style={{ height: '80vh', overflow: 'hidden', width:"95vw", margin:"auto" }}>
+        <div style={{ height: '70vh', overflow: 'hidden', width:"95vw", margin:"auto" }}>
           <LoadingBox />
         </div>
       ) : (
         <div style={{ overflowX: 'hidden' }}>
+
+
+
           <div>
             <div
               style={{

@@ -40,7 +40,7 @@ span{font-size: 13px;}
   }
 
   .small{
-    width:80vw !important;
+    width:80% !important;
     margin: auto !important;
   }
 
@@ -77,3 +77,7 @@ span{font-size: 13px;}
  .kitchhovering .kitchhov:hover{
   transform: scale(1.03) !important;
  }
+
+
+
+

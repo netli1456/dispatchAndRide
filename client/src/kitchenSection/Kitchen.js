@@ -198,6 +198,7 @@ function Kitchen() {
                     top: -10,
                     height: 'calc(100vh -220px',
                     backgroundColor: 'lightgrey',
+                    width: isSmallScreen ? "100%" : ""
                  
                   }}
                 >
@@ -220,9 +221,9 @@ function Kitchen() {
                           {loading ? (
                             <div>
                               <Skeleton />
-                              <Skeleton />
+                             
                               <Skeleton width="60%" />
-                              <Skeleton />
+                              
                             </div>
                           ) : (
                             <div className="search-results1 rounded " >
@@ -274,18 +275,17 @@ function Kitchen() {
                         </ListGroup.Item>
                         {loading ? (
                           <div>
-                            <Skeleton height={200} />
-                            <Skeleton />
-                            <Skeleton width="60%" />
-                            <Skeleton />
+                            <Skeleton height={200} /> 
                           </div>
                         ) : (
                           <div
                             className={
                               isSmallScreen && !openSort
-                                ? 'd-none d-md-flex flex-column'
+                                ? 'd-none  flex-column'
                                 : 'd-flex flex-column'
+                               
                             }
+                           
                           >
                             <ListGroup.Item c>
                               <strong>Price Range: </strong>

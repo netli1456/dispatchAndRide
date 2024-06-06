@@ -125,19 +125,19 @@ export const getRandomKitchens = async (req, res) => {
   try {
     const { query, page = 1, pageSize = 10 } = req.query;
     const aggregationPipeline = [];
-    aggregationPipeline.push([
+    aggregationPipeline.push(
       {
         $match: {
           $or: [
-            { desc: new RegExp(query, 'i') },
-            { category: new RegExp(query, 'i') },
-            { type: new RegExp(query, 'i') },
-            { name: new RegExp(query, 'i') },
+            { desc: { $regex: query, $options: 'i' } },
+            { category: { $regex: query, $options: 'i' } },
+            { type: { $regex: query, $options: 'i' } },
+            { name: { $regex: query, $options: 'i' } },
           ],
         },
       },
       { $sample: { size: parseInt(pageSize) } },
-    ]);
+    );
     const itemsToSkip = (page - 1) * pageSize;
     aggregationPipeline.push({ $skip: itemsToSkip });
 
@@ -245,38 +245,40 @@ export const getUserReviews = async (req, res) => {
     const { id } = req.params;
 
     const reviews = [];
-    console.log('reviews', reviews)
+    console.log('reviews', reviews);
 
     const review = await Review.find({ userId: id });
 
     if (!review) {
       return res.status(500).json({ message: 'no reviews' });
     }
-if(review.length > 0) {
-    for (const reviewws of review) {
-      const reviewerData = await User.findById(reviewws.reviewerId);
-      const reviewss = {
-        reviewerName: reviewerData.name,
-        reviewerImg: reviewerData.img,
-        msg: reviewws.msg,
-        reviewerId: reviewws.reviewerId,
-        _id: reviewws._id,
-        positive: reviewws.positive,
-      };
-      reviews.push(reviewss);
+    if (review.length > 0) {
+      for (const reviewws of review) {
+        const reviewerData = await User.findById(reviewws.reviewerId);
+        const reviewss = {
+          reviewerName: reviewerData.name,
+          reviewerImg: reviewerData.img,
+          msg: reviewws.msg,
+          reviewerId: reviewws.reviewerId,
+          _id: reviewws._id,
+          positive: reviewws.positive,
+        };
+        reviews.push(reviewss);
+      }
+
+      const positiveReviews = reviews
+        .filter((rev) => rev.positive === true)
+        .slice(0, 2);
+
+      const negativeReviews = reviews
+        .filter((rev) => rev.positive === false)
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, 1);
+
+      const allReviews = [...positiveReviews, ...negativeReviews];
+
+      return res.status(200).json(allReviews);
     }
-
-    const positiveReviews = reviews
-      .filter((rev) => rev.positive === true).slice(0, 2)
-      
-    const negativeReviews = reviews
-      .filter((rev) => rev.positive === false).sort((a, b) => b.createdAt - a.createdAt).slice(0, 1)
-      
-
-    const allReviews = [...positiveReviews, ...negativeReviews];
-
-    return res.status(200).json(allReviews);
-  }
   } catch (error) {
     res.status(500).json({ message: error.message });
     console.log(error);
