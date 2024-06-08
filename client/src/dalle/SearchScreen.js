@@ -86,7 +86,27 @@ function SearchScreen() {
         )}
       </div>
       <Container className='mb-5'>
-        {products.length > 0 ? (
+        {query && products.length === 0 ?
+        
+         (
+          <div className="my-5">
+            <div className=" d-flex justify-content-center align-items-center flex-column">
+              <p className="fw-bold " style={{ height: '15vh' }}>
+                <strong className="border-bottom fs-5  border-primary text-danger">
+                  No kitchen found.
+                </strong>{' '}
+              </p>
+
+              <YoutubeSearchedForIcon
+                style={{ width: '100px', height: '100px' }}
+                className="text-success "
+              />
+              <Button variant="light" className=" text-success fs-3 fw-bold">
+                Show All Stores
+              </Button>
+            </div>
+          </div>
+        ):
           <Row className="my-3">
             <Col md={isSmallScreen ? 12 : 3}>
               <ListGroup variant="flush">
@@ -232,25 +252,7 @@ function SearchScreen() {
               </ResponsiveMasonry>
             </Col>
           </Row>
-        ) : (
-          <div className="mb-5">
-            <div className=" d-flex justify-content-center align-items-center flex-column">
-              <p className="fw-bold " style={{ height: '15vh' }}>
-                <strong className="border-bottom fs-5  border-primary text-danger">
-                  Sorry, this address is out of our delivery zone.
-                </strong>{' '}
-              </p>
-
-              <YoutubeSearchedForIcon
-                style={{ width: '100px', height: '100px' }}
-                className="text-success "
-              />
-              <Button variant="light" className=" text-success fs-3 fw-bold">
-                Show All Stores
-              </Button>
-            </div>
-          </div>
-        )}
+         }
       </Container>
 
       {products.length > 0 && (

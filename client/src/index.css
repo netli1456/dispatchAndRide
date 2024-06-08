@@ -91,3 +91,5 @@ body {
   z-index: 9999;
   min-height: 80px;
 }
+
+.cursors{cursor:  pointer !important;}

@@ -139,4 +139,21 @@ p {
   transform: scale(1.03);
 }
 
+.location{
+  background: white;
+  height: 100%;
+}
 
+
+.input-no-border {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 2px solid #ccc !important; /* You can customize the bottom border color and thickness */
+  border-radius: 0 !important; /* To make sure there is no border radius */
+  box-shadow: none !important; /* To remove any default box shadow */
+}
+
+.input-group-no-border {
+  border: none !important;
+}

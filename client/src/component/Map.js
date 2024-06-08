@@ -7,11 +7,11 @@ import Button from 'react-bootstrap/esm/Button';
 import Carousel from 'react-bootstrap/Carousel';
 import { useNavigate } from 'react-router-dom';
 
-const Map = () => {
+const Map = (props) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState('');
-
+ const {setOpenLocation}=props
   // useEffect(() => {
   //   if ('geolocation' in navigator) {
   //     navigator.geolocation.getCurrentPosition(
@@ -120,7 +120,7 @@ const Map = () => {
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
           <div className="mb-3 searchbar">
-            <SearchBar bg={true} />
+            <SearchBar setOpenLocation={setOpenLocation} bg={true} />
           </div>
         </Form>
       ) : (

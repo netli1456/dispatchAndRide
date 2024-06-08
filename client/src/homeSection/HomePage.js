@@ -16,6 +16,7 @@ import { api } from '../utils/apiConfig';
 
 import { Box, Skeleton } from '@mui/material';
 import NavSearch from '../navSection/NavSearch';
+import LocationPage from '../dalle/LocationPage';
 
 function HomePage(props) {
   const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ function HomePage(props) {
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
+  const [openLocation, setOpenLocation] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +58,7 @@ function HomePage(props) {
         setCarouselData(userResponse.data);
       } catch (error) {
         setLoading(false);
-        console.log('Error fetching data:', error);
+        console.log('Error fetching data');
       }
     };
 
@@ -84,12 +85,11 @@ function HomePage(props) {
     };
   }, []);
 
-
   return (
-    <div style={{width:"100%"}}>
-     {!isSmallScreen ?  <Navbar /> : <NavSearch/>}
-    
-      <Map />
+    <div style={{ width: '100%', position:openLocation ? "relative" : '', height:openLocation ? "100vh" : '',  overflow: openLocation ? 'hidden' : ''}}>
+      {!isSmallScreen ? <Navbar /> : <NavSearch />}
+
+      <Map setOpenLocation={setOpenLocation} />
       <div className="my-5 d-flex justify-content-center">
         {' '}
         <h3 className="border-bottom border-secondary">
@@ -124,7 +124,7 @@ function HomePage(props) {
               <Cards loading={loading} item={item} />
             ) : (
               <div>
-                <Skeleton variant="rectangular" width={"100%"} height={118} />
+                <Skeleton variant="rectangular" width={'100%'} height={118} />
                 <Box sx={{ pt: 0.5 }}>
                   <Skeleton />
                   <Skeleton width="60%" />
@@ -161,6 +161,14 @@ function HomePage(props) {
       <div className="rowParent2   border-bottom border-secondary">
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
+
+      {openLocation && (
+        <div style={{width:"100%", position:"absolute", top:0, height:"100vh", }} className=' d-flex justify-content-center align-items-center locationBg'>
+          
+          <LocationPage setOpenLocation={setOpenLocation}/>
+          </div>
+        
+      )}
       <div className=" p-2">
         <Footer />
       </div>
