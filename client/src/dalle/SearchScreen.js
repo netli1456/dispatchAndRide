@@ -92,17 +92,18 @@ function SearchScreen() {
     <div>
       
       <div className=''
-        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9 }}
+        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9,  }}
       >
         {' '}
         <SearchBar />
       </div>
       {loading ? (
-        <LoadingBox />
+        <div style={{height: loading ? '50vh' : '', overflow:loading ? 'hidden' : '' }}> <LoadingBox /></div>
+       
       ) : (
         <Container className="mb-5">
           <Row className="my-3">
-            <Col md={isSmallScreen ? 12 : 3} >
+            <Col md={isSmallScreen ? 12 : 3}>
               <ListGroup variant="flush">
                 <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
                   <strong>Sort</strong>

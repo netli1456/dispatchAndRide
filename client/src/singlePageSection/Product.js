@@ -90,9 +90,7 @@ function Product() {
 
   return (
     <div>
-      <div style={{ position: 'sticky', top: -3, zIndex: 999 }}>
-        <Navbar />{' '}
-      </div>
+      
 
       {loadings ? (
         <div style={{ height: '70vh', overflow: 'hidden', width:"95vw", margin:"auto" }}>

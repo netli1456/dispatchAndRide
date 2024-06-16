@@ -112,7 +112,7 @@ function Cart() {
 
   return (
     <div>
-      <NavSearch />
+      
       <Row className="m-3 ">
         <Card>
           <Card.Body>

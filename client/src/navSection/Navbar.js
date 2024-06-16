@@ -24,7 +24,7 @@ function Navbar(props) {
   const [open, setOpen] = useState();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { searchedLocation } = useSelector((state) => state.searching);
-  const { setOpenNow, openNow } = props;
+  const { setOpenNow, } = props;
 
   const handleLogOut = () => {
     dispatch(clearUserInfo());
@@ -49,7 +49,6 @@ function Navbar(props) {
     setOpenNow(true);
   };
 
-  console.log('location', openNow);
 
   return (
     <div className="bg-success py-2" style={{ width: '100%' ,  }}>
@@ -119,7 +118,7 @@ function Navbar(props) {
                   style={{
                     position: 'absolute',
                     top: 35,
-                    zIndex: 99,
+                    
                     right: 0,
                     minWidth: '200px',
                   }}
@@ -128,6 +127,7 @@ function Navbar(props) {
                     <Link
                       to="/profile"
                       className="text-decoration-none text-success fw-bold d-flex flex-column align-items-center px-3"
+                      onClick={()=>setOpen(false)}
                     >
                       Account
                     </Link>
