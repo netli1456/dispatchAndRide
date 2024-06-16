@@ -96,7 +96,7 @@ function HomePage(props) {
         overflow: open ? 'hidden' : '',
       }}
     >
-        <Navbar openNow={open} setOpenNow={setOpen}/>
+      <div style={{position:"sticky", width:"100%", top:0, zIndex:999999}}>  <Navbar openNow={open} setOpenNow={setOpen}/></div>
       
 
       <Map setOpen={setOpen} />

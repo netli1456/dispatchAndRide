@@ -91,13 +91,18 @@ function SearchScreen() {
   return (
     <div>
       <Navbar />
-      <SearchBar />
+      <div
+        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 999999 }}
+      >
+        {' '}
+        <SearchBar />
+      </div>
       {loading ? (
         <LoadingBox />
       ) : (
         <Container className="mb-5">
           <Row className="my-3">
-            <Col md={isSmallScreen ? 12 : 3}>
+            <Col md={isSmallScreen ? 12 : 3} >
               <ListGroup variant="flush">
                 <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
                   <strong>Sort</strong>
