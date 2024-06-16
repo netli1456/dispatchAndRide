@@ -59,7 +59,7 @@ function App() {
         </div>
       )}
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage setOpen={setOpen}/>} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/kitchen/:id" element={<Kitchen />} />

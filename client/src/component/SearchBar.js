@@ -6,25 +6,26 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-
 function SearchBar(props) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const location = useLocation();
-  
-  const {setOpen, bg}=props
+
+  const { setOpen, bg } = props;
   const { searchedLocation } = useSelector((state) => state.searching);
 
-  
-  const locationQuery = searchedLocation === undefined ? '' : searchedLocation
-  
+  const locationQuery = searchedLocation === undefined ? '' : searchedLocation;
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (location.pathname === `/riders`) {
       navigate(query ? `/riders?query=${query}` : '/riders');
     } else {
-      navigate(query ? `/search?searchedLocation=${locationQuery}&query=${query}` : '/search');
+      navigate(
+        query
+          ? `/search?searchedLocation=${locationQuery}&query=${query}`
+          : '/search'
+      );
     }
   };
 
@@ -46,16 +47,14 @@ function SearchBar(props) {
             }
             aria-describedby="search"
             id="search"
-            onChange={(e)=> setQuery( e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             className="border border-success"
-            
             readOnly={location.pathname === '/'}
-            onClick={()=> location.pathname === '/' &&  setOpen(true)}
-            
+            onClick={() => location.pathname === '/' && setOpen(true)}
           />
           <Button
             onClick={handleSearch}
-            disabled={location.pathname !== '/'  && !query}
+            disabled={location.pathname !== '/' && !query}
             variant="success"
             id="basic-addon1"
             className=" text-white fw-bold d-flex align-items-center"
@@ -77,23 +76,21 @@ function SearchBar(props) {
             placeholder="write something here!"
             aria-describedby="search"
             id="search"
-            onChange={(e)=>setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             className="border border-success"
             readOnly={location.pathname === '/'}
-            onClick={()=> location.pathname === '/' &&  setOpen(true)}
-           
+            onClick={() => location.pathname === '/' && setOpen(true)}
           />
           <Button
             onClick={handleSearch}
             variant="success"
+            disabled={location.pathname !== '/' && !query}
             className=" text-white border border-white fw-bold d-flex align-items-center"
           >
             <SearchOutlinedIcon />
           </Button>
         </InputGroup>
       </div>
-
-     
     </div>
   );
 }

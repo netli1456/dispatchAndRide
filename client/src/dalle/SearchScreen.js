@@ -90,7 +90,7 @@ function SearchScreen() {
 
   return (
     <div>
-      {/* <Navbar /> */}
+      
       <div className=''
         style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9 }}
       >

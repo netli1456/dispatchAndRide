@@ -16,11 +16,11 @@ import { api } from '../utils/apiConfig';
 
 import { Box, Skeleton } from '@mui/material';
 
-import LocationPage from '../dalle/LocationPage';
+
 
 function HomePage(props) {
   const [data, setData] = useState([]);
-  const [open, setOpen]= useState(false);
+  const { setOpen}= props;
   const [carouselData, setCarouselData] = useState([]);
   const randomNum = Math.floor(Math.random() * 500);
   const page = 'all';
@@ -89,14 +89,9 @@ function HomePage(props) {
 
   return (
     <div
-      // style={{
-      //   width: '100%',
-      //   position: open ? 'relative' : '',
-      //   height: open ? '100vh' : '',
-      //   overflow: open ? 'hidden' : '',
-      // }}
+     
     >
-      {/* <div style={{position:"sticky", width:"100%", top:0, zIndex:999999}}>  <Navbar openNow={open} setOpenNow={setOpen}/></div> */}
+      
       
 
       <Map setOpen={setOpen} />
