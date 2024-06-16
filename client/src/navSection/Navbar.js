@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
@@ -11,14 +11,20 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { clearUserInfo } from '../redux/userSlice';
 import { clearCart } from '../redux/cartSlice';
 import { clearShipping } from '../redux/shippingSlice';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Button from 'react-bootstrap/Button';
 
-function Navbar() {
+function Navbar(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { userInfo } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const [open, setOpen] = useState();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const { searchedLocation } = useSelector((state) => state.searching);
+  const { setOpenLocation, openLocation } = props;
 
   const handleLogOut = () => {
     dispatch(clearUserInfo());
@@ -27,8 +33,20 @@ function Navbar() {
     dispatch(clearUserInfo());
   };
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 1200);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
   return (
-    <div className="bg-success py-2" style={{width:"100%"}}>
+    <div className="bg-success py-2" style={{ width: '100%' }}>
       <Container className="text-white py-1 d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3 align-items-center navbarIcon px-2">
           <MenuIcon className="fs-2 fw-bold" />
@@ -36,6 +54,21 @@ function Navbar() {
             <strong className="fw-bold fs-5">M-bite</strong>
           </Link>
         </div>
+        {searchedLocation && (
+          <Button
+            onClick={() => setOpenLocation(!openLocation)}
+            variant="success"
+            className="bg-success "
+          >
+            <strong className="d-flex align-items-center gap-1 text-uppercase">
+              <LocationOnIcon />
+              {isSmallScreen && searchedLocation.length >= 8
+                ? `${searchedLocation.slice(0, 5)}..`
+                : searchedLocation}
+              <KeyboardArrowDownIcon className="fw-bold fs-5" />
+            </strong>
+          </Button>
+        )}
         <div className="d-flex align-items-center gap-3">
           <div
             onClick={() => navigate('/cart')}
@@ -52,7 +85,6 @@ function Navbar() {
             <Badge
               pill
               bg="danger"
-              
               style={{ position: 'absolute', right: -5, top: -2 }}
             >
               {cartItems?.length}
@@ -67,7 +99,10 @@ function Navbar() {
               }
               style={{ cursor: 'pointer', position: 'relative' }}
             >
-              <div className='d-flex align-items-center' onClick={()=>setOpen(!open)}>
+              <div
+                className="d-flex align-items-center"
+                onClick={() => setOpen(!open)}
+              >
                 {' '}
                 <AccountCircleIcon className="fs-2 fw-bold" />
                 <span className="d-none d-md-flex fw-bold align-items-center text-capitalize">
@@ -83,7 +118,6 @@ function Navbar() {
                     right: 0,
                     minWidth: '200px',
                   }}
-                  
                 >
                   <ListGroup.Item>
                     <Link

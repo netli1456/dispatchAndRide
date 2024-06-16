@@ -2,13 +2,13 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String,  },
-    surname:{ type: String,},
-    firstname:{ type: String, },
+    name: { type: String },
+    surname: { type: String },
+    firstname: { type: String },
     password: { type: String, required: true },
     businessName: { type: String },
     businessImg: { type: String },
-    wallet:{type:Boolean, default: false},
+    wallet: { type: Boolean, default: false },
     rating: { type: Number, default: 0 },
     verified: { type: Boolean, default: false },
     physicalAddress: { type: String },
@@ -20,12 +20,13 @@ const userSchema = new mongoose.Schema(
     timeOpen: { type: String },
     balance: { type: Number, default: 0 },
     isDispatcher: { type: Boolean, default: false },
-    age: { type: Date,  },
-    state: { type: String,},
-    country: { type: String, },
-    email: { type: String,  required: true},
-    isBusinessOwner: { type: Boolean, default: false}
-    
+    age: { type: Date },
+    state: { type: String },
+    country: { type: String },
+    email: { type: String, required: true },
+    isBusinessOwner: { type: Boolean, default: false },
+    lga: { type: String },
+    placesCanDeliverTo: { type: Array, default: [] },
   },
   { timestamps: true }
 );

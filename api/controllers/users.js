@@ -136,7 +136,7 @@ export const getRandomKitchens = async (req, res) => {
           ],
         },
       },
-      { $sample: { size: parseInt(pageSize) } },
+      { $sample: { size: parseInt(pageSize) } }
     );
     const itemsToSkip = (page - 1) * pageSize;
     aggregationPipeline.push({ $skip: itemsToSkip });
@@ -318,6 +318,150 @@ export const insertFromLocalToOnline = async (req, res) => {
   try {
     const local = await User.find();
     const online = await User.insertMany({ local });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const gettingKitchenByLocation = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (query) {
+      const RegisteredKitchens = await User.exists({
+        $or: [
+          { physicalAddress: { $regex: query, $options: 'i' } },
+          { state: { $regex: query, $options: 'i' } },
+          { lga: { $regex: query, $options: 'i' } },
+          { placesCanDeliverTo: { $regex: query, $options: 'i' } },
+        ],
+      });
+
+      RegisteredKitchens
+        ? res.status(200).json('store exist')
+        : res
+            .status(200)
+            .json('Sorry, we do not have stores in this location yet');
+    } else {
+      res.status(200).json('query is required');
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getStores = async (req, res) => {
+  try {
+    const {
+      query = '',
+      rating,
+      popularFilter,
+      page,
+      pageSize = 16,
+      searchedLocation,
+    } = req.query;
+
+    const ratingNumber = rating ? parseFloat(rating) : null;
+
+    const searchConditions = {
+      isBusinessOwner: true,
+      blocked: false,
+      suspended: false,
+    };
+
+    // const stores = await User.find({
+    //   isBusinessOwner: true,
+    //   blocked: false,
+    //   suspended: false,
+    //   $or: [
+    //     { physicalAddress: { $regex: query, $options: 'i' } },
+    //     { lga: { $regex: query, $options: 'i' } },
+    //     { state: { $regex: query, $options: 'i' } },
+    //     { placesCanDeliverTo: { $regex: query, $options: 'i' } },
+    //   ],
+    // });
+
+    if (searchedLocation) {
+      searchConditions.$or = [
+        { lga: { $regex: searchedLocation, $options: 'i' } },
+        { state: { $regex: searchedLocation, $options: 'i' } },
+        { country: { $regex: searchedLocation, $options: 'i' } },
+        { physicalAddress: { $regex: searchedLocation, $options: 'i' } },
+      ];
+    }
+    if (query) {
+      searchConditions.$or = [
+        { businessName: { $regex: query, $options: 'i' } },
+      ];
+    }
+
+    const stores = await User.find(searchConditions);
+
+    if (!stores) return;
+
+    let filteredStores = stores.map((store) => ({
+      businessName: store.businessName,
+      _id: store._id,
+      businessImg: store.businessImg,
+      verified: store.verified,
+      rating: store.rating,
+      km: store.km,
+      deliveryRate: store.deliveryRate,
+      physicalAddress: store.physicalAddress,
+      timeOpen: store.timeOpen,
+    }));
+
+    if (ratingNumber !== null && searchedLocation) {
+      searchConditions.$or[
+        { physicalAddress: { $regex: searchedLocation, $options: 'i' } },
+        { lga: { $regex: searchedLocation, $options: 'i' } },
+        { state: { $regex: searchedLocation, $options: 'i' } },
+        { country: { $regex: searchedLocation, $options: 'i' } }
+      ],
+        filteredStores.sort((a, b) => b.rating - a.rating);
+    }
+
+    if (popularFilter) {
+      const storesWithPopularProducts = [];
+      const noduplicateId = new Set();
+
+      for (const store of stores) {
+        const products = await Product.find({
+          userId: store._id.toString(),
+          $or: [
+            { type: { $regex: popularFilter, $options: 'i' } },
+            { category: { $regex: popularFilter, $options: 'i' } },
+            { name: { $regex: popularFilter, $options: 'i' } },
+            { desc: { $regex: popularFilter, $options: 'i' } },
+          ],
+        });
+
+        if (products.length > 0) {
+          const productsUserId = products.map((product) => product.userId);
+          if (store._id.toString() === productsUserId.toString()) {
+            storesWithPopularProducts.push(store);
+            noduplicateId.add(store._id.toString());
+          }
+        }
+      }
+      filteredStores = storesWithPopularProducts;
+    }
+
+    const startIndex = (page - 1) * parseInt(pageSize);
+    const endIndex = startIndex + parseInt(pageSize);
+
+    const paginatedStores = filteredStores.slice(startIndex, endIndex);
+
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    };
+
+    shuffleArray(paginatedStores);
+
+    res.status(200).json(paginatedStores);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

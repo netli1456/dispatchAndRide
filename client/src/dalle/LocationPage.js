@@ -1,21 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Skeleton } from '@mui/material';
 import ListGroup from 'react-bootstrap/ListGroup';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   MapContainer,
   TileLayer,
   Marker,
   Popup,
-  useMap,
   useMapEvents,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -23,6 +22,9 @@ import L from 'leaflet';
 import Button from 'react-bootstrap/esm/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { api } from '../utils/apiConfig';
+import { useDispatch } from 'react-redux';
+import { searchAddress } from '../redux/searchSlice';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -40,8 +42,12 @@ function LocationPage(props) {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mapCenter, setMapCenter] = useState([6.5244, 3.3792]);
-  const [setZoom] = useState(13);
+  const [zoom, setZoom] = useState(13);
   const mapRef = useRef(null);
+  const [zoomMapdata, setZoomMapData] = useState('');
+  const [exist, setExist] = useState('');
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -58,14 +64,30 @@ function LocationPage(props) {
   const handleInputChange = async (e) => {
     const value = e.target.value;
     setQuery(value);
-
+    setExist('');
     if (value?.length > 2) {
       setLoading(true);
       try {
+        const normalizedQuery = value.toLowerCase();
         const response = await axios.get(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${value}`
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            normalizedQuery
+          )}`
         );
-        setSuggestions(response.data);
+        const formattedSuggestions = response.data.map((suggestion) => {
+          const addressParts = suggestion.display_name.split(',');
+          const relevantParts = addressParts
+            .slice(-3)
+            .map((part) => part.trim())
+            .join(', ');
+          return {
+            ...suggestion,
+            display_name: relevantParts,
+          };
+        });
+
+        setSuggestions(formattedSuggestions);
+
         setLoading(false);
       } catch (error) {
         if (error.response && error.response.status === 429) {
@@ -84,24 +106,47 @@ function LocationPage(props) {
         setLoading(false);
       }
     } else {
-      setSuggestions('');
+      setSuggestions([]);
     }
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    setQuery(suggestion.display_name);
-    setSuggestions([]);
-    const lat = parseFloat(suggestion.lat);
-    const lon = parseFloat(suggestion.lon);
+  const handleSuggestionClick = async (suggestion) => {
+    const display_name = suggestion?.display_name || query;
+    const lat = parseFloat(suggestion?.lat);
+    const lon = parseFloat(suggestion?.lon);
 
-    setZoom(15);
-    if (mapRef.current) {
-      mapRef.current.setView([lat, lon], 15);
+    if (display_name) {
+      setQuery(display_name);
+      setSuggestions([]);
+      
+      if (!isNaN(lat) && !isNaN(lon)) {
+        setMapCenter([lat, lon]);
+        setZoom(15);
+        if (mapRef.current) {
+          mapRef.current.setView([lat, lon], 15);
+        }
+      }
+
+      try {
+        const storeExist = await axios.get(
+          `${api}/api/users/location?query=${display_name}`
+        );
+
+        
+        if (storeExist.data === 'store exist') {
+          dispatch(searchAddress(display_name ));
+          navigate(
+            `/search?searchedLocation=${display_name}&query=${display_name}`
+          );
+          setExist(storeExist.data);
+        } else {
+          setExist(storeExist.data);
+        }
+      } catch (error) {
+        console.error('Error checking store existence:', error);
+      }
     }
-    // navigate(`/search?query=${query}`);
   };
-
-  const [zoomMapdata, setZoomMapData] = useState('');
 
   const MapEvents = () => {
     const map = useMapEvents({
@@ -117,6 +162,7 @@ function LocationPage(props) {
           .then((response) => {
             setZoomMapData(response.data.display_name);
             setMapCenter([lat, lon]);
+            setExist('');
           })
           .catch((error) => {
             console.error('Error fetching location name:', error);
@@ -125,6 +171,13 @@ function LocationPage(props) {
     });
 
     return null;
+  };
+
+  const handleClearQuery = () => {
+    setQuery('');
+    setExist('');
+    setSuggestions([]);
+    setZoomMapData('');
   };
 
   return (
@@ -159,7 +212,12 @@ function LocationPage(props) {
               className="input-no-border"
               style={{ maxWidth: '80%' }}
             />
-            {query?.length > 0 && <CloseIcon  onClick={()=>setQuery('')} className="text-secondary cursors" />}
+            {query?.length > 0 && (
+              <CloseIcon
+                onClick={handleClearQuery}
+                className="text-secondary cursors"
+              />
+            )}
           </InputGroup>
 
           <div>
@@ -175,27 +233,56 @@ function LocationPage(props) {
                 </span>
               )}
 
-              {suggestions?.length > 0 && (
+              {suggestions?.length > 0 ? (
                 <div style={{ width: '80%', margin: 'auto' }}>
-                  {suggestions.map((suggestion) => (
+                  {suggestions?.map((suggestion) => (
                     <ListGroup.Item
                       key={suggestion.place_id}
                       onClick={() => handleSuggestionClick(suggestion)}
                       style={{ cursor: 'pointer' }}
                     >
-                      {suggestion.display_name}
+                      {suggestion?.display_name}
                     </ListGroup.Item>
                   ))}
+                </div>
+              ) : (
+                <div className="d-flex flex-column justify-content-center">
+                  {exist?.data !== 'store exist' && (
+                    <span
+                      style={{ width: 'fit-content', margin: 'auto' }}
+                      className="text-danger fw-bold"
+                    >
+                      {exist}
+                    </span>
+                  )}
+                  {query?.length > 2 &&
+                    !loading &&
+                    suggestions?.length === 0 && (
+                      <Button
+                        variant="light bg-success border border-grey"
+                        style={{ width: 'fit-content', margin: 'auto' }}
+                        className="fw-bold my-3 text-white"
+                        onClick={() => handleSuggestionClick()}
+                      >
+                        <SearchIcon /> Search Location
+                      </Button>
+                    )}
                 </div>
               )}
             </ListGroup>
           </div>
         </Col>
         <Col md={6}>
+          <div
+            style={{ width: '100%' }}
+            className="text-success d-flex justify-content-center fs-4 fw-bold mb-3"
+          >
+            Use map
+          </div>
           <div style={{ height: '70%' }} className="">
             <MapContainer
               center={mapCenter}
-              zoom={13}
+              zoom={zoom}
               style={{ height: '95%', width: '90%', margin: 'auto' }}
               whenCreated={(mapInstance) => {
                 mapRef.current = mapInstance;
@@ -218,7 +305,10 @@ function LocationPage(props) {
                 {zoomMapdata}
               </span>
               <Button
-                onClick={() => setQuery(zoomMapdata)}
+                onClick={() => {
+                  setQuery(zoomMapdata);
+                  handleSuggestionClick();
+                }}
                 variant="light"
                 className="fw-bold mx-3 bg-success text-white"
               >

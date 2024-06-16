@@ -86,8 +86,16 @@ function HomePage(props) {
   }, []);
 
   return (
-    <div style={{ width: '100%', position:openLocation ? "relative" : '', height:openLocation ? "100vh" : '',  overflow: openLocation ? 'hidden' : ''}}>
-      {!isSmallScreen ? <Navbar /> : <NavSearch />}
+    <div
+      style={{
+        width: '100%',
+        position: openLocation ? 'relative' : '',
+        height: openLocation ? '100vh' : '',
+        overflow: openLocation ? 'hidden' : '',
+      }}
+    >
+      <Navbar setOpenLocation={setOpenLocation} openLocation={openLocation} />
+      
 
       <Map setOpenLocation={setOpenLocation} />
       <div className="my-5 d-flex justify-content-center">
@@ -163,11 +171,17 @@ function HomePage(props) {
       </div>
 
       {openLocation && (
-        <div style={{width:"100%", position:"absolute", top:0, height:"100vh", }} className=' d-flex justify-content-center align-items-center locationBg'>
-          
-          <LocationPage setOpenLocation={setOpenLocation}/>
-          </div>
-        
+        <div
+          style={{
+            width: '100%',
+            position: 'absolute',
+            top: 0,
+            height: '100vh',
+          }}
+          className=" d-flex justify-content-center align-items-center locationBg"
+        >
+          <LocationPage setOpenLocation={setOpenLocation} />
+        </div>
       )}
       <div className=" p-2">
         <Footer />

@@ -107,6 +107,12 @@ p {
   
 }
 
+.active{
+  background-color: lightgray !important;
+  cursor: pointer !important;
+  
+}
+
 
 /* .kitchenHover:hover{
   font-weight:bolder !important;

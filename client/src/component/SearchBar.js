@@ -4,6 +4,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 function SearchBar(props) {
@@ -12,8 +13,10 @@ function SearchBar(props) {
   const location = useLocation();
   
   const {setOpenLocation, bg}=props
-  
+  const { searchedLocation } = useSelector((state) => state.searching);
 
+  
+  const locationQuery = searchedLocation === undefined ? '' : searchedLocation
   
 
   const handleSearch = (e) => {
@@ -21,7 +24,7 @@ function SearchBar(props) {
     if (location.pathname === `/riders`) {
       navigate(query ? `/riders?query=${query}` : '/riders');
     } else {
-      navigate(query ? `/search?query=${query}` : '/search');
+      navigate(query ? `/search?searchedLocation=${locationQuery}&query=${query}` : '/search');
     }
   };
 

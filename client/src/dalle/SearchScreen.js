@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/esm/Container';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import './mybite.css';
 import Navbar from '../navSection/Navbar';
@@ -10,7 +10,7 @@ import SearchBar from '../component/SearchBar';
 import axios from 'axios';
 import { api } from '../utils/apiConfig';
 import Button from 'react-bootstrap/Button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TuneIcon from '@mui/icons-material/Tune';
 import TapasIcon from '@mui/icons-material/Tapas';
 import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
@@ -28,16 +28,19 @@ import YoutubeSearchedForIcon from '@mui/icons-material/YoutubeSearchedFor';
 function SearchScreen() {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
-  const query = sp.get('query') || 'all';
+  const query = sp.get('query') || '';
+  const popularFilter = sp.get('popularFilter') || '';
+  const rating = sp.get('rating') || '';
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-
+  const { searchedLocation } = useSelector((state) => state.searching);
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+
+  console.log('searchlocation', searchedLocation);
+  const locationQuery = searchedLocation === undefined ? '' : searchedLocation;
 
   const [products, setProducts] = useState([]);
   const location = useLocation();
-  const handlePageChange = () => {
-    setPage(page + 1);
-  };
 
   const dispatch = useDispatch();
 
@@ -46,7 +49,7 @@ function SearchScreen() {
       const handleSearch = async () => {
         try {
           const { data } = await axios.get(
-            `${api}/api/users?query=${query}&page=${page}`
+            `${api}/api/users/stores?searchedLocation=${locationQuery}&query=${query}&page=${page}&popularFilter=${popularFilter}&rating=${rating}`
           );
           setProducts(data);
         } catch (error) {
@@ -55,7 +58,7 @@ function SearchScreen() {
       };
       handleSearch();
     }
-  }, [query, page, location, dispatch]);
+  }, [query, page, location, dispatch, popularFilter, locationQuery, rating]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -69,193 +72,196 @@ function SearchScreen() {
     };
   }, []);
 
+  const handleFilter = (filterData) => {
+    navigate(
+      `/search?searchedLocation=${locationQuery}&popularFilter=${filterData}`
+    );
+  };
+
   return (
     <div>
       <Navbar />
       <SearchBar />
 
-      <div className="search-results d-flex flex-column ">
-        {products.length > 0 && (
-          <p className="fw-bold my-2">
-            {products?.length} kitchens selling{' '}
-            <span className="border-bottom border-primary text-danger">
-              {query !== 'all' ? query : ''}
-            </span>{' '}
-            near you found
-          </p>
-        )}
-      </div>
-      <Container className='mb-5'>
-        {query && products.length === 0 ?
-        
-         (
-          <div className="my-5">
-            <div className=" d-flex justify-content-center align-items-center flex-column">
-              <p className="fw-bold " style={{ height: '15vh' }}>
-                <strong className="border-bottom fs-5  border-primary text-danger">
-                  No kitchen found.
-                </strong>{' '}
-              </p>
+      <Container className="mb-5">
+        <Row className="my-3">
+          <Col md={isSmallScreen ? 12 : 3}>
+            <ListGroup variant="flush">
+              <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
+                <strong>Sort</strong>
+              </ListGroup.Item>
+              <ListGroup.Item
+                className={!isSmallScreen ? 'mb-3 hovering ' : 'd-none'}
+              >
+                <span className="d-flex align-items-center gap-3">
+                  <NearMeIcon className="text-success" />
+                  Near me
+                </span>
+              </ListGroup.Item>
+              <ListGroup.Item
+                className={!isSmallScreen ? 'mb-3 hovering' : 'd-none'}
+                onClick={() => handleFilter('rating')}
+              >
+                {' '}
+                <span className="d-flex align-items-center gap-3">
+                  <ThumbUpIcon className="text-success" />
+                  Rating
+                </span>
+              </ListGroup.Item>
 
-              <YoutubeSearchedForIcon
-                style={{ width: '100px', height: '100px' }}
-                className="text-success "
-              />
-              <Button variant="light" className=" text-success fs-3 fw-bold">
-                Show All Stores
-              </Button>
-            </div>
-          </div>
-        ):
-          <Row className="my-3">
-            <Col md={isSmallScreen ? 12 : 3}>
-              <ListGroup variant="flush">
-                <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
-                  <strong>Sort</strong>
-                </ListGroup.Item>
-                <ListGroup.Item
-                  className={!isSmallScreen ? 'mb-3 hovering ' : 'd-none'}
-                >
-                  <span className="d-flex align-items-center gap-3">
-                    <NearMeIcon className="text-success" />
-                    Near me
-                  </span>
-                </ListGroup.Item>
-                <ListGroup.Item
-                  className={!isSmallScreen ? 'mb-3 hovering' : 'd-none'}
-                >
-                  {' '}
-                  <span className="d-flex align-items-center gap-3">
-                    <ThumbUpIcon className="text-success" />
-                    Rating
-                  </span>
-                </ListGroup.Item>
+              <div className={!isSmallScreen ? 'my-5 ' : 'my-2'}>
+                <strong className={!isSmallScreen ? ' ' : 'd-none'}>
+                  Popular filters
+                </strong>
 
-                <div className={!isSmallScreen ? 'my-5 ' : 'my-2'}>
-                  <strong className={!isSmallScreen ? ' ' : 'd-none'}>
-                    Popular filters
-                  </strong>
+                <div
+                  style={{
+                    width: isSmallScreen ? '90%' : '',
+                    margin: isSmallScreen ? 'auto' : '',
+                  }}
+                  className={
+                    !isSmallScreen
+                      ? 'd-flex flex-column gap-3 mt-3'
+                      : 'd-flex fw-bold align-items-center justify-content-between my-2'
+                  }
+                >
+                  <div
+                    className={`${
+                      !isSmallScreen
+                        ? 'd-none'
+                        : 'd-flex flex-column p-1 align-items-center justify-content-center p-1 hovering p-2'
+                    } ${popularFilter === '' ? 'active' : ''}`}
+                    style={{
+                      borderRadius: isSmallScreen ? '50%' : '',
+                      height: isSmallScreen ? '50px ' : '',
+                      width: isSmallScreen ? '50px' : '',
+                    }}
+                  >
+                    <span>
+                      <TuneIcon className="text-success" />
+                    </span>
+                    <span>Filter</span>
+                  </div>
+                  <div
+                    className={`${
+                      !isSmallScreen
+                        ? 'd-flex align-items-center  gap-3 hovering'
+                        : 'd-flex flex-column  align-items-center justify-content-center hovering '
+                    } ${popularFilter === 'swallow' ? 'active' : ''}`}
+                    style={{
+                      borderRadius: isSmallScreen ? '50%' : '',
+                      height: isSmallScreen ? '55px ' : '',
+                      width: isSmallScreen ? '55px' : '',
+                    }}
+                    onClick={() => handleFilter('swallow')}
+                  >
+                    <span className="text-success">
+                      <TapasIcon />
+                    </span>
+                    <span>swallow</span>
+                  </div>
+                  <div
+                    className={`${
+                      !isSmallScreen
+                        ? 'd-flex align-items-center p-1 gap-2 hovering'
+                        : 'd-flex p-1 flex-column align-items-center justify-content-center hovering'
+                    }  ${popularFilter === 'water' ? 'active' : ''}`}
+                    style={{
+                      borderRadius: isSmallScreen ? '50%' : '',
+                      height: isSmallScreen ? '55px ' : '',
+                      width: isSmallScreen ? '55px' : '',
+                    }}
+                    onClick={() => handleFilter('water')}
+                  >
+                    <span className="text-success">
+                      <DinnerDiningIcon />
+                    </span>
+                    <span>water</span>
+                  </div>
 
                   <div
-                    style={{
-                      width: isSmallScreen ? '90%' : '',
-                      margin: isSmallScreen ? 'auto' : '',
-                    }}
-                    className={
+                    className={`${
                       !isSmallScreen
-                        ? 'd-flex flex-column gap-3 mt-3'
-                        : 'd-flex fw-bold align-items-center justify-content-between my-2'
-                    }
+                        ? 'd-flex align-items-center gap-2 hovering'
+                        : 'd-flex flex-column align-items-center justify-content-center hovering p-2  rounded'
+                    } ${popularFilter === 'local foods' ? 'active' : ''}`}
+                    onClick={() => handleFilter('local foods')}
                   >
-                    <div
-                      className={
-                        !isSmallScreen
-                          ? 'd-none'
-                          : 'd-flex flex-column align-items-center justify-content-center hovering p-2'
-                      }
-                      style={{
-                        borderRadius: isSmallScreen ? '50%' : '',
-                        height: isSmallScreen ? '50px ' : '',
-                        width: isSmallScreen ? '50px' : '',
-                      }}
-                    >
-                      <span>
-                        <TuneIcon className="text-success" />
-                      </span>
-                      <span>Filter</span>
-                    </div>
-                    <div
-                      className={
-                        !isSmallScreen
-                          ? 'd-flex align-items-center gap-3 hovering'
-                          : 'd-flex flex-column align-items-center justify-content-center hovering p-3'
-                      }
-                      style={{
-                        borderRadius: isSmallScreen ? '50%' : '',
-                        height: isSmallScreen ? '55px ' : '',
-                        width: isSmallScreen ? '55px' : '',
-                      }}
-                    >
-                      <span className="text-success">
-                        <TapasIcon />
-                      </span>
-                      <span>snacks</span>
-                    </div>
-                    <div
-                      className={
-                        !isSmallScreen
-                          ? 'd-flex align-items-center gap-2 hovering'
-                          : 'd-flex flex-column align-items-center justify-content-center hovering'
-                      }
-                      style={{
-                        borderRadius: isSmallScreen ? '50%' : '',
-                        height: isSmallScreen ? '55px ' : '',
-                        width: isSmallScreen ? '55px' : '',
-                      }}
-                    >
-                      <span className="text-success">
-                        <DinnerDiningIcon />
-                      </span>
-                      <span>Pasta</span>
-                    </div>
-
-                    <div
-                      className={
-                        !isSmallScreen
-                          ? 'd-flex align-items-center gap-2 hovering'
-                          : 'd-flex flex-column align-items-center justify-content-center hovering p-2  rounded'
-                      }
-                    >
-                      <span className="text-success">
-                        <LocalDiningIcon />
-                      </span>
-                      <span>local food</span>
-                    </div>
+                    <span className="text-success">
+                      <LocalDiningIcon />
+                    </span>
+                    <span>local food</span>
                   </div>
                 </div>
-              </ListGroup>
-
-              <div className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
-                <strong className="">More filters</strong>
-                <ListGroup variant="flush" className="mt-3">
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering ">
-                    <RiceBowlIcon className="text-success" /> Desert
-                  </ListGroup.Item>
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering">
-                    <IcecreamIcon className="text-success" />
-                    Ice cream
-                  </ListGroup.Item>
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering">
-                    <SetMealIcon className="text-success" /> sea foods
-                  </ListGroup.Item>
-                </ListGroup>
               </div>
-            </Col>
-            <Col md={!isSmallScreen ? 9 : 12}>
-              <ResponsiveMasonry
-                columnsCountBreakPoints={{ 350: 1, 765: 2, 900: 2 }}
-              >
-                <Masonry gutter="10px">
-                  {products?.length > 0 &&
-                    products?.map((item, index) => (
-                      <Link
-                        to={`/kitchen/${item._id}`}
-                        className="text-decoration-none kitchenHover border rounded  p-2 "
-                        style={{ minHeight: '200px' }}
-                        key={`${index}-${item._id}`}
-                      >
-                        {' '}
-                        <SearchedItems item={item} />
-                      </Link>
-                    ))}
-                </Masonry>
-              </ResponsiveMasonry>
-            </Col>
-          </Row>
-         }
+            </ListGroup>
+
+            <div className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
+              <strong className="">More filters</strong>
+              <ListGroup variant="flush" className="mt-3">
+                <ListGroup.Item className="d-flex align-items gap-3 hovering ">
+                  <RiceBowlIcon className="text-success" /> Desert
+                </ListGroup.Item>
+                <ListGroup.Item className="d-flex align-items gap-3 hovering">
+                  <IcecreamIcon className="text-success" />
+                  Ice cream
+                </ListGroup.Item>
+                <ListGroup.Item className="d-flex align-items gap-3 hovering">
+                  <SetMealIcon className="text-success" /> sea foods
+                </ListGroup.Item>
+              </ListGroup>
+            </div>
+          </Col>
+          <Col md={!isSmallScreen ? 9 : 12}>
+            {(query || popularFilter) && products?.length === 0 && (
+              <div className="my-5">
+                <div className=" d-flex justify-content-center align-items-center flex-column">
+                  <p className="fw-bold " style={{ height: '15vh' }}>
+                    <strong className="border-bottom fs-5  border-primary text-danger">
+                      No kitchen found.
+                    </strong>{' '}
+                  </p>
+
+                  <YoutubeSearchedForIcon
+                    style={{ width: '100px', height: '100px' }}
+                    className="text-success "
+                  />
+                  <Link
+                    to="/search"
+                    on
+                    variant="light"
+                    className=" text-success fs-3 fw-bold"
+                  >
+                    Show All Stores
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 350: 1, 765: 2, 900: 2 }}
+            >
+              <Masonry gutter="10px">
+                {products?.length > 0 &&
+                  products?.map((item, index) => (
+                    <Link
+                      to={`/kitchen/${item?._id}`}
+                      className="text-decoration-none kitchenHover border rounded  p-2 "
+                      style={{ minHeight: '200px' }}
+                      key={`${index}-${item._id}`}
+                    >
+                      {' '}
+                      <SearchedItems item={item} />
+                    </Link>
+                  ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </Col>
+        </Row>
+        {/* )} */}
       </Container>
 
-      {products.length > 0 && (
+      {products?.length > 0 && (
         <div className="navigation-button">
           <Button className="button1">see more</Button>
         </div>
