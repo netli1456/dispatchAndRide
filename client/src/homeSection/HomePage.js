@@ -89,14 +89,14 @@ function HomePage(props) {
 
   return (
     <div
-      style={{
-        width: '100%',
-        position: open ? 'relative' : '',
-        height: open ? '100vh' : '',
-        overflow: open ? 'hidden' : '',
-      }}
+      // style={{
+      //   width: '100%',
+      //   position: open ? 'relative' : '',
+      //   height: open ? '100vh' : '',
+      //   overflow: open ? 'hidden' : '',
+      // }}
     >
-      <div style={{position:"sticky", width:"100%", top:0, zIndex:999999}}>  <Navbar openNow={open} setOpenNow={setOpen}/></div>
+      {/* <div style={{position:"sticky", width:"100%", top:0, zIndex:999999}}>  <Navbar openNow={open} setOpenNow={setOpen}/></div> */}
       
 
       <Map setOpen={setOpen} />
@@ -172,19 +172,7 @@ function HomePage(props) {
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
 
-      {open === true && (
-        <div
-          style={{
-            width: '100%',
-            position: 'absolute',
-            top: 0,
-            height: '100vh',
-          }}
-          className=" d-flex justify-content-center align-items-center locationBg"
-        >
-          <LocationPage setOpen={setOpen} />
-        </div>
-      )}
+      
       <div className=" p-2">
         <Footer />
       </div>

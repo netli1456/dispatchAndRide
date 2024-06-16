@@ -52,7 +52,7 @@ function Navbar(props) {
   console.log('location', openNow);
 
   return (
-    <div className="bg-success py-2" style={{ width: '100%' }}>
+    <div className="bg-success py-2" style={{ width: '100%' ,  }}>
       <Container className="text-white py-1 d-flex justify-content-between align-items-center">
         <div className="d-flex gap-3 align-items-center navbarIcon px-2">
           <MenuIcon className="fs-2 fw-bold" />

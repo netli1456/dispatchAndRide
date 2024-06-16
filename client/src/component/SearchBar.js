@@ -33,8 +33,8 @@ function SearchBar(props) {
       <div
         className={
           bg
-            ? 'search-ba d-none d-md-flex justify-content-center'
-            : 'search-bar d-none d-md-flex justify-content-center'
+            ? 'search-ba py-3 d-none d-md-flex justify-content-center'
+            : 'search-bar py-3 d-none d-md-flex justify-content-center'
         }
       >
         <InputGroup className="mb-3 searchba" style={{ width: '80%' }}>
@@ -68,8 +68,8 @@ function SearchBar(props) {
       <div
         className={
           bg
-            ? 'd-md-none search-ba  d-flex justify-content-center'
-            : 'd-md-none search-bar  d-flex justify-content-center'
+            ? 'd-md-none p-3 search-ba  d-flex justify-content-center'
+            : 'd-md-none py-3 search-bar  d-flex justify-content-center'
         }
       >
         <InputGroup className=" searchba">

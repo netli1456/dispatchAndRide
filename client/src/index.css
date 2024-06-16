@@ -10,9 +10,8 @@ body {
 .searchbar {
   position: absolute !important;
   top: 40px !important;
-  width: 85% !important;
+  width: 100% !important;
   left: 50% !important;
-
   transform: translate(-50%, -50%);
   justify-content: center !important;
   display: flex !important;
@@ -84,12 +83,13 @@ body {
   font-size: 10px !important;
 }
 
-
-.locationBg{
+.locationBg {
   background-color: rgba(255, 255, 255, 0.721);
-  color:red;
+  color: red;
   z-index: 9999;
   min-height: 80px;
 }
 
-.cursors{cursor:  pointer !important;}
+.cursors {
+  cursor: pointer !important;
+}

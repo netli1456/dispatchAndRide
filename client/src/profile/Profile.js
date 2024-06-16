@@ -109,7 +109,7 @@ const Profile = () => {
 
   return (
     <div>
-      <NavSearch />
+      
       <Container >
         <ProfileHeader
           userInfo={userInfo}

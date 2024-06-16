@@ -18,6 +18,7 @@ import { api } from '../utils/apiConfig';
 
 import Recommended from '../recommended/Recommended';
 import LoadingBox from '../LoadingBox';
+import Navbar from '../navSection/Navbar';
 
 
 function Product() {
@@ -90,7 +91,7 @@ function Product() {
   return (
     <div>
       <div style={{ position: 'sticky', top: -3, zIndex: 999 }}>
-        <NavSearch />{' '}
+        <Navbar />{' '}
       </div>
 
       {loadings ? (
