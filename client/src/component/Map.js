@@ -11,7 +11,7 @@ const Map = (props) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState('');
- const {setOpenLocation}=props
+ const {setOpen}=props
   // useEffect(() => {
   //   if ('geolocation' in navigator) {
   //     navigator.geolocation.getCurrentPosition(
@@ -120,7 +120,7 @@ const Map = (props) => {
             referrerPolicy="no-referrer-when-downgrade"
           ></iframe>
           <div className="mb-3 searchbar">
-            <SearchBar setOpenLocation={setOpenLocation} bg={true} />
+            <SearchBar setOpen={setOpen} bg={true} />
           </div>
         </Form>
       ) : (

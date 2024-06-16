@@ -15,11 +15,12 @@ import { useSelector } from 'react-redux';
 import { api } from '../utils/apiConfig';
 
 import { Box, Skeleton } from '@mui/material';
-import NavSearch from '../navSection/NavSearch';
+
 import LocationPage from '../dalle/LocationPage';
 
 function HomePage(props) {
   const [data, setData] = useState([]);
+  const [open, setOpen]= useState(false);
   const [carouselData, setCarouselData] = useState([]);
   const randomNum = Math.floor(Math.random() * 500);
   const page = 'all';
@@ -28,7 +29,8 @@ function HomePage(props) {
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [openLocation, setOpenLocation] = useState(false);
+ 
+ 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,15 +91,15 @@ function HomePage(props) {
     <div
       style={{
         width: '100%',
-        position: openLocation ? 'relative' : '',
-        height: openLocation ? '100vh' : '',
-        overflow: openLocation ? 'hidden' : '',
+        position: open ? 'relative' : '',
+        height: open ? '100vh' : '',
+        overflow: open ? 'hidden' : '',
       }}
     >
-      <Navbar setOpenLocation={setOpenLocation} openLocation={openLocation} />
+        <Navbar openNow={open} setOpenNow={setOpen}/>
       
 
-      <Map setOpenLocation={setOpenLocation} />
+      <Map setOpen={setOpen} />
       <div className="my-5 d-flex justify-content-center">
         {' '}
         <h3 className="border-bottom border-secondary">
@@ -170,7 +172,7 @@ function HomePage(props) {
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
 
-      {openLocation && (
+      {open === true && (
         <div
           style={{
             width: '100%',
@@ -180,7 +182,7 @@ function HomePage(props) {
           }}
           className=" d-flex justify-content-center align-items-center locationBg"
         >
-          <LocationPage setOpenLocation={setOpenLocation} />
+          <LocationPage setOpen={setOpen} />
         </div>
       )}
       <div className=" p-2">

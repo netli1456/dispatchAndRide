@@ -38,7 +38,7 @@ function LocationPage(props) {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const { setOpenLocation } = props;
+  const { setOpen } = props;
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mapCenter, setMapCenter] = useState([6.5244, 3.3792]);
@@ -118,7 +118,7 @@ function LocationPage(props) {
     if (display_name) {
       setQuery(display_name);
       setSuggestions([]);
-      
+
       if (!isNaN(lat) && !isNaN(lon)) {
         setMapCenter([lat, lon]);
         setZoom(15);
@@ -132,9 +132,8 @@ function LocationPage(props) {
           `${api}/api/users/location?query=${display_name}`
         );
 
-        
         if (storeExist.data === 'store exist') {
-          dispatch(searchAddress(display_name ));
+          dispatch(searchAddress(display_name));
           navigate(
             `/search?searchedLocation=${display_name}&query=${display_name}`
           );
@@ -161,6 +160,7 @@ function LocationPage(props) {
           )
           .then((response) => {
             setZoomMapData(response.data.display_name);
+            setQuery(response.data.display_name);
             setMapCenter([lat, lon]);
             setExist('');
           })
@@ -193,7 +193,7 @@ function LocationPage(props) {
       <div className="m-4 d-flex align-items-center  text-dark">
         <ArrowBackIosIcon
           className="text-secondary cursors"
-          onClick={() => setOpenLocation(false)}
+          onClick={() => setOpen(false)}
         />
         <div className="text-center w-100">
           {' '}
@@ -299,14 +299,14 @@ function LocationPage(props) {
               <MapEvents />
             </MapContainer>
           </div>
+
           {zoomMapdata?.length > 0 && (
             <div className="d-flex gap-3 flex-column ">
               <span className=" text-succes fw-bold border-danger border-bottom">
-                {zoomMapdata}
+                {zoomMapdata}jjjjjj
               </span>
               <Button
                 onClick={() => {
-                  setQuery(zoomMapdata);
                   handleSuggestionClick();
                 }}
                 variant="light"

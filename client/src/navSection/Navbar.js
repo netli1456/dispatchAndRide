@@ -24,7 +24,7 @@ function Navbar(props) {
   const [open, setOpen] = useState();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { searchedLocation } = useSelector((state) => state.searching);
-  const { setOpenLocation, openLocation } = props;
+  const { setOpenNow, openNow } = props;
 
   const handleLogOut = () => {
     dispatch(clearUserInfo());
@@ -45,6 +45,12 @@ function Navbar(props) {
     };
   }, []);
 
+  const handleLocationOpen = () => {
+    setOpenNow(true);
+  };
+
+  console.log('location', openNow);
+
   return (
     <div className="bg-success py-2" style={{ width: '100%' }}>
       <Container className="text-white py-1 d-flex justify-content-between align-items-center">
@@ -55,12 +61,11 @@ function Navbar(props) {
           </Link>
         </div>
         {searchedLocation && (
-          <Button
-            onClick={() => setOpenLocation(!openLocation)}
-            variant="success"
-            className="bg-success "
-          >
-            <strong className="d-flex align-items-center gap-1 text-uppercase">
+          <Button variant="success" className="bg-success ">
+            <strong
+              className="d-flex align-items-center gap-1 text-uppercase"
+              onClick={handleLocationOpen}
+            >
               <LocationOnIcon />
               {isSmallScreen && searchedLocation.length >= 8
                 ? `${searchedLocation.slice(0, 5)}..`

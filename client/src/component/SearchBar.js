@@ -12,7 +12,7 @@ function SearchBar(props) {
   const [query, setQuery] = useState('');
   const location = useLocation();
   
-  const {setOpenLocation, bg}=props
+  const {setOpen, bg}=props
   const { searchedLocation } = useSelector((state) => state.searching);
 
   
@@ -41,8 +41,8 @@ function SearchBar(props) {
           <Form.Control
             placeholder={
               location.pathname === '/'
-                ? 'Write your address'
-                : 'write something here!'
+                ? 'Write your address here'
+                : 'search by store name!'
             }
             aria-describedby="search"
             id="search"
@@ -50,11 +50,12 @@ function SearchBar(props) {
             className="border border-success"
             
             readOnly={location.pathname === '/'}
-            onClick={()=> location.pathname === '/' &&  setOpenLocation(true)}
+            onClick={()=> location.pathname === '/' &&  setOpen(true)}
             
           />
           <Button
             onClick={handleSearch}
+            disabled={location.pathname !== '/'  && !query}
             variant="success"
             id="basic-addon1"
             className=" text-white fw-bold d-flex align-items-center"
@@ -79,7 +80,7 @@ function SearchBar(props) {
             onChange={(e)=>setQuery(e.target.value)}
             className="border border-success"
             readOnly={location.pathname === '/'}
-            onClick={()=> location.pathname === '/' &&  setOpenLocation(true)}
+            onClick={()=> location.pathname === '/' &&  setOpen(true)}
            
           />
           <Button
