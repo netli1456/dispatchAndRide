@@ -94,7 +94,7 @@ function Navbar(props) {
               {cartItems?.length}
             </Badge>
           </div>
-          {userInfo?.user?.firstname ? (
+          {userInfo?.user?._id ? (
             <div
               className={
                 location.pathname === '/profile'

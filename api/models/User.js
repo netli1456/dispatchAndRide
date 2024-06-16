@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     age: { type: Date },
     state: { type: String },
     country: { type: String },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     isBusinessOwner: { type: Boolean, default: false },
     lga: { type: String },
     placesCanDeliverTo: { type: Array, default: [] },

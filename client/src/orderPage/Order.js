@@ -120,7 +120,6 @@ function Order() {
 
   return (
     <div>
-      <NavSearch />
       <>
         <Container className="my-3">
           <div>
@@ -138,7 +137,7 @@ function Order() {
                 </Box>
               ) : (
                 <div className="d-flex flex-column ">
-                  <div >
+                  <div>
                     <h3 className="d-none d-md-flex">
                       Order ID: {data?.details?._id}
                     </h3>
@@ -295,7 +294,9 @@ function Order() {
               )}
             </div>
             <div>
-              <div className="fs-4 fw-bold text-center my-3">{loading ? <Skeleton/> : "Items"}</div>
+              <div className="fs-4 fw-bold text-center my-3">
+                {loading ? <Skeleton /> : 'Items'}
+              </div>
               <Row>
                 <Col md={8} className="mb-3">
                   <OrderDetails
@@ -307,10 +308,13 @@ function Order() {
                 <Col md={4}>
                   <ListGroup>
                     {loading ? (
-                     <div> <Skeleton />
-                     <Skeleton />
-                     <Skeleton />
-                     <Skeleton /></div>
+                      <div>
+                        {' '}
+                        <Skeleton />
+                        <Skeleton />
+                        <Skeleton />
+                        <Skeleton />
+                      </div>
                     ) : (
                       <div>
                         <strong>Total:N{data?.details?.total}</strong>
@@ -324,7 +328,10 @@ function Order() {
                               data?.details?.buyerId ? (
                                 <div>
                                   <div className="d-flex  flex-column text-start">
-                                  <span className='fw-bold'>  Business Details</span>
+                                    <span className="fw-bold">
+                                      {' '}
+                                      Business Details
+                                    </span>
                                     <span>
                                       Name: {data?.details?.businessName}
                                     </span>

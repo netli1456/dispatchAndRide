@@ -21,8 +21,11 @@ export const userRegister = async (req, res) => {
       },
       process.env.JWT_SECRET
     );
-    const { password, ...others } = user._doc;
-    res.status(200).json({ user: others, token });
+    const userDetails = {
+      firstname: user.firstname,
+      _id: user._id,
+    };
+    res.status(200).json({ user: userDetails, token });
   } catch (error) {
     res.status(500).json({ message: 'fill the neccessary fields' });
   }
@@ -50,76 +53,16 @@ export const userLogin = async (req, res) => {
       },
       process.env.JWT_SECRET
     );
-    const { password, ...others } = user._doc;
-    res.status(200).json({ user: others, token });
+    const userDetails = {
+      firstname: user.firstname,
+      _id: user._id,
+    };
+   
+    res.status(200).json({ user: userDetails, token });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
-
-// kitchen and search
-
-// export const randomKitchens = async (req, res) => {
-//   const fetchKitchens = new Set();
-//   const kitchens = [];
-//   try {
-//     const { query, page = 1, pageSize = 10 } = req.query;
-
-//     const skip = (page - 1) * pageSize;
-
-//     let aggregationPipeline = [];
-
-//     if (query !== 'all') {
-//       aggregationPipeline.push({
-//         $match: {
-//           $or: [
-//             { desc: { $regex: query, $options: 'i' } },
-//             { category: { $regex: query, $options: 'i' } },
-//             { type: { $regex: query, $options: 'i' } },
-//             { name: { $regex: query, $options: 'i' } },
-//           ],
-//         },
-//       });
-//     } else {
-//       {
-//       }
-//     }
-//     aggregationPipeline.push({
-//       $match: { userId: { $nin: Array.from(fetchKitchens) } },
-//     });
-
-//     aggregationPipeline.push({ $sample: { size: parseInt(pageSize) } });
-
-//     const products = await Product.aggregate(aggregationPipeline);
-//     if (products) {
-//       for (const product of products) {
-//         if (!fetchKitchens.has(product.userId)) {
-//           const kitchen = await User.findById(product.userId);
-//           if (kitchen) {
-//             const allKitchens = {
-//               rating: kitchen.rating,
-//               verified: kitchen.verified,
-//               physicalAddress: kitchen.physicalAddress,
-//               businessName: kitchen.businessName,
-//               businessImg: kitchen.businessImg,
-//               deliveryRate: kitchen.deliveryRate,
-//               km: kitchen.km,
-//               _id: kitchen._id,
-//               timeOpen: kitchen.timeOpen,
-//             };
-//             kitchens.push(allKitchens);
-//             fetchKitchens.add(product.userId);
-//           } else {
-//             return res.status(404).json({ message: 'no available kitchens' });
-//           }
-//         }
-//       }
-//     }
-//     res.status(200).json(kitchens);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 
 export const getRandomKitchens = async (req, res) => {
   try {
@@ -413,10 +356,10 @@ export const getStores = async (req, res) => {
 
     if (ratingNumber !== null && searchedLocation) {
       searchConditions.$or[
-        { physicalAddress: { $regex: searchedLocation, $options: 'i' } },
+        ({ physicalAddress: { $regex: searchedLocation, $options: 'i' } },
         { lga: { $regex: searchedLocation, $options: 'i' } },
         { state: { $regex: searchedLocation, $options: 'i' } },
-        { country: { $regex: searchedLocation, $options: 'i' } }
+        { country: { $regex: searchedLocation, $options: 'i' } })
       ],
         filteredStores.sort((a, b) => b.rating - a.rating);
     }
@@ -466,3 +409,35 @@ export const getStores = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const client = twilio(accountSid, authToken);
+
+// export const createusers = async (req, res) => {
+//   const saltRounds = 10;
+
+//   try {
+//     const hash = bcrypt.hashSync(req.body.password, saltRounds);
+//     const user = new User({ ...req.body, password: hash });
+//     await user.save();
+
+//     if (user.phone) {
+//       const message = await client.messages.create({
+//         body: 'Your confirmation code: 097473',
+//         from: '+1234567890', // Your Twilio phone number
+//         to: user.phone, // User's phone number from req.body
+//       });
+
+//       console.log('SMS sent. SID:', message.sid);
+
+//       // Respond with success message after sending email
+//       res.status(200).json({ message: 'User created successfully', info});
+//     } else {
+//       res.status(400).json({ message: 'User email not provided' });
+//     }
+//   } catch (error) {
+//     console.error('Error sending email:', error);
+//     res.status(500).json({ message: 'Failed to create user' });
+//   }
+// };

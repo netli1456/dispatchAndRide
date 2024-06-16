@@ -93,7 +93,7 @@ function SignUp() {
 
   return (
     <div>
-      <Navbar />
+     
       <div
         style={{
           backgroundColor: 'lightgrey',

@@ -93,3 +93,8 @@ body {
 .cursors {
   cursor: pointer !important;
 }
+
+
+.shipBg{
+  background-color: rgb(247, 251, 247) !important;
+}

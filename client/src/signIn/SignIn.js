@@ -37,7 +37,7 @@ function SignIn() {
       dispatch(fetchSuccess(data));
 
       toast.success(
-        `Signed in as ${data?.user?.surname} ${data?.user?.firstname}`,
+        `Signed in as ${data?.user?.firstname}`,
         {
           autoClose: true,
           theme: 'light',
@@ -61,7 +61,7 @@ function SignIn() {
     }
   });
 
-
+console.log(userInfo.user._id)
   useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 1200);
@@ -76,7 +76,7 @@ function SignIn() {
 
   return (
     <div>
-      <Navbar />
+     
       <div
         style={{
           backgroundColor: 'lightgrey',
