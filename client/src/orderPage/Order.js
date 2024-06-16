@@ -11,8 +11,6 @@ import OrderDetails from './OrderDetails';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import NavSearch from '../navSection/NavSearch';
 import { toast } from 'react-toastify';
 import Rating from '../component/Rating';
 import { api } from '../utils/apiConfig';

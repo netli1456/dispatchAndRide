@@ -15,9 +15,12 @@ export const searchSlice = createSlice({
     },
     searchAddress:(state, action) => {
       state.searchedLocation = action.payload;
-    }
+    },
+    clearLocation: (state) => {
+      state.searchedLocation = '';
+    },
   },
 });
 
-export const { searchSuccess, searchAddress } = searchSlice.actions;
+export const { searchSuccess, searchAddress, clearLocation } = searchSlice.actions;
 export default searchSlice.reducer;

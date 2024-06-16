@@ -103,8 +103,8 @@ function SearchScreen() {
       ) : (
         <Container className="mb-5">
           <Row className="my-3">
-            <Col md={isSmallScreen ? 12 : 3}>
-              <ListGroup variant="flush">
+            <Col md={isSmallScreen ? 12 : 3}  className={isSmallScreen ? 'mb-3' :''}>
+              <ListGroup variant="flush" className={isSmallScreen ? 'border-bottom' :''}>
                 <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
                   <strong>Sort</strong>
                 </ListGroup.Item>

@@ -312,17 +312,6 @@ export const getStores = async (req, res) => {
       suspended: false,
     };
 
-    // const stores = await User.find({
-    //   isBusinessOwner: true,
-    //   blocked: false,
-    //   suspended: false,
-    //   $or: [
-    //     { physicalAddress: { $regex: query, $options: 'i' } },
-    //     { lga: { $regex: query, $options: 'i' } },
-    //     { state: { $regex: query, $options: 'i' } },
-    //     { placesCanDeliverTo: { $regex: query, $options: 'i' } },
-    //   ],
-    // });
 
     if (searchedLocation) {
       searchConditions.$or = [
@@ -410,34 +399,3 @@ export const getStores = async (req, res) => {
   }
 };
 
-// const accountSid = process.env.TWILIO_ACCOUNT_SID;
-// const authToken = process.env.TWILIO_AUTH_TOKEN;
-// const client = twilio(accountSid, authToken);
-
-// export const createusers = async (req, res) => {
-//   const saltRounds = 10;
-
-//   try {
-//     const hash = bcrypt.hashSync(req.body.password, saltRounds);
-//     const user = new User({ ...req.body, password: hash });
-//     await user.save();
-
-//     if (user.phone) {
-//       const message = await client.messages.create({
-//         body: 'Your confirmation code: 097473',
-//         from: '+1234567890', // Your Twilio phone number
-//         to: user.phone, // User's phone number from req.body
-//       });
-
-//       console.log('SMS sent. SID:', message.sid);
-
-//       // Respond with success message after sending email
-//       res.status(200).json({ message: 'User created successfully', info});
-//     } else {
-//       res.status(400).json({ message: 'User email not provided' });
-//     }
-//   } catch (error) {
-//     console.error('Error sending email:', error);
-//     res.status(500).json({ message: 'Failed to create user' });
-//   }
-// };

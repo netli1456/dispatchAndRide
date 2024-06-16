@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../navSection/Navbar';
 import Map from '../component/Map';
 import HouseOutlinedIcon from '@mui/icons-material/HouseOutlined';
 import Cards from '../component/Cards';
@@ -28,7 +27,6 @@ function HomePage(props) {
   const userId = cartItems.length > 0 ? cartItems[0].userId : '';
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
  
  
 
@@ -75,17 +73,7 @@ function HomePage(props) {
     setCurrentSlide(currentSlide === data.length - 1 ? 0 : currentSlide + 1);
   };
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 1200);
-    };
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-
-    return () => {
-      window.removeEventListener('resize', checkScreenSize);
-    };
-  }, []);
+ 
 
   return (
     <div

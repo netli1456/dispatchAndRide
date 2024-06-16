@@ -23,8 +23,8 @@ import Button from 'react-bootstrap/esm/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { api } from '../utils/apiConfig';
-import { useDispatch } from 'react-redux';
-import { searchAddress } from '../redux/searchSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearLocation, searchAddress } from '../redux/searchSlice';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -46,7 +46,7 @@ function LocationPage(props) {
   const mapRef = useRef(null);
   const [zoomMapdata, setZoomMapData] = useState('');
   const [exist, setExist] = useState('');
-
+  const { searchedLocation } = useSelector((state) => state.searching);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -135,9 +135,10 @@ function LocationPage(props) {
         if (storeExist.data === 'store exist') {
           dispatch(searchAddress(display_name));
           navigate(
-            `/search?searchedLocation=${display_name}&query=${display_name}`
+            `/search?searchedLocation=${display_name}`
           );
           setExist(storeExist.data);
+          setOpen(false)
         } else {
           setExist(storeExist.data);
         }
@@ -178,7 +179,12 @@ function LocationPage(props) {
     setExist('');
     setSuggestions([]);
     setZoomMapData('');
+    
   };
+
+  const handleClear=()=>{
+    dispatch(clearLocation())
+  }
 
   return (
     <div
@@ -273,12 +279,22 @@ function LocationPage(props) {
           </div>
         </Col>
         <Col md={6}>
-          <div
-            style={{ width: '100%' }}
-            className="text-success d-flex justify-content-center fs-4 fw-bold mb-3"
+          {searchedLocation.length > 0 && <div
+            style={{ width: '90%', margin: 'auto' }}
+            className="d-flex   text-secondary"
           >
-            Use map
-          </div>
+            <div
+              className="border border-success rounded py-1 d-flex justify-content-center mb-3"
+              style={{ width: '90%' }}
+            >
+              <strong className="text-uppercase text-secondary">
+                {searchedLocation.length > 0 && searchedLocation}
+              </strong>
+            </div>
+            <CloseIcon style={{cursor:"pointer"}} onClick={handleClear}/>
+            
+          </div>}
+
           <div style={{ height: '70%' }} className="">
             <MapContainer
               center={mapCenter}
@@ -303,7 +319,7 @@ function LocationPage(props) {
           {zoomMapdata?.length > 0 && (
             <div className="d-flex gap-3 flex-column ">
               <span className=" text-succes fw-bold border-danger border-bottom">
-                {zoomMapdata}jjjjjj
+                {zoomMapdata}
               </span>
               <Button
                 onClick={() => {

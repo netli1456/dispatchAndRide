@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Navbar from '../navSection/Navbar';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Link, useNavigate } from 'react-router-dom';
@@ -61,7 +60,7 @@ function SignIn() {
     }
   });
 
-console.log(userInfo.user._id)
+
   useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 1200);
@@ -136,7 +135,7 @@ console.log(userInfo.user._id)
                   <div>
                     <strong>Email *</strong>
                     <InputGroup className="   ">
-                      {/* <InputGroup.Text className=" ">Email</InputGroup.Text> */}
+                      
                       <Form.Control
                        className=' '
                         type="text"

@@ -14,6 +14,7 @@ import { clearShipping } from '../redux/shippingSlice';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Button from 'react-bootstrap/Button';
+import { clearLocation } from '../redux/searchSlice';
 
 function Navbar(props) {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ function Navbar(props) {
     dispatch(clearCart());
     dispatch(clearShipping());
     dispatch(clearUserInfo());
+    dispatch(clearLocation());
   };
 
   useEffect(() => {
