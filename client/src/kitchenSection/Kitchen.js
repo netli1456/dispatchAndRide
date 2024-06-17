@@ -99,8 +99,6 @@ function Kitchen() {
 
   return (
     <div >
-      <Navbar />
-
       <div style={{ position: 'relative' }}>
         <div
           style={{
