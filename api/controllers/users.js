@@ -43,29 +43,27 @@ export const userRegister = async (req, res) => {
     }
     await user.save();
 
-    let msg = {};
     if (user.email) {
-      const info = await transporter.sendMail({
+      await transporter.sendMail({
         to: user.email,
         from: process.env.USER,
         subject: 'M-bite Verification code  ',
         text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
       });
-
-      msg = info;
     }
 
     const userData = {
       email: user.email,
       url:
         user.surname +
-        user.createdAt.toISOString() + user._id +
+        user.createdAt.toISOString() +
+        user._id +
         user.otpCreatedAt.toISOString() +
         user.firstname,
     };
     res.status(200).json(userData);
   } catch (error) {
-    res.status(500).json({ message: 'something went wrong'});
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -122,7 +120,10 @@ export const verifyOtp = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email, otpIsVerified:true });
+    const user = await User.findOne({
+      email: req.body.email,
+      otpIsVerified: true,
+    });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -153,8 +154,6 @@ export const userLogin = async (req, res) => {
   }
 };
 
-
-
 export const Riders = async (req, res) => {
   try {
     const { query, page = 1, pageSize = 10 } = req.query;
@@ -179,7 +178,7 @@ export const Riders = async (req, res) => {
 
     res.status(200).json(riders);
   } catch (error) {
-    res.status(500).json({ message: 'something went wrong'});
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -312,7 +311,6 @@ export const userBalance = async (req, res) => {
 // export const insertFromLocalToOnline = async (req, res) => {
 //   try {
 //     // Connect to your local MongoDB (assuming it's running locally)
-   
 
 //     // Find all documents in your local User collection
 //     const localUsers = await User.find();
