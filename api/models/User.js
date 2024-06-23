@@ -26,6 +26,13 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     isBusinessOwner: { type: Boolean, default: false },
     lga: { type: String },
+    otp: { type: String },
+
+    otpIsVerified: { type: Boolean, default: false },
+    otpCreatedAt: {
+      type: Date,
+      default: Date.now(),
+    },
     placesCanDeliverTo: { type: Array, default: [] },
   },
   { timestamps: true }

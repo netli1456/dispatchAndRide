@@ -42,7 +42,7 @@ function SearchBar(props) {
           <Form.Control
             placeholder={
               location.pathname === '/'
-                ? 'Write your address here'
+                ? 'Search your location here !'
                 : 'search by store name!'
             }
             aria-describedby="search"

@@ -22,7 +22,7 @@ function HomePage(props) {
   const { setOpen}= props;
   const [carouselData, setCarouselData] = useState([]);
   const randomNum = Math.floor(Math.random() * 500);
-  const page = 'all';
+  const page = 1;
   const { cartItems } = useSelector((state) => state.cart);
   const userId = cartItems.length > 0 ? cartItems[0].userId : '';
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ function HomePage(props) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const userResponse = await axios.get(`${api}/api/users?query=${page}`);
+        const userResponse = await axios.get(`${api}/api/users/stores?page=${page}`);
         setLoading(false);
         setCarouselData(userResponse.data);
       } catch (error) {
@@ -151,7 +151,7 @@ function HomePage(props) {
           </span>
         </div>
       </div>
-      <div className="rowParent2   border-bottom border-secondary">
+      <div className="rowParent2   border-bottom border-secondary" >
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
 

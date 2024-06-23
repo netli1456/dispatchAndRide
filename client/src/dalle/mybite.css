@@ -104,29 +104,19 @@ p {
 .hovering:hover{
   background-color: lightgray !important;
   cursor: pointer !important;
+ 
   
 }
 
 .active{
   background-color: lightgray !important;
   cursor: pointer !important;
+  border-bottom: 5px solid green !important;
   
 }
 
 
-/* .kitchenHover:hover{
-  font-weight:bolder !important;
-  transition-duration: 0.3s !important;
-  padding: 30px !important;
-} */
 
-/* .kitchenHover, .listing-image:hover {
-  width: 120px;
-  height: 120px;
-  margin-right: 10px;
-  border-radius: 50%;
-  transition-duration: 0.3s ;
-} */
 
 
 .kitchenHover {

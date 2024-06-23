@@ -7,6 +7,7 @@ export const userSlice = createSlice({
     userInfo: {},
     loading: false,
     error: null,
+    countdown: 0,
   },
   reducers: {
     fetchSuccess: (state, action) => {
@@ -16,9 +17,18 @@ export const userSlice = createSlice({
     clearUserInfo: (state) => {
       state.userInfo = {};
     },
+    updateCountDown: (state, action) => {
+      state.countdown = action.payload;
+    },
   },
 });
 
-export const { fetchFail, fetchStart, fetchSuccess, clearUserInfo } = userSlice.actions;
+export const {
+  fetchFail,
+  fetchStart,
+  fetchSuccess,
+  clearUserInfo,
+  updateCountDown,
+} = userSlice.actions;
 
 export default userSlice.reducer;

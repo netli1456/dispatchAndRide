@@ -87,24 +87,41 @@ function SearchScreen() {
       `/search?searchedLocation=${locationQuery}&popularFilter=${filterData}`
     );
   };
+  const handleFilters = async () => {
+    // navigate(`/search?searchedLocation=${locationQuery}&&rating=${rate}`);
+    const { data } = await axios.post(`${api}/api/users/m`);
+  };
 
   return (
     <div>
-      
-      <div className=''
-        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9,  }}
+      <div
+        className=""
+        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9 }}
       >
         {' '}
         <SearchBar />
       </div>
       {loading ? (
-        <div style={{height: loading ? '50vh' : '', overflow:loading ? 'hidden' : '' }}> <LoadingBox /></div>
-       
+        <div
+          style={{
+            height: loading ? '50vh' : '',
+            overflow: loading ? 'hidden' : '',
+          }}
+        >
+          {' '}
+          <LoadingBox />
+        </div>
       ) : (
         <Container className="mb-5">
           <Row className="my-3">
-            <Col md={isSmallScreen ? 12 : 3}  className={isSmallScreen ? 'mb-3' :''}>
-              <ListGroup variant="flush" className={isSmallScreen ? 'border-bottom' :''}>
+            <Col
+              md={isSmallScreen ? 12 : 3}
+              className={isSmallScreen ? 'mb-3' : ''}
+            >
+              <ListGroup
+                variant="flush"
+                className={isSmallScreen ? 'border-bottom' : ''}
+              >
                 <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
                   <strong>Sort</strong>
                 </ListGroup.Item>
@@ -118,7 +135,7 @@ function SearchScreen() {
                 </ListGroup.Item>
                 <ListGroup.Item
                   className={!isSmallScreen ? 'mb-3 hovering' : 'd-none'}
-                  onClick={() => handleFilter('rating')}
+                  onClick={() => handleFilters(1)}
                 >
                   {' '}
                   <span className="d-flex align-items-center gap-3">
@@ -282,7 +299,9 @@ function SearchScreen() {
 
       {products?.length > 0 && (
         <div className="navigation-button">
-          <Button className="button1">see more</Button>
+          <Button onClick={handleFilters} className="button1">
+            see more
+          </Button>
         </div>
       )}
       <Footer />

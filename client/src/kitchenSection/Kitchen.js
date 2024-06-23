@@ -4,7 +4,6 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import './kitchen.css';
 import Cards from '../component/Cards';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import Navbar from '../navSection/Navbar';
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -54,14 +53,6 @@ function Kitchen() {
     searchedCategory();
   }, [id, category]);
 
-  // const filteredProducts = (filter) => {
-  //   const filteredCategory = filter.category || category;
-  //   const filteredPrice = filter.price || price;
-  //   const filteredPage = filter.page || page;
-
-  //   return `/search?page=${filteredPage}&price=${filteredPrice}&category=${filteredCategory}`;
-  // };
-
   useEffect(() => {
     const handleSearch = async () => {
       setLoading(true);
@@ -98,7 +89,7 @@ function Kitchen() {
   }, [openSort]);
 
   return (
-    <div >
+    <div>
       <div style={{ position: 'relative' }}>
         <div
           style={{
@@ -186,7 +177,7 @@ function Kitchen() {
             </div>
           </div>
 
-          <div style={{ overflowX: 'hidden',  }}>
+          <div style={{ overflowX: 'hidden' }}>
             <div className={isSmallScreen ? '' : 'small'}>
               <Row>
                 <Col
@@ -196,8 +187,7 @@ function Kitchen() {
                     top: -10,
                     height: 'calc(100vh -220px',
                     backgroundColor: 'lightgrey',
-                    width: isSmallScreen ? "100%" : ""
-                 
+                    width: isSmallScreen ? '100%' : '',
                   }}
                 >
                   <div
@@ -205,7 +195,6 @@ function Kitchen() {
                       position: 'sticky',
                       top: 0,
                       height: 'calc(100vh -220px',
-                 
                     }}
                   >
                     <div>
@@ -219,12 +208,11 @@ function Kitchen() {
                           {loading ? (
                             <div>
                               <Skeleton />
-                             
+
                               <Skeleton width="60%" />
-                              
                             </div>
                           ) : (
-                            <div className="search-results1 rounded " >
+                            <div className="search-results1 rounded ">
                               <div className="d-flex align-items-center gap-1 ">
                                 <strong className="text-capitalize d-flex align-items-center gap-1 border-bottom text-dark">
                                   <span
@@ -273,7 +261,7 @@ function Kitchen() {
                         </ListGroup.Item>
                         {loading ? (
                           <div>
-                            <Skeleton height={200} /> 
+                            <Skeleton height={200} />
                           </div>
                         ) : (
                           <div
@@ -281,9 +269,7 @@ function Kitchen() {
                               isSmallScreen && !openSort
                                 ? 'd-none  flex-column'
                                 : 'd-flex flex-column'
-                               
                             }
-                           
                           >
                             <ListGroup.Item c>
                               <strong>Price Range: </strong>

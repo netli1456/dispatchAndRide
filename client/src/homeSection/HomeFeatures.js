@@ -33,11 +33,11 @@ function HomeFeatures({ carouselData, loading }) {
         ) : (
           <>
             {carouselData && carouselData?.length > 0 ? (
-              <Carousel>
+              <Carousel controls={true} indicators={false}  className="custom-carousel">
                 {carouselData.map((item, index) => (
                   <Carousel.Item
                     key={`${item?._id}-${index}`}
-                    className="carouselIte "
+                    className="carouselIte"
                   >
                     <div style={{ height: '380px' }}>
                       <Button className=" suggetWidth fw-bold border-bottom border-success bg-success text-white mt-3 mb-1">

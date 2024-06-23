@@ -151,7 +151,7 @@ export const kitchenItems = async (req, res) => {
       businessImg: user.businessImg,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -232,6 +232,6 @@ export const relatedProducts = async (req, res) => {
       res.status(200).json(filteredProduct);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };

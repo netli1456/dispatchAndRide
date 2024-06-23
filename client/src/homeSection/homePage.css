@@ -9,12 +9,7 @@
   object-fit: cover !important;
 }
 
-.carouselItem img {
-  /* width: 100%;
-  object-fit: contain;
-  border-radius: 10px;
-  height: 80%; */
-}
+
 
 .rowParent2 {
   width: 100%;
@@ -39,6 +34,7 @@
 
 .suggetWidth {
   width: fit-content;
+ 
 }
 
 .icons {
@@ -54,3 +50,8 @@
   background-color: rgba(0, 0, 0, 0.338) !important;
   
 }
+
+.bgt{ background-color: rgba(245, 238, 238, 0.789) !important;}
+
+
+

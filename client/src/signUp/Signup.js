@@ -8,7 +8,7 @@ import Footer from '../footerSection/Footer';
 import axios from 'axios';
 import HttpsIcon from '@mui/icons-material/Https';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSuccess } from '../redux/userSlice';
+import { fetchSuccess, updateCountDown } from '../redux/userSlice';
 import { toast } from 'react-toastify';
 import { api } from '../utils/apiConfig';
 import Col from 'react-bootstrap/esm/Col';
@@ -27,7 +27,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { userInfo } = useSelector((state) => state.user);
+  const { userInfo, countdown } = useSelector((state) => state.user);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const handleSignUp = async (e) => {
@@ -45,16 +45,10 @@ function SignUp() {
           email: email,
         });
         dispatch(fetchSuccess(data));
-        navigate('/');
+
+        navigate(`/verification/${data.url}/auth`);
         setLoading(false);
-        toast.success(
-          `welcome! ${data?.user?.surname} ${data?.user?.firstname}`,
-          {
-            autoClose: false,
-            theme: 'light',
-            toastId: 'unique-toast-id',
-          }
-        );
+        dispatch(updateCountDown(60));
       } catch (error) {
         toast.error(error.response.data.message, {
           autoClose: true,
@@ -74,12 +68,6 @@ function SignUp() {
   };
 
   useEffect(() => {
-    if (userInfo?.user?.firstname) {
-      navigate('/');
-    }
-  });
-
-  useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 1200);
     };
@@ -91,9 +79,27 @@ function SignUp() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleCount = () => {
+      let count = countdown;
+      const timer = setInterval(() => {
+        if (count > 0) {
+          count -= 1;
+          dispatch(updateCountDown(count));
+        } else {
+          clearInterval(timer);
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    };
+    handleCount();
+  }, [countdown, dispatch]);
+
+  console.log('newCountdown', countdown, userInfo);
+
   return (
     <div>
-     
       <div
         style={{
           backgroundColor: 'lightgrey',
@@ -138,13 +144,13 @@ function SignUp() {
                 style={{ width: '95%' }}
               >
                 <Button
-                variant="success"
-                className="bg-success opacity-75 p-1"
-                style={{ borderRadius: '50%' }}
-              >
-                <HttpsIcon />
-              </Button>
-              <strong className="mb-2">Sign Up</strong>
+                  variant="success"
+                  className="bg-success opacity-75 p-1"
+                  style={{ borderRadius: '50%' }}
+                >
+                  <HttpsIcon />
+                </Button>
+                <strong className="mb-2">Sign Up</strong>
                 <div
                   className=""
                   style={{ minWidth: !isSmallScreen ? ' 60%' : '100%' }}
@@ -160,7 +166,7 @@ function SignUp() {
                           type="text"
                           required
                           onChange={(e) => setFirstName(e.target.value)}
-                          placeholder='First name '
+                          placeholder="First name "
                         />
                       </InputGroup>
                     </div>
@@ -171,8 +177,7 @@ function SignUp() {
                           type="text"
                           required
                           onChange={(e) => setSurname(e.target.value)}
-                          placeholder='Last name '
-
+                          placeholder="Last name "
                         />
                       </InputGroup>
                     </div>
@@ -184,8 +189,7 @@ function SignUp() {
                           type="text"
                           required
                           onChange={(e) => setState(e.target.value)}
-                          placeholder='state '
-
+                          placeholder="state "
                         />
                       </InputGroup>
                     </div>
@@ -196,8 +200,7 @@ function SignUp() {
                           type="text"
                           required
                           onChange={(e) => setCountry(e.target.value)}
-                          placeholder='country'
-
+                          placeholder="country"
                         />
                       </InputGroup>
                     </div>
@@ -208,8 +211,6 @@ function SignUp() {
                           type="Date"
                           required
                           onChange={(e) => setAge(e.target.value)}
-                          
-
                         />
                       </InputGroup>
                     </div>
@@ -220,8 +221,7 @@ function SignUp() {
                           type="email"
                           required
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder='Email'
-
+                          placeholder="Email"
                         />
                       </InputGroup>
                     </div>
@@ -232,8 +232,7 @@ function SignUp() {
                           type="password"
                           required
                           onChange={(e) => setPassword(e.target.value)}
-                          placeholder='Password'
-
+                          placeholder="Password"
                         />
                       </InputGroup>
                     </div>
@@ -244,8 +243,7 @@ function SignUp() {
                           type="password"
                           required
                           onChange={(e) => setComfirmPassword(e.target.value)}
-                          placeholder=' Password'
-
+                          placeholder=" Password"
                         />
                       </InputGroup>
                     </div>
@@ -255,6 +253,16 @@ function SignUp() {
                       style={{ position: 'relative' }}
                     >
                       <Button
+                        disabled={
+                          !surname ||
+                          !firstName ||
+                          !password ||
+                          !comfirmPassword ||
+                          !age ||
+                          !country ||
+                          !state ||
+                          !email
+                        }
                         variant="success"
                         className="bg-success border fw-bold rounded-5 px-5"
                         type="submit"
@@ -272,14 +280,13 @@ function SignUp() {
                       )}
                     </div>
                   </Form>
-                  
                 </div>
                 <div className="my-3">
-                    <strong>
-                      {' '}
-                      Have an account ? <Link to="/signin"> sign in here</Link>
-                    </strong>
-                  </div>
+                  <strong>
+                    {' '}
+                    Have an account ? <Link to="/signin"> sign in here</Link>
+                  </strong>
+                </div>
               </div>
             </Col>
           </Row>

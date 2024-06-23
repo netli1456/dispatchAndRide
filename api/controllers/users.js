@@ -4,14 +4,101 @@ import jwt from 'jsonwebtoken';
 import Product from '../models/Product.js';
 import Review from '../models/Review.js';
 import Account from '../models/accounts.js';
-import { sanitizeKitchen } from '../middleWare/MiddleWare.js';
+import nodemailer from 'nodemailer';
+// import mongoose from 'mongoose';
 
 export const userRegister = async (req, res) => {
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.USER,
+      pass: process.env.PASS,
+    },
+  });
   const saltRounds = 10;
+  let otp = '';
+  const characters = '0123456789';
+  for (let i = 0; i < 6; i++) {
+    otp += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+
   try {
+    let user = {};
     const hash = bcrypt.hashSync(req.body.password, saltRounds);
-    const user = new User({ ...req.body, password: hash });
+    const hashOtp = bcrypt.hashSync(otp, saltRounds);
+
+    const userExist = await User.findOne({ email: req.body.email });
+
+    if (userExist) {
+      if (userExist.otpIsVerified) {
+        return res.status(402).json({ message: 'user already exist' });
+      } else {
+        userExist.otp = hashOtp;
+        user = userExist;
+      }
+    } else {
+      const newUser = new User({ ...req.body, password: hash, otp: hashOtp });
+
+      user = newUser;
+    }
     await user.save();
+
+    let msg = {};
+    if (user.email) {
+      const info = await transporter.sendMail({
+        to: user.email,
+        from: process.env.USER,
+        subject: 'M-bite Verification code  ',
+        text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
+      });
+
+      msg = info;
+    }
+
+    const userData = {
+      email: user.email,
+      url:
+        user.surname +
+        user.createdAt.toISOString() + user._id +
+        user.otpCreatedAt.toISOString() +
+        user.firstname,
+    };
+    res.status(200).json(userData);
+  } catch (error) {
+    res.status(500).json({ message: 'something went wrong'});
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  const { email, otpCode } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!otpCode || user.otpIsVerified) {
+      return res.status(400).json({ message: 'Invalid request' });
+    }
+    const otpValid = bcrypt.compareSync(otpCode, user.otp);
+
+    if (!otpValid) {
+      return res.status(401).json({ message: 'Incorrect OTP' });
+    }
+
+    const otpAge = Date.now() - user.otpCreatedAt.getTime();
+    const otpExpiry = 100 * 60 * 1000;
+
+    if (otpAge > otpExpiry) {
+      return res.status(403).json({ message: 'OTP has expired' });
+    }
+
+    user.otpIsVerified = true;
+    user.otp = undefined;
+    user.otpCreatedAt = undefined;
+    await user.save();
+
     const token = jwt.sign(
       {
         _id: user._id,
@@ -21,19 +108,21 @@ export const userRegister = async (req, res) => {
       },
       process.env.JWT_SECRET
     );
+
     const userDetails = {
       firstname: user.firstname,
       _id: user._id,
     };
+
     res.status(200).json({ user: userDetails, token });
   } catch (error) {
-    res.status(500).json({ message: 'fill the neccessary fields' });
+    res.status(500).json({ message: 'omething went wrong' });
   }
 };
 
 export const userLogin = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email, otpIsVerified:true });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -57,51 +146,14 @@ export const userLogin = async (req, res) => {
       firstname: user.firstname,
       _id: user._id,
     };
-   
+
     res.status(200).json({ user: userDetails, token });
   } catch (error) {
     res.status(500).json({ message: 'something went wrong' });
   }
 };
 
-export const getRandomKitchens = async (req, res) => {
-  try {
-    const { query, page = 1, pageSize = 10 } = req.query;
-    const aggregationPipeline = [];
-    aggregationPipeline.push(
-      {
-        $match: {
-          $or: [
-            { desc: { $regex: query, $options: 'i' } },
-            { category: { $regex: query, $options: 'i' } },
-            { type: { $regex: query, $options: 'i' } },
-            { name: { $regex: query, $options: 'i' } },
-          ],
-        },
-      },
-      { $sample: { size: parseInt(pageSize) } }
-    );
-    const itemsToSkip = (page - 1) * pageSize;
-    aggregationPipeline.push({ $skip: itemsToSkip });
 
-    const kitchens =
-      query !== 'all'
-        ? await Product.aggregate(aggregationPipeline)
-        : await Product.find()
-            .skip((page - 1) * pageSize)
-            .limit(parseInt(pageSize));
-    const uniqueKitchenIds = new Set(kitchens.map((kitchen) => kitchen.userId));
-    const uniqueKitchens = await User.find({
-      _id: { $in: Array.from(uniqueKitchenIds) },
-    });
-
-    res
-      .status(200)
-      .json(uniqueKitchens.map((kitchen) => sanitizeKitchen(kitchen)));
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 export const Riders = async (req, res) => {
   try {
@@ -127,7 +179,7 @@ export const Riders = async (req, res) => {
 
     res.status(200).json(riders);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong'});
   }
 };
 
@@ -179,7 +231,7 @@ export const getRiderAndReviews = async (req, res) => {
       return res.status(404).json({ message: 'no user available' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -223,7 +275,7 @@ export const getUserReviews = async (req, res) => {
       return res.status(200).json(allReviews);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
     console.log(error);
   }
 };
@@ -257,14 +309,30 @@ export const userBalance = async (req, res) => {
   }
 };
 
-export const insertFromLocalToOnline = async (req, res) => {
-  try {
-    const local = await User.find();
-    const online = await User.insertMany({ local });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+// export const insertFromLocalToOnline = async (req, res) => {
+//   try {
+//     // Connect to your local MongoDB (assuming it's running locally)
+   
+
+//     // Find all documents in your local User collection
+//     const localUsers = await User.find();
+
+//     // Connect to MongoDB Atlas using your connection string (stored in environment variables)
+//     await mongoose.connect(process.env.MONGO, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+
+//     // Insert all documents retrieved from the local database into MongoDB Atlas
+//     const result = await User.insertMany(localUsers);
+
+//     res.status(200).json({ message: 'Data migration successful', result });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+// // to check the database if there are any related document that match with the query from location page
 
 export const gettingKitchenByLocation = async (req, res) => {
   try {
@@ -289,7 +357,7 @@ export const gettingKitchenByLocation = async (req, res) => {
       res.status(200).json('query is required');
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -311,7 +379,6 @@ export const getStores = async (req, res) => {
       blocked: false,
       suspended: false,
     };
-
 
     if (searchedLocation) {
       searchConditions.$or = [
@@ -342,8 +409,9 @@ export const getStores = async (req, res) => {
       physicalAddress: store.physicalAddress,
       timeOpen: store.timeOpen,
     }));
+    console.log('rating', rating);
 
-    if (ratingNumber !== null && searchedLocation) {
+    if (ratingNumber !== null) {
       searchConditions.$or[
         ({ physicalAddress: { $regex: searchedLocation, $options: 'i' } },
         { lga: { $regex: searchedLocation, $options: 'i' } },
@@ -351,6 +419,8 @@ export const getStores = async (req, res) => {
         { country: { $regex: searchedLocation, $options: 'i' } })
       ],
         filteredStores.sort((a, b) => b.rating - a.rating);
+    } else {
+      filteredStores.sort((a, b) => b.rating - a.rating);
     }
 
     if (popularFilter) {
@@ -395,7 +465,6 @@ export const getStores = async (req, res) => {
 
     res.status(200).json(paginatedStores);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
-
