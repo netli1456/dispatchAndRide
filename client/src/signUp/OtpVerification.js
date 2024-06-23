@@ -126,25 +126,22 @@ function OtpVerification() {
   const handleCount = async () => {
     await axios.post(`${api}/api/users/resendOtp`, { email: userInfo.email });
     dispatch(updateCountDown(60));
-    toast.success(
-      `sent successfully, check your email.`,
-      {
-        autoClose: true,
-        theme: 'light',
-        toastId: 'unique-toast-id',
-      }
-    );
+    toast.success(`sent successfully, check your email.`, {
+      autoClose: true,
+      theme: 'light',
+      toastId: 'unique-toast-id',
+    });
   };
 
   return (
-    <div style={{ overflowX: 'hidden' }} >
+    <div style={{ overflowX: 'hidden' }}>
       <Row>
         <Col
-          className="border m-auto "
+          className="border m-auto  "
           style={{ height: '80vh', overflowX: 'hidden' }}
         >
           <div
-            className="d-flex flex-column justify-content-center align-items-center"
+            className="d-flex flex-column justify-content-center align-items-center "
             style={{ height: '100%' }}
           >
             <div>
@@ -153,7 +150,7 @@ function OtpVerification() {
                 style={{ width: '120px', height: '120px' }}
               />
             </div>
-            <div className="d-flex flex-column text-center">
+            <div className="d-flex flex-column text-center ">
               <strong className="fs-3 fw-bold">Verification Code</strong>
               <span>
                 A verification code has been sent to{' '}
@@ -163,7 +160,7 @@ function OtpVerification() {
               </span>
               <form
                 id="otpForm"
-                className="d-flex gap-2 my-4 justify-content center align-items-center"
+                className="d-flex gap-2 my-4 justify-content center align-items-center "
                 onSubmit={handleVerification}
               >
                 {[...Array(6)].map((_, index) => (
@@ -174,6 +171,8 @@ function OtpVerification() {
                     className="otpInput border-success fw-bold text-center"
                     maxLength="1"
                     size="1"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     onChange={handleInputChange(index)}
                     onKeyDown={handleKeyDown(index)}
                     value={otp[index]}

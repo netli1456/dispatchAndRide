@@ -8,37 +8,27 @@ import { generateOtp } from '../middleWare/MiddleWare.js';
 
 export const userRegister = async (req, res) => {
   const saltRounds = 10;
+
   try {
     let user = {};
+
     const hash = bcrypt.hashSync(req.body.password, saltRounds);
-   
-    
     const userExist = await User.findOne({ email: req.body.email });
-  
-    const hashOtp = await generateOtp(userExist)
+
     if (userExist) {
       if (userExist.otpIsVerified) {
-        return res.status(402).json({ message: 'user already exist' });
+        return res.status(402).json({ message: 'User already exists' });
       } else {
-        
-        userExist.otp = hashOtp;
+        userExist.otp = await generateOtp(userExist);
         user = userExist;
       }
     } else {
-      const user ={
-        email: req.body.email,
-      }
-      const hashOtp = await generateOtp(user)
-      const newUser = new User({ ...req.body, password: hash, otp:hashOtp });
-
+      const newUser = new User({ ...req.body, password: hash });
+      newUser.otp = await generateOtp(newUser);
       user = newUser;
-
     }
+
     await user.save();
-
-    if (user.email) {
-      generateOtp(user);
-    }
 
     const userData = {
       email: user.email,
@@ -49,6 +39,7 @@ export const userRegister = async (req, res) => {
         user.otpCreatedAt.toISOString() +
         user.firstname,
     };
+
     res.status(200).json(userData);
   } catch (error) {
     res.status(500).json({ message: error.message });

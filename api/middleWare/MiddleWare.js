@@ -91,7 +91,7 @@ export const queryFit = async (req, res) => {
 };
 
 
-export const generateOtp =async (user)=>{
+export const generateOtp = async (user) => {
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -99,20 +99,22 @@ export const generateOtp =async (user)=>{
       pass: process.env.PASS,
     },
   });
+
   const saltRounds = 10;
   let otp = '';
   const characters = '0123456789';
   for (let i = 0; i < 6; i++) {
     otp += characters.charAt(Math.floor(Math.random() * characters.length));
   }
+
   let hashOtp = bcrypt.hashSync(otp, saltRounds);
 
   await transporter.sendMail({
     to: user.email,
     from: process.env.USER,
-    subject: 'M-bite Verification code  ',
-    text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
+    subject: 'M-bite Verification code',
+    text: `Your M-bite verification code is ${otp}. Do not disclose this code to anyone`,
   });
 
   return hashOtp;
-}
+};
