@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
-
-import NavSearch from '../navSection/NavSearch';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
-
 import './product.css';
 import Button from 'react-bootstrap/Button';
-
 import Footer from '../footerSection/Footer';
 import ProductDetails from './ProductDetails';
 import CartCard from '../cartSection/CartCard';
-
 import { useSelector } from 'react-redux';
 import { api } from '../utils/apiConfig';
-
 import Recommended from '../recommended/Recommended';
 import LoadingBox from '../LoadingBox';
-import Navbar from '../navSection/Navbar';
 
 
 function Product() {

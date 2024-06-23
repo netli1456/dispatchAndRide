@@ -125,6 +125,14 @@ function OtpVerification() {
   const handleCount = async () => {
     await axios.post(`${api}/api/users/resendOtp`, { email: userInfo.email });
     dispatch(updateCountDown(60));
+    toast.success(
+      `sent successfully, check your email.`,
+      {
+        autoClose: true,
+        theme: 'light',
+        toastId: 'unique-toast-id',
+      }
+    );
   };
 
   return (

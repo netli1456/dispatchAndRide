@@ -111,7 +111,7 @@ export const resendOtp = async (req, res) => {
     user.otpCreatedAt = Date.now();
     await user.save();
 
-    res.status(200).json(user);
+    res.status(200).json('check your email for the code');
   } catch (error) {
     res.status(500).json({ message: 'something went wrong' });
   }
