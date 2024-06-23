@@ -96,7 +96,6 @@ function SignUp() {
     handleCount();
   }, [countdown, dispatch]);
 
-  console.log('newCountdown', countdown, userInfo);
 
   return (
     <div>
@@ -105,7 +104,7 @@ function SignUp() {
           backgroundColor: 'lightgrey',
           overflowX: 'hidden',
           position: 'relative',
-          height: '',
+          height: '1200px',
         }}
       >
         <img

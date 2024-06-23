@@ -11,6 +11,7 @@ import { fetchSuccess, updateCountDown } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Spinners from '../utils/Spinner';
+import Container from 'react-bootstrap/Container';
 
 function OtpVerification() {
   const inputRefs = useRef([]);
@@ -136,10 +137,10 @@ function OtpVerification() {
   };
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
+    <div style={{ overflowX: 'hidden' }} >
       <Row>
         <Col
-          className="border m-auto"
+          className="border m-auto "
           style={{ height: '80vh', overflowX: 'hidden' }}
         >
           <div

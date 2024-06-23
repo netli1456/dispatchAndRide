@@ -1,5 +1,7 @@
 import Product from '../models/Product.js';
 import nodemailer from 'nodemailer';
+import bcrypt from 'bcryptjs';
+
 
 
 export const sanitizeUser = (user) => {
@@ -97,13 +99,13 @@ export const generateOtp =async (user)=>{
       pass: process.env.PASS,
     },
   });
-
+  const saltRounds = 10;
   let otp = '';
   const characters = '0123456789';
   for (let i = 0; i < 6; i++) {
     otp += characters.charAt(Math.floor(Math.random() * characters.length));
   }
-
+  let hashOtp = bcrypt.hashSync(otp, saltRounds);
 
   await transporter.sendMail({
     to: user.email,
@@ -112,5 +114,5 @@ export const generateOtp =async (user)=>{
     text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
   });
 
-  return otp;
+  return hashOtp;
 }

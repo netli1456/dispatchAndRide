@@ -11,21 +11,28 @@ export const userRegister = async (req, res) => {
   try {
     let user = {};
     const hash = bcrypt.hashSync(req.body.password, saltRounds);
-    const hashOtp = bcrypt.hashSync(otp, saltRounds);
-
+   
+    
     const userExist = await User.findOne({ email: req.body.email });
-
+  
+    const hashOtp = await generateOtp(userExist)
     if (userExist) {
       if (userExist.otpIsVerified) {
         return res.status(402).json({ message: 'user already exist' });
       } else {
+        
         userExist.otp = hashOtp;
         user = userExist;
       }
     } else {
-      const newUser = new User({ ...req.body, password: hash, otp: hashOtp });
+      const user ={
+        email: req.body.email,
+      }
+      const hashOtp = await generateOtp(user)
+      const newUser = new User({ ...req.body, password: hash, otp:hashOtp });
 
       user = newUser;
+
     }
     await user.save();
 
@@ -44,7 +51,7 @@ export const userRegister = async (req, res) => {
     };
     res.status(200).json(userData);
   } catch (error) {
-    res.status(500).json({ message: 'something went wrong' });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -105,9 +112,9 @@ export const resendOtp = async (req, res) => {
       otpIsVerified: false,
     });
     if (!user) return res.status(404).json({ message: 'Unauthorized action' });
-    const otp = await generateOtp(user);
+    const hashOtp = await generateOtp(user);
 
-    user.otp = otp;
+    user.otp = hashOtp;
     user.otpCreatedAt = Date.now();
     await user.save();
 
