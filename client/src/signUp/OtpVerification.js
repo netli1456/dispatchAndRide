@@ -20,27 +20,24 @@ function OtpVerification() {
   const navigate = useNavigate();
   const [otp, setOtp] = useState(new Array(6).fill(''));
 
-  
-
   useEffect(() => {
     const handlePaste = (event) => {
-      event.preventDefault(); 
-      const pasteData = event.clipboardData?.getData('text') || '';  
-      
+      event.preventDefault();
+      const pasteData = event.clipboardData?.getData('text') || '';
+
       let index = 0;
-      const newOtp = [...otp]; 
+      const newOtp = [...otp];
       for (
         let i = 0;
         i < pasteData.length && index < inputRefs.current.length;
         i++
       ) {
         inputRefs.current[index].value = pasteData[i];
-        newOtp[index] = pasteData[i]; 
+        newOtp[index] = pasteData[i];
         index++;
       }
-      setOtp(newOtp); 
+      setOtp(newOtp);
 
-      
       for (let i = 0; i < inputRefs.current.length - 1; i++) {
         inputRefs.current[i].addEventListener('input', () => {
           if (inputRefs.current[i].value.length === 1) {
@@ -56,17 +53,15 @@ function OtpVerification() {
     return () => {
       otpForm?.removeEventListener('paste', handlePaste);
     };
-  }, []); 
+  }, []);
 
   const handleInputChange = (index) => (event) => {
     const value = event.target.value;
 
-    
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
 
-   
     if (value && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1].focus();
     }
@@ -127,7 +122,8 @@ function OtpVerification() {
     handleCount();
   }, [countdown, dispatch]);
 
-  const handleCount = () => {
+  const handleCount = async () => {
+    await axios.post(`${api}/api/users/resendOtp`, { email: userInfo.email });
     dispatch(updateCountDown(60));
   };
 
@@ -158,7 +154,7 @@ function OtpVerification() {
               </span>
               <form
                 id="otpForm"
-                className="d-flex gap-2 my-4"
+                className="d-flex gap-2 my-4 justify-content center align-items-center"
                 onSubmit={handleVerification}
               >
                 {[...Array(6)].map((_, index) => (
@@ -186,7 +182,8 @@ function OtpVerification() {
                 Resend Code{countdown > 0 && `(${countdown}s)`}
               </Button>
               <div className="d-grid" style={{ position: 'relative' }}>
-                <Button disabled={otp.includes('') }
+                <Button
+                  disabled={otp.includes('')}
                   variant="success"
                   className="text-success rounded text-white fw-bold"
                   onClick={handleVerification}

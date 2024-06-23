@@ -105,7 +105,7 @@ function SignUp() {
           backgroundColor: 'lightgrey',
           overflowX: 'hidden',
           position: 'relative',
-          height: '840px',
+          height: '',
         }}
       >
         <img

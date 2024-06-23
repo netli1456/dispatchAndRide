@@ -1,5 +1,6 @@
 .otpInput{
     height: 50px ;
+    min-width: 60px;
     border-radius: 10px;
     
 }

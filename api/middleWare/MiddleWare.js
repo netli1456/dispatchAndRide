@@ -1,4 +1,6 @@
 import Product from '../models/Product.js';
+import nodemailer from 'nodemailer';
+
 
 export const sanitizeUser = (user) => {
   const { password, ...userData } = user.toObject();
@@ -85,3 +87,30 @@ export const queryFit = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const generateOtp =async (user)=>{
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.USER,
+      pass: process.env.PASS,
+    },
+  });
+
+  let otp = '';
+  const characters = '0123456789';
+  for (let i = 0; i < 6; i++) {
+    otp += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+
+
+  await transporter.sendMail({
+    to: user.email,
+    from: process.env.USER,
+    subject: 'M-bite Verification code  ',
+    text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
+  });
+
+  return otp;
+}

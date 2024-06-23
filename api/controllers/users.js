@@ -4,24 +4,10 @@ import jwt from 'jsonwebtoken';
 import Product from '../models/Product.js';
 import Review from '../models/Review.js';
 import Account from '../models/accounts.js';
-import nodemailer from 'nodemailer';
-
+import { generateOtp } from '../middleWare/MiddleWare.js';
 
 export const userRegister = async (req, res) => {
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.USER,
-      pass: process.env.PASS,
-    },
-  });
   const saltRounds = 10;
-  let otp = '';
-  const characters = '0123456789';
-  for (let i = 0; i < 6; i++) {
-    otp += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-
   try {
     let user = {};
     const hash = bcrypt.hashSync(req.body.password, saltRounds);
@@ -43,29 +29,22 @@ export const userRegister = async (req, res) => {
     }
     await user.save();
 
-    
     if (user.email) {
-      await transporter.sendMail({
-        to: user.email,
-        from: process.env.USER,
-        subject: 'M-bite Verification code  ',
-        text: `Your M-bite verification code is ${otp}. do not disclose this code to anyone`,
-      });
-
-   
+      generateOtp(user);
     }
 
     const userData = {
       email: user.email,
       url:
         user.surname +
-        user.createdAt.toISOString() + user._id +
+        user.createdAt.toISOString() +
+        user._id +
         user.otpCreatedAt.toISOString() +
         user.firstname,
     };
     res.status(200).json(userData);
   } catch (error) {
-    res.status(500).json({ message: error.message});
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -73,7 +52,6 @@ export const verifyOtp = async (req, res) => {
   const { email, otpCode } = req.body;
   try {
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -116,13 +94,35 @@ export const verifyOtp = async (req, res) => {
 
     res.status(200).json({ user: userDetails, token });
   } catch (error) {
-    res.status(500).json({ message: 'omething went wrong' });
+    res.status(500).json({ message: 'something went wrong' });
+  }
+};
+
+export const resendOtp = async (req, res) => {
+  try {
+    const user = await User.findOne({
+      email: req.body.email,
+      otpIsVerified: false,
+    });
+    if (!user) return res.status(404).json({ message: 'Unauthorized action' });
+    const otp = await generateOtp(user);
+
+    user.otp = otp;
+    user.otpCreatedAt = Date.now();
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
 export const userLogin = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email, otpIsVerified:true });
+    const user = await User.findOne({
+      email: req.body.email,
+      otpIsVerified: true,
+    });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -153,8 +153,6 @@ export const userLogin = async (req, res) => {
   }
 };
 
-
-
 export const Riders = async (req, res) => {
   try {
     const { query, page = 1, pageSize = 10 } = req.query;
@@ -179,7 +177,7 @@ export const Riders = async (req, res) => {
 
     res.status(200).json(riders);
   } catch (error) {
-    res.status(500).json({ message: 'something went wrong'});
+    res.status(500).json({ message: 'something went wrong' });
   }
 };
 
@@ -312,7 +310,6 @@ export const userBalance = async (req, res) => {
 // export const insertFromLocalToOnline = async (req, res) => {
 //   try {
 //     // Connect to your local MongoDB (assuming it's running locally)
-   
 
 //     // Find all documents in your local User collection
 //     const localUsers = await User.find();

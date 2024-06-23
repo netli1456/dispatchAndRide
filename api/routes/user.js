@@ -10,6 +10,10 @@ import {
   
  
   
+  resendOtp,
+  
+ 
+  
   userBalance,
   userLogin,
   userRegister,
@@ -34,6 +38,7 @@ userRouter.get('/stores', getStores);
 // userRouter.post('/insert', insertFromLocalToOnline)
 
 userRouter.post('/verification', verifyOtp);
+userRouter.post('/resendOtp', resendOtp);
 
 
 export default userRouter;
