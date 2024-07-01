@@ -25,6 +25,7 @@ export const createVirtuaAccount = async (req, res) => {
           bank: response.data.bank_name,
           userId: user._id,
           accountNumber: response.data.account_number,
+          order_ref: response.data.order_ref,
         });
 
         user.wallet = true;
@@ -101,6 +102,28 @@ export const initTrans = async () => {
 
     const response = await flw.Transfer.initiate(payload);
     console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetch = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const account = await Account.findOne({ userId: user._id.toString() });
+    if (!account) {
+      return res.status(401).json({ message: 'you dont have an account yet' });
+    }
+
+    const payload = {
+      order_ref: account.order_ref +'12',
+    };
+    const response = await flw.VirtualAcct.fetch(payload);
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
   }

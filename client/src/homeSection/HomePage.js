@@ -79,9 +79,6 @@ function HomePage(props) {
     <div
      
     >
-      
-      
-
       <Map setOpen={setOpen} />
       <div className="my-5 d-flex justify-content-center">
         {' '}

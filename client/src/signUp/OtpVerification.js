@@ -11,7 +11,6 @@ import { fetchSuccess, updateCountDown } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Spinners from '../utils/Spinner';
-import Container from 'react-bootstrap/Container';
 
 function OtpVerification() {
   const inputRefs = useRef([]);
@@ -30,7 +29,7 @@ function OtpVerification() {
       const newOtp = [...otp];
       for (
         let i = 0;
-        i < pasteData.length && index < inputRefs.current.length;
+        i < pasteData?.length && index < inputRefs?.current?.length;
         i++
       ) {
         inputRefs.current[index].value = pasteData[i];
@@ -39,10 +38,10 @@ function OtpVerification() {
       }
       setOtp(newOtp);
 
-      for (let i = 0; i < inputRefs.current.length - 1; i++) {
-        inputRefs.current[i].addEventListener('input', () => {
-          if (inputRefs.current[i].value.length === 1) {
-            inputRefs.current[i + 1].focus();
+      for (let i = 0; i < inputRefs?.current?.length - 1; i++) {
+        inputRefs?.current[i].addEventListener('input', () => {
+          if (inputRefs?.current[i].value.length === 1) {
+            inputRefs?.current[i + 1].focus();
           }
         });
       }
@@ -63,7 +62,7 @@ function OtpVerification() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value && index < inputRefs.current.length - 1) {
+    if (value && index < inputRefs?.current?.length - 1) {
       inputRefs.current[index + 1].focus();
     }
   };
@@ -82,7 +81,7 @@ function OtpVerification() {
 
     try {
       const { data } = await axios.post(`${api}/api/users/verification`, {
-        email: userInfo.email,
+        email: userInfo?.email,
         otpCode: otp.join(''),
       });
 
@@ -124,7 +123,7 @@ function OtpVerification() {
   }, [countdown, dispatch]);
 
   const handleCount = async () => {
-    await axios.post(`${api}/api/users/resendOtp`, { email: userInfo.email });
+    await axios.post(`${api}/api/users/resendOtp`, { email: userInfo?.email });
     dispatch(updateCountDown(60));
     toast.success(`sent successfully, check your email.`, {
       autoClose: true,
@@ -133,6 +132,11 @@ function OtpVerification() {
     });
   };
 
+  useEffect(() => {
+    if (userInfo._id) {
+      navigate('/');
+    }
+  });
   return (
     <div style={{ overflowX: 'hidden' }}>
       <Row>
@@ -155,8 +159,8 @@ function OtpVerification() {
               <span>
                 A verification code has been sent to{' '}
                 <strong>{`${'*'.repeat(
-                  userInfo.email.length - 13
-                )}${userInfo.email.slice(-13)}`}</strong>
+                  userInfo?.email?.length - 13
+                )}${userInfo?.email.slice(-13)}`}</strong>
               </span>
               <form
                 id="otpForm"

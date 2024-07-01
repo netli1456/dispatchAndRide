@@ -10,41 +10,16 @@ import { useNavigate } from 'react-router-dom';
 const Map = (props) => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const navigate = useNavigate();
-  const [error, setError] = useState('');
- const {setOpen}=props
-  // useEffect(() => {
-  //   if ('geolocation' in navigator) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const { latitude, longitude } = position.coords;
-
-  //         const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
-
-  //         document.getElementById('map-iframe').src = mapUrl;
-  //         console.log('mapUrl', mapUrl);
-  //       },
-
-  //       (error) => {
-  //         setError('Error getting user location', error);
-  //       }
-  //     );
-  //   } else {
-  //     setError('Geolocation is not supported by this browser.');
-  //   }
-  // }, []);
-
+  const [mapData, setMapData] = useState(false);
+  const { setOpen } = props;
 
   useEffect(() => {
-    const latitude = 6.5244; // Latitude for Lagos
-    const longitude = 3.3792; // Longitude for Lagos
-  
+    const latitude = 6.5244;
+    const longitude = 3.3792;
+
     const mapUrl = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d126844.06348606381!2d${longitude}!3d${latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sng!4v1706517127493!5m2!1sen!2sng`;
-  
-   setError(  mapUrl);
-    // setError(mapUrl)
-  }, []);
-
-
+    setMapData(mapUrl);
+  },[]);
 
   const data = [
     {
@@ -102,18 +77,18 @@ const Map = (props) => {
     };
   }, []);
 
-  console.log('error', );
+  
 
   return (
     <div style={{ width: '100%', overflow: 'hidden' }}>
-      {error ? (
+      {mapData ? (
         <Form className="searchP">
           <iframe
             width="100%"
             height="300"
             title="Google Map Embed"
             id="map-iframe"
-            src={error}
+            src={mapData}
             style={{ border: '0' }}
             allowFullScreen=""
             loading="lazy"
@@ -130,21 +105,24 @@ const Map = (props) => {
               className="d-flex gap-4 align-items-center px-3 py-1"
               style={{ fontSize: '77px' }}
             >
-              <span className='sponsoredfont'>powered by META</span>
-              <span className='sponsoredfont'>BDC approved</span>
-              <span className='sponsoredfont'>logistics</span>
+              <span className="sponsoredfont">powered by META</span>
+              <span className="sponsoredfont">BDC approved</span>
+              <span className="sponsoredfont">logistics</span>
             </div>
           }
           <div
             className={!isSmallScreen ? `bgg  rounded p-4 ` : 'bgg pt-2'}
             style={{ width: '100%', margin: 'auto' }}
           >
-            <Row className="bg-white rounded"> 
+            <Row className="bg-white rounded">
               <Col md={6} className="rounded p-0">
                 <Carousel>
                   {data.map((item, index) => (
                     <Carousel.Item key={index}>
-                      <div style={{ width: '100%', height: '390px' }} className=''>
+                      <div
+                        style={{ width: '100%', height: '390px' }}
+                        className=""
+                      >
                         <img
                           src={item?.img}
                           alt=""
@@ -152,7 +130,6 @@ const Map = (props) => {
                             width: '100%',
                             height: '390px',
                             objectFit: 'cover',
-                           
                           }}
                           className="picRound"
                         />

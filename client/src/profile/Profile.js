@@ -45,7 +45,7 @@ const Profile = () => {
         setLoadingBalance(false);
         
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error('something went wrong');
         setLoadingBalance(false);
       }
     };

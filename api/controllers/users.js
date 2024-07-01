@@ -17,7 +17,7 @@ export const userRegister = async (req, res) => {
 
     if (userExist) {
       if (userExist.otpIsVerified) {
-        return res.status(402).json({ message: 'User already exists' });
+        return res.status(402).json({ message: 'email has already been used' });
       } else {
         userExist.otp = await generateOtp(userExist);
         user = userExist;
@@ -29,18 +29,21 @@ export const userRegister = async (req, res) => {
     }
 
     await user.save();
+    console.log(user);
 
+    
     const userData = {
       email: user.email,
-      url:
-        user.surname +
-        user.createdAt.toISOString() +
+      url: user.surname +
+        (user.createdAt ? user.createdAt.toISOString() : '') +
         user._id +
-        user.otpCreatedAt.toISOString() +
-        user.firstname,
+        (user.otpCreatedAt ? user.otpCreatedAt.toISOString() : '') +
+        user.firstname
     };
+      res.status(200).json(userData);
+    
 
-    res.status(200).json(userData);
+    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -236,7 +239,6 @@ export const getUserReviews = async (req, res) => {
     const { id } = req.params;
 
     const reviews = [];
-    console.log('reviews', reviews);
 
     const review = await Review.find({ userId: id });
 
@@ -272,7 +274,6 @@ export const getUserReviews = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'something went wrong' });
-    console.log(error);
   }
 };
 
@@ -404,7 +405,6 @@ export const getStores = async (req, res) => {
       physicalAddress: store.physicalAddress,
       timeOpen: store.timeOpen,
     }));
-    console.log('rating', rating);
 
     if (ratingNumber !== null) {
       searchConditions.$or[
