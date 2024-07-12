@@ -9,8 +9,6 @@ export const CreateOrder = async (req, res) => {
     const shippingAddress = req.body.shippingAddress;
     const customer = await User.findById(buyerId);
 
-    
-
     if (!customer) {
       return res.status(404).json({ message: 'not a registered  user' });
     }
@@ -47,7 +45,6 @@ export const CreateOrder = async (req, res) => {
           });
 
           const ordered = await order.save();
-         
 
           if (ordered.total) {
             customer.balance = customer.balance - order.total;
@@ -87,12 +84,14 @@ export const orderedItems = async (req, res) => {
     const { id } = req.params;
 
     const orders = [];
+
     const isBusinessId = await User.findById(id);
+
     if (isBusinessId.isBusinessOwner === true) {
       const order = await Order.find({
         isTaken: '',
         $or: [{ businessId: id }, { buyerId: id }],
-      });
+      }).sort({ createdAt: -1 });;
 
       if (order.length !== 0) {
         for (const item of order) {
@@ -116,8 +115,8 @@ export const orderedItems = async (req, res) => {
     } else {
       const order = await Order.find({
         buyerId: id,
-        isTaken: '',
-      });
+        isDelivered: false,
+      }).sort({ createdAt: -1 });
       if (order.length !== 0) {
         for (const item of order) {
           const singleItem = item.orderedItems.map((items) => {
@@ -139,7 +138,7 @@ export const orderedItems = async (req, res) => {
       }
     }
 
-    res.status(200).json(orders);
+    res.status(200).json({ orders: orders, bal: isBusinessId.balance });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -148,7 +147,11 @@ export const orderedItems = async (req, res) => {
 export const getSingleOrder = async (req, res) => {
   try {
     const { id, orderId } = req.params;
-    const order = await Order.findById(orderId);
+
+    const order = await Order.findOne({
+      _id: orderId.toString(),
+      $or: [{ businessId: id }, { buyerId: id }],
+    });
     if (!order) {
       return res.status(404).json({ message: 'order not found' });
     }
@@ -170,26 +173,27 @@ export const getSingleOrder = async (req, res) => {
       });
 
       const { orderedItems, ...other } = order._doc;
-      const buyer = await User.findById(order.buyerId);
+      const buyer = await User.findById(order.buyerId.toString());
       if (!buyer) {
         res.status(404).json({ message: 'user not found' });
       }
-      const business = await User.findById(order.businessId);
+      const business = await User.findById(order.businessId.toString());
       if (!business) {
         res.status(404).json({ message: 'user not found' });
       }
       const others = {
         ...other,
-        buyerName: buyer.name,
-        businessName: business.name,
+        buyerName: buyer.surname + buyer.firstname,
+        businessName: business.businessName,
         businessId: business._id,
         buyerId: buyer._id,
         rating: business.rating,
       };
+
       res.status(200).json({ products: orders, details: others });
     }
   } catch (error) {
-    res.status(404).json({ message: 'invalid order details' });
+    res.status(404).json({ message: error.message });
   }
 };
 

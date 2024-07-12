@@ -127,7 +127,7 @@ function Navbar(props) {
                 >
                   <ListGroup.Item>
                     <Link
-                      to="/profile"
+                      to={`/profile/${userInfo?.user?._id}`}
                       className="text-decoration-none text-success fw-bold d-flex flex-column align-items-center px-3"
                       onClick={()=>setOpen(false)}
                     >

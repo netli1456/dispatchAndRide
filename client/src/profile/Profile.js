@@ -9,7 +9,6 @@ import Footer from '../footerSection/Footer';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import NavSearch from '../navSection/NavSearch';
 import { fetchSuccess } from '../redux/userSlice';
 import { toast } from 'react-toastify';
 import ProfileHeader from './ProfileHeader';
@@ -24,8 +23,8 @@ const Profile = () => {
   const [open, setOpen] = useState(false);
   const [arl, Setarl] = useState(false);
   const dispatch = useDispatch();
-  const [balance, setBalance] = useState(null);
-  const [loadingBalance, setLoadingBalance] = useState(null);
+ 
+ 
   const [loading, setLoading] = useState('page' || false);
 
   useEffect(() => {
@@ -34,37 +33,20 @@ const Profile = () => {
     }
   });
 
-  useEffect(() => {
-    const handleAct = async () => {
-      setLoadingBalance(true);
-      try {
-        const { data } = await axios.get(
-          `${api}/api/users/acct/${userInfo.user?._id}`
-        );
-        setBalance(data);
-        setLoadingBalance(false);
-        
-      } catch (error) {
-        toast.error('something went wrong');
-        setLoadingBalance(false);
-      }
-    };
-  
-    handleAct();
-   
-  }, [userInfo?.user?._id, data]);
+ 
 
   useEffect(() => {
     const handleOrder = async () => {
       setLoading('page');
       try {
         const { data } = await axios.get(
-          `${api}/api/orders/allorders/${userInfo?.user?._id}`
+          `${api}/api/orders/allorders/${userInfo?.user?._id }`
         );
         setData(data);
         setLoading(false);
+        
       } catch (error) {
-        console.log(error);
+        toast.error('something went wrong');
         setLoading(false);
       }
     };
@@ -81,7 +63,7 @@ const Profile = () => {
       setLoading(false);
       setOpenWallet(true);
     } catch (error) {
-      toast.error(error.ressponse.data.message);
+      toast.error('something went wrong');
       setLoading(false);
     }
   };
@@ -102,7 +84,7 @@ const Profile = () => {
       );
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      toast.error('something went wrong');
       setLoading(false);
     }
   };
@@ -114,7 +96,7 @@ const Profile = () => {
         <ProfileHeader
           userInfo={userInfo}
           open={open}
-          balance={balance}
+          balance={data.bal}
           handleWalletDetails={handleWalletDetails}
           setOpen={setOpen}
           handleCreateWallet={handleCreateWallet}
@@ -122,7 +104,7 @@ const Profile = () => {
           setOpenWallet={setOpenWallet}
           arl={arl}
           loading={loading}
-          loadingBalance={loadingBalance}
+         
         />
 
         <SearchBar />
@@ -132,7 +114,7 @@ const Profile = () => {
             <strong className="text-success fw-bold ">
               New Orders
               <Badge pill bg="danger">
-                {data?.length}
+                {data?.orders?.length}
               </Badge>
             </strong>
           </div>
@@ -140,7 +122,7 @@ const Profile = () => {
             columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 2 }}
           >
             <Masonry gutter="20px">
-              {(loading === 'page' ? Array.from(new Array(2)) : data)?.map(
+              {(loading === 'page' ? Array.from(new Array(2)) : data.orders)?.map(
                 (item, index) => (
                   <>
                     {item ? (

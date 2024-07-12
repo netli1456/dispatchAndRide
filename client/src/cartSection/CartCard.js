@@ -23,9 +23,9 @@ function CartCard(props) {
     dispatch(addCart({ ...item, quantity }));
   };
   return (
-    <div >
+    <div>
       {location.pathname !== '/cart' && (
-        <Card >
+        <Card>
           <Card.Body>
             <strong>
               Total({cartItems?.length} Items):{' '}
@@ -51,10 +51,11 @@ function CartCard(props) {
           <ListGroup.Item
             className={' d-flex mb-2 border gap-1 '}
             key={item._id}
-            
           >
-           
-            <Link to={`/product/${item._id}`} style={{ width: '60%', height: '100px' }}>
+            <Link
+              to={`/product/${item._id}`}
+              style={{ width: '60%', height: '100px' }}
+            >
               {' '}
               <img
                 src={item?.imgs[0]}
@@ -62,7 +63,7 @@ function CartCard(props) {
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit:  'cover',
+                  objectFit: 'cover',
                 }}
               />
             </Link>
@@ -89,6 +90,7 @@ function CartCard(props) {
                   variant="success"
                   className=" bg-success d-flex justify-content-center align-items-center fs-3 text-white"
                   onClick={() => handlequantity(item, item?.quantity - 1)}
+                  disabled={item.quantity === 1}
                 >
                   -
                 </Button>{' '}
@@ -120,7 +122,6 @@ function CartCard(props) {
             >
               <HighlightOffOutlinedIcon />
             </span>
-       
           </ListGroup.Item>
         ))}
         {/* <ListGroup.Item>

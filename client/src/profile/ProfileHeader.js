@@ -28,7 +28,7 @@ function ProfileHeader(props) {
     setOpenWallet,
     loading,
     arl,
-    loadingBalance
+    
   } = props;
 
   const [history, setHistory] = useState([]);
@@ -49,12 +49,21 @@ function ProfileHeader(props) {
     }
   };
 
+  const formatBalance = (balance) => {
+    if (!balance) return '';
+  
+  
+    const fixedBalance = Number(balance).toFixed(2);
+  
+
+    return fixedBalance.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
   return (
     <Row className="balance-inf my-2">
       <Col className=" p-3 border ">
-        <h3 className='text-capitalize'>
-          Hello {userInfo?.user?.firstname ? userInfo?.user?.firstname : ''}{' '}
-          !
+        <h3 className="text-capitalize">
+          Hello {userInfo?.user?.firstname ? userInfo?.user?.firstname : ''} !
         </h3>
 
         <Row className="d-flex  justify-content-between flex-wrap gap-3">
@@ -65,10 +74,13 @@ function ProfileHeader(props) {
               <div className="d-flex flex-column mb-2">
                 {' '}
                 Available balance:
-                {loadingBalance ? (
+                {loading ? (
                   <Skeleton />
                 ) : (
-                  <strong> N{balance && balance}</strong>
+                  <strong>
+                    {' '}
+                    <strong> N{balance && formatBalance(balance)}</strong>
+                  </strong>
                 )}
               </div>
             )}
@@ -136,7 +148,7 @@ function ProfileHeader(props) {
                         variant="danger"
                         className="bg-danger"
                       >
-                        {loading  === "createWallet" ? <Skeleton/> : "Ok"}
+                        {loading === 'createWallet' ? <Skeleton /> : 'Ok'}
                       </Button>
                     </div>
                   </div>
@@ -199,7 +211,7 @@ function ProfileHeader(props) {
                   arl.accountNumber && (
                     <div
                       className="d-flex acct text-start flex-column text-secondary"
-                      style={{ fontSize: '14px', minWidth:"100%" }}
+                      style={{ fontSize: '14px', minWidth: '100%' }}
                     >
                       <strong
                         variant=" text-success"

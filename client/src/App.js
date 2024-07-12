@@ -67,7 +67,7 @@ function App() {
           <Route path="/search" element={<SearchScreen />} />
           <Route path="/riders" element={<RidersPage />} />
           <Route path="/rider/:id" element={<RiderCard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/order/:id" element={<Order />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />

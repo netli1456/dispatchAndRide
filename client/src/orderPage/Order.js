@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import Rating from '../component/Rating';
 import { api } from '../utils/apiConfig';
 import { Box, Skeleton } from '@mui/material';
+import Error from '../utils/Error';
 
 function Order() {
   const params = useParams();
@@ -32,16 +33,12 @@ function Order() {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `${api}/api/orders/find/${userInfo.user?._id}/${id}`
+          `${api}/api/orders/find/${id}/${userInfo.user?._id}`
         );
         setData(data);
         setLoading(false);
       } catch (error) {
-        toast.error(error.response.data.message, {
-          autoClose: false,
-          theme: 'colored',
-          toastId: 'unique-toast-id',
-        });
+        
         setLoading(false);
       }
     };
@@ -116,8 +113,10 @@ function Order() {
     }
   };
 
+  console.log(data.products)
   return (
     <div>
+      {data?.products?.length > 0 ?
       <>
         <Container className="my-3">
           <div>
@@ -368,7 +367,7 @@ function Order() {
             </div>
           </div>
         </Container>
-      </>
+      </> :<Error/>}
     </div>
   );
 }
