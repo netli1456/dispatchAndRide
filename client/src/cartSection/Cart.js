@@ -78,6 +78,13 @@ function Cart() {
           toastId:"unique-toast-id",
 
         });
+      } else if (error.response.data.message === 'something went wrong') {
+        toast.error(error.response.data.message, {
+          autoClose: false,
+          theme: 'colored',
+          toastId:"unique-toast-id",
+
+        });
        
       } else {
         toast.error('please fill the shipping address',error.response.data.message, {
@@ -108,7 +115,7 @@ function Cart() {
   }, [shipOpen]);
 
 
-  console.log(shipping)  
+ 
 
   return (
     <div>
@@ -123,7 +130,7 @@ function Cart() {
               >
                 <h3>
                   Cart is empty{' '}
-                  <Link to="/search">click here to see available kitchens</Link>
+                  <Link to="/search" style={{fontSize:"16px"}}>Click here to see available kitchens</Link>
                 </h3>
               </div>
             ) : (
@@ -203,7 +210,7 @@ function Cart() {
                           variant="lighter"
                           className=" fw-bold"
                         >
-                          shipping Fee :{' '}
+                          Delivery Fee :{' '}
                           {cartItems.reduce(
                             (a, c) => a + c.price * c.quantity,
                             0

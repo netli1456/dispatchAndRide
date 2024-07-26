@@ -14,12 +14,12 @@ import { useSelector } from 'react-redux';
 import { api } from '../utils/apiConfig';
 
 import { Box, Skeleton } from '@mui/material';
-
-
+import LetsDoItTogether from './LetsDoItTogether';
+import CategoryLayout from './CategoryLayout';
 
 function HomePage(props) {
   const [data, setData] = useState([]);
-  const { setOpen}= props;
+  const { setOpen } = props;
   const [carouselData, setCarouselData] = useState([]);
   const randomNum = Math.floor(Math.random() * 500);
   const page = 1;
@@ -27,8 +27,6 @@ function HomePage(props) {
   const userId = cartItems.length > 0 ? cartItems[0].userId : '';
   const [loading, setLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
- 
- 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +51,9 @@ function HomePage(props) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const userResponse = await axios.get(`${api}/api/users/stores?page=${page}`);
+        const userResponse = await axios.get(
+          `${api}/api/users/stores?page=${page}`
+        );
         setLoading(false);
         setCarouselData(userResponse.data);
       } catch (error) {
@@ -73,13 +73,10 @@ function HomePage(props) {
     setCurrentSlide(currentSlide === data.length - 1 ? 0 : currentSlide + 1);
   };
 
- 
-
   return (
-    <div
-     
-    >
+    <div style={{overflowX:"hidden", backgroundColor:"" }}>
       <Map setOpen={setOpen} />
+      
       <div className="my-5 d-flex justify-content-center">
         {' '}
         <h3 className="border-bottom border-secondary">
@@ -98,7 +95,7 @@ function HomePage(props) {
       >
         {(loading ? Array.from(new Array(5)) : data).map((item, index) => (
           <Link
-            to={`/product/${item?._id}`}
+            to={`/kitchen/${item?.userId}`}
             key={`${index}`}
             className="box text-decoration-none "
             style={{
@@ -132,6 +129,9 @@ function HomePage(props) {
           </div>
         </div>
       </div>
+      <div className='text-center' style={{}}><h1>Browse our categories</h1>
+        <CategoryLayout setOpen={setOpen}/>
+      </div>
       <div className="d-flex justify-content-center text-secondary border-top border-grey py-3">
         <div className="d-flex my-5 flex-column">
           <Link
@@ -148,11 +148,14 @@ function HomePage(props) {
           </span>
         </div>
       </div>
-      <div className="rowParent2   border-bottom border-secondary" >
+      <div className="rowParent2   ">
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
+      <div style={{marginTop:"120px"}}></div>
+      <div  className='my-5'>
+        <LetsDoItTogether />
+      </div>
 
-      
       <div className=" p-2">
         <Footer />
       </div>

@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
-import Badge from 'react-bootstrap/Badge';
 
 import SearchBar from '../component/SearchBar';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import './profile.css';
 import Footer from '../footerSection/Footer';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSuccess } from '../redux/userSlice';
 import { toast } from 'react-toastify';
 import ProfileHeader from './ProfileHeader';
 import { api } from '../utils/apiConfig';
 import { Box, Skeleton } from '@mui/material';
+import Button from 'react-bootstrap/esm/Button';
 const Profile = () => {
   const [data, setData] = useState([]);
 
@@ -23,9 +23,17 @@ const Profile = () => {
   const [open, setOpen] = useState(false);
   const [arl, Setarl] = useState(false);
   const dispatch = useDispatch();
- 
- 
+  const [counts, setCounts] = useState({});
+
   const [loading, setLoading] = useState('page' || false);
+
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const query = sp.get('query') || 'pending';
+
+  const handleQuery = (que) => {
+    navigate(`/profile/${userInfo?.user?._id}?query=${que}`);
+  };
 
   useEffect(() => {
     if (!userInfo.user?._id) {
@@ -33,25 +41,25 @@ const Profile = () => {
     }
   });
 
- 
-
   useEffect(() => {
     const handleOrder = async () => {
       setLoading('page');
       try {
         const { data } = await axios.get(
-          `${api}/api/orders/allorders/${userInfo?.user?._id }`
+          `${api}/api/orders/allorders/${userInfo?.user?._id}?query=${query}`
         );
         setData(data);
         setLoading(false);
-        
+        setCounts(data?.counts);
+
       } catch (error) {
         toast.error('something went wrong');
         setLoading(false);
       }
     };
     handleOrder();
-  }, [userInfo?.user?._id]);
+  }, [userInfo?.user?._id, query]);
+
 
   const handleWalletDetails = async () => {
     setLoading('walletDetails');
@@ -90,9 +98,8 @@ const Profile = () => {
   };
 
   return (
-    <div>
-      
-      <Container >
+    <div style={{ width: '100%', overflowX: 'hidden' }}>
+      <Container>
         <ProfileHeader
           userInfo={userInfo}
           open={open}
@@ -104,26 +111,73 @@ const Profile = () => {
           setOpenWallet={setOpenWallet}
           arl={arl}
           loading={loading}
-         
         />
 
         <SearchBar />
         <div className="my-3 ">
-          <div className="text-center mb-3 border-bottom border-grey">
+          <div className="text-center p-3 flex-wrap d-flex align-items-center justify-content-between mb-3 border-bottom border-grey">
             {' '}
-            <strong className="text-success fw-bold ">
-              New Orders
-              <Badge pill bg="danger">
-                {data?.orders?.length}
-              </Badge>
-            </strong>
+            <Button
+              variant="light"
+              onClick={() => handleQuery('pending')}
+              className={query === 'pending' ? "text-danger fw-bold  border-bottom" : "text-success  "}
+              
+            >
+              Pending(
+               {counts.pending > 0 ? counts?.pending : 0}
+              )
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => handleQuery('dispatched')}
+              className={query === 'dispatched' ? "text-danger fw-bold  border-bottom" : "text-success"}
+            >
+              Dispatched(
+                {counts.dispatched > 0 ? counts?.dispatched : 0}
+              )
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => handleQuery('delivered')}
+              className={query === 'delivered' ? "text-danger fw-bold  border-bottom" : "text-success  "}
+            >
+              Delivered(
+                {counts?.delivered > 0 ? counts?.delivered : 0}
+              )
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => handleQuery('refunded')}
+              className={query === 'refunded' ? "text-danger fw-bold  border-bottom" : "text-success  "}
+            >
+              Refunded(
+                {counts.refunded > 0 ? counts?.refunded : 0}
+              )
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => handleQuery('all')}
+              className={query === 'all' ? "text-danger fw-bold  border-bottom" : "text-success  "}
+            >
+              View All(
+                {counts.all > 0 ? counts?.all : 0}
+              )
+            </Button>
           </div>
-          <ResponsiveMasonry
-            columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 2 }}
-          >
-            <Masonry gutter="20px">
-              {(loading === 'page' ? Array.from(new Array(2)) : data.orders)?.map(
-                (item, index) => (
+          {data.orders?.length === 0 ? (
+            <div className="text-center my-5" >
+              {' '}
+              <strong>No {query} orders</strong>{' '}
+            </div>
+          ) : (
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 2 }}
+            >
+              <Masonry gutter="20px">
+                {(loading === 'page'
+                  ? Array.from(new Array(2))
+                  : data.orders
+                )?.map((item, index) => (
                   <>
                     {item ? (
                       <Link
@@ -192,10 +246,10 @@ const Profile = () => {
                       </div>
                     )}{' '}
                   </>
-                )
-              )}
-            </Masonry>
-          </ResponsiveMasonry>
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          )}
         </div>
       </Container>
       <Footer />

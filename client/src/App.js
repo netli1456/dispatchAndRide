@@ -17,17 +17,26 @@ import Navbar from './navSection/Navbar';
 import { useState } from 'react';
 import LocationPage from './dalle/LocationPage';
 import OtpVerification from './signUp/OtpVerification';
+import CategoryLayout from './homeSection/CategoryLayout';
 
 function App() {
   const [open, setOpen] = useState(false);
   return (
     <BrowserRouter>
-      <div style={{
-        width: '100%',
-        position: open ? 'relative' : '',
-        height: open ? '100vh' : '',
-        overflow: open ? 'hidden' : '',
-      }}>
+      <div
+        
+        style={{
+          width: '100%',
+          position: open ? 'relative' : '',
+          height: open ? '100vh' : '',
+          overflow: open ? 'hidden' : '',
+        }}
+      >
+        <div style={{ position: 'sticky', width: '', top: 0, zIndex: 9 }}>
+          {' '}
+          <Navbar openNow={open} setOpenNow={setOpen} />
+        </div>
+
         <ToastContainer
           position="bottom-center"
           autoClose={5000}
@@ -38,43 +47,42 @@ function App() {
           pauseOnFocusLoss
           pauseOnHover
         />
-        <div
-          style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9 }}
-        >
-          {' '}
-          <Navbar openNow={open} setOpenNow={setOpen} />
+      
+          {open === true && (
+            <div
+            style={{
+              width: '100%',
+              position: 'absolute',
+              top: 0,
+              height: '100vh',
+            }}
+            className=" d-flex justify-content-center align-items-center locationBg"
+            >
+              <LocationPage setOpen={setOpen} />
+            </div>
+          )}
+  
+          <Routes >
+            <Route path="/" element={<HomePage setOpen={setOpen} />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/kitchen/:id" element={<Kitchen />} />
+            <Route path="/search" element={<SearchScreen />} />
+            <Route path="/riders" element={<RidersPage />} />
+            <Route path="/rider/:id" element={<RiderCard />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/order/:id" element={<Order />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/test" element={<Testss />} />
+            <Route path="/cat" element={<CategoryLayout/>} />
+            <Route
+              path="/verification/:url/auth"
+              element={<OtpVerification />}
+            />
+          </Routes>
         </div>
-
-
-        {open === true && (
-        <div
-          style={{
-            width: '100%',
-            position: 'absolute',
-            top: 0,
-            height: '100vh',
-          }}
-          className=" d-flex justify-content-center align-items-center locationBg"
-        >
-          <LocationPage setOpen={setOpen} />
-        </div>
-      )}
-        <Routes>
-          <Route path="/" element={<HomePage setOpen={setOpen}/>} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/kitchen/:id" element={<Kitchen />} />
-          <Route path="/search" element={<SearchScreen />} />
-          <Route path="/riders" element={<RidersPage />} />
-          <Route path="/rider/:id" element={<RiderCard />} />
-          <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/order/:id" element={<Order />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/test" element={<Testss />} />
-          <Route path="/verification/:url/auth" element={<OtpVerification />} />
-        </Routes>
-      </div>
+     
     </BrowserRouter>
   );
 }

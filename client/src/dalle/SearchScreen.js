@@ -39,7 +39,6 @@ function SearchScreen() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  console.log('searchlocation', searchedLocation);
   const locationQuery = searchedLocation === undefined ? '' : searchedLocation;
 
   const [products, setProducts] = useState([]);
@@ -96,7 +95,7 @@ function SearchScreen() {
     <div>
       <div
         className=""
-        style={{ position: 'sticky', width: '100%', top: 0, zIndex: 9 }}
+        style={{ position: 'sticky', width: '100%', top: 50, zIndex: 8 }}
       >
         {' '}
         <SearchBar />
@@ -116,7 +115,9 @@ function SearchScreen() {
           <Row className="my-3">
             <Col
               md={isSmallScreen ? 12 : 3}
-              className={isSmallScreen ? 'mb-3' : ''}
+              className={
+                isSmallScreen ? 'mb-3 ' : 'scrollable-column'
+              }
             >
               <ListGroup
                 variant="flush"
@@ -171,6 +172,7 @@ function SearchScreen() {
                         height: isSmallScreen ? '50px ' : '',
                         width: isSmallScreen ? '50px' : '',
                       }}
+                      onClick={() => handleFilter('')}
                     >
                       <span>
                         <TuneIcon className="text-success" />
@@ -247,7 +249,7 @@ function SearchScreen() {
                 </ListGroup>
               </div>
             </Col>
-            <Col md={!isSmallScreen ? 9 : 12}>
+            <Col className="scrollable-column" md={!isSmallScreen ? 9 : 12}>
               {(query || popularFilter) && products?.length === 0 && (
                 <div className="my-5">
                   <div className=" d-flex justify-content-center align-items-center flex-column">
@@ -289,6 +291,8 @@ function SearchScreen() {
                         <SearchedItems item={item} />
                       </Link>
                     ))}
+
+                    
                 </Masonry>
               </ResponsiveMasonry>
             </Col>

@@ -12,11 +12,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addCart } from '../redux/cartSlice';
 import CartError from '../utils/CartError';
 import { toast } from 'react-toastify';
-import Reviews from '../reviews/Reviews';
 
 
 function ProductDetails(props) {
-  const { product,  isSmallScreen, currentImage, setCurrentImage, id } =
+  const { product,  isSmallScreen, currentImage, setCurrentImage,  } =
     props;
 
   const [error, setError] = useState(null);
@@ -24,29 +23,31 @@ function ProductDetails(props) {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
 
-  const addToCart = (cart) => {
+  const addToCart = (product) => {
     if (cartItems.length === 0) {
       const existItem = cartItems?.find((item) => item._id === product._id);
       const quantity = existItem ? existItem.quantity + 1 : 1;
-      dispatch(addCart({ ...cart, quantity }));
+      dispatch(addCart({ ...product, quantity }));
       toast.success('Added', {
         autoClose: 300,
         theme: 'light',
         toastId: 'unique-toast-id',
       });
-    } else if (cartItems.length >= 1 && cart?.userId === cartItems[0]?.userId) {
+    } else if (cartItems.length >= 1 && product?.userId === cartItems[0]?.userId) {
       const existItem = cartItems?.find((item) => item._id === product._id);
       const quantity = existItem ? existItem.quantity + 1 : 1;
-      dispatch(addCart({ ...cart, quantity }));
+      dispatch(addCart({ ...product, quantity }));
       toast.success('Added', {
         autoClose: 300,
         theme: 'light',
         toastId: 'unique-toast-id',
       });
     } else {
-      setError(
-        'You can only add items from one store at a time. this message is showing because you already have an item from another store in your cart. it is to enhance the delivery time. you can make another order after the current order or better still, you can clear the cart to begin a new order'
-      );
+      toast.warning('You can only add items from one store at a time. you already have an item from another store in your cart. ', {
+        autoClose: false,
+        theme: 'dark',
+        toastId: 'unique-toast-id',
+      });
     }
   };
 
@@ -119,9 +120,9 @@ function ProductDetails(props) {
           <ListGroup.Item>
             
               <div className="d-flex align-items-center gap-1">
-                <strong className="text-capitalize text-secondary">
+                <Link to={`/kitchen/${product.userId}`} className="text-capitalize fw-bold text-secondary">
                   {product?.businessName}
-                </strong>
+                </Link>
                 <img
                   src="https://cdn-icons-png.freepik.com/512/7641/7641727.png"
                   alt=""

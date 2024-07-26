@@ -29,8 +29,14 @@ export const CreateOrder = async (req, res) => {
           });
 
           const business = await User.findById(businessId);
-          if (!business) {
-            return res.status(404).json({ message: 'no bussiness owner' });
+          if (business) {
+            for (const item of orderedItems) {
+              if (item.userId !== business._id.toString()) {
+                return res
+                  .status(401)
+                  .json({ message: 'something went wrong' });
+              }
+            }
           }
 
           const order = new Order({
@@ -75,23 +81,41 @@ export const CreateOrder = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error.message);
   }
 };
 
 export const orderedItems = async (req, res) => {
   try {
     const { id } = req.params;
+    const { query } = req.query;
 
     const orders = [];
+    const searchConditions = { $or: [{ businessId: id }, { buyerId: id }] };
+
+    switch (query) {
+      case 'pending':
+        searchConditions.isPaid = false;
+        // searchConditions.isDispatched = false;
+        break;
+      case 'delivered':
+        searchConditions.isDelivered = true;
+        searchConditions.isPaid = true;
+        break;
+      case 'refunded':
+        searchConditions.isCancelled = true;
+        break;
+      case 'dispatched':
+        searchConditions.isTaken = { $exists: true };
+        break;
+      default:
+        // No additional condition for 'all' or unspecified query
+        break;
+    }
 
     const isBusinessId = await User.findById(id);
 
-    if (isBusinessId.isBusinessOwner === true) {
-      const order = await Order.find({
-        isTaken: '',
-        $or: [{ businessId: id }, { buyerId: id }],
-      }).sort({ createdAt: -1 });;
+    if (isBusinessId) {
+      const order = await Order.find(searchConditions).sort({ createdAt: -1 });
 
       if (order.length !== 0) {
         for (const item of order) {
@@ -112,35 +136,21 @@ export const orderedItems = async (req, res) => {
           orders.push(items);
         }
       }
+
+      const counts = {
+        pending: await Order.countDocuments({ $or: [{ businessId: id }, { buyerId: id }], isPaid: false }),
+        delivered: await Order.countDocuments({ $or: [{ businessId: id }, { buyerId: id }], isDelivered: true, isPaid: true }),
+        refunded: await Order.countDocuments({ $or: [{ businessId: id }, { buyerId: id }], isCancelled: true }),
+        dispatched: await Order.countDocuments({ $or: [{ businessId: id }, { buyerId: id }], isTaken: { $exists: true } }),
+        all: await Order.countDocuments({ $or: [{ businessId: id }, { buyerId: id }] })
+      };
+
+      res.status(200).json({ orders: orders, bal: isBusinessId.balance, counts });
     } else {
-      const order = await Order.find({
-        buyerId: id,
-        isDelivered: false,
-      }).sort({ createdAt: -1 });
-      if (order.length !== 0) {
-        for (const item of order) {
-          const singleItem = item.orderedItems.map((items) => {
-            return {
-              name: items.name,
-              category: items.category,
-              quantity: items.quantity,
-              productId: items.productId,
-            };
-          });
-
-          const items = {
-            content: singleItem,
-            imgs: item.orderedItems[0].imgs[0],
-            _id: item._id,
-          };
-          orders.push(items);
-        }
-      }
+      res.status(404).json({ message: 'User not found' });
     }
-
-    res.status(200).json({ orders: orders, bal: isBusinessId.balance });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

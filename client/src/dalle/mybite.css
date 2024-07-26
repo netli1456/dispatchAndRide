@@ -153,3 +153,23 @@ p {
 .input-group-no-border {
   border: none !important;
 }
+
+
+
+.scrollable-column {
+  max-height: 80vh; 
+  overflow-y: auto;
+}
+
+.scrollable-column::-webkit-scrollbar {
+  width: 1px;
+}
+
+.scrollable-column::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scrollable-column::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

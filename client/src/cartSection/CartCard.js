@@ -124,9 +124,7 @@ function CartCard(props) {
             </span>
           </ListGroup.Item>
         ))}
-        {/* <ListGroup.Item>
-                  <span>Cart Items</span>
-                </ListGroup.Item> */}
+        
       </ListGroup>
     </div>
   );

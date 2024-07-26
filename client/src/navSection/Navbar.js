@@ -15,6 +15,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Button from 'react-bootstrap/Button';
 import { clearLocation } from '../redux/searchSlice';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 function Navbar(props) {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ function Navbar(props) {
             onClick={() => navigate('/cart')}
             style={{ position: 'relative', cursor: 'pointer' }}
           >
-            <CircleNotificationsIcon
+            < AddShoppingCartIcon
               className={
                 location.pathname === '/cart'
                   ? 'fs-2 fw-bold  border border-white text-white color-white rounded'

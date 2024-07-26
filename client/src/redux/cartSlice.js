@@ -15,7 +15,7 @@ export const cartSlice = createSlice({
       const updatedItem = existItem
         ? state.cartItems.map((item) =>
             item._id === existItem._id
-              ? { ...item, quantity: quantity  }
+              ? { ...item, quantity: quantity   }
               : item
           )
         : [...state.cartItems, { ...newItem, quantity: 1 }];
