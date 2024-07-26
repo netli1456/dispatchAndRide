@@ -129,7 +129,7 @@ function HomePage(props) {
           </div>
         </div>
       </div>
-      <div className='text-center' style={{}}><h1>Browse our categories</h1>
+      <div className='text-center'><h1>Browse our categories</h1>
         <CategoryLayout setOpen={setOpen}/>
       </div>
       <div className="d-flex justify-content-center text-secondary border-top border-grey py-3">

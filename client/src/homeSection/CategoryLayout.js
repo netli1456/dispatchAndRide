@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SetMealIcon from '@mui/icons-material/SetMeal';
 import TakeoutDiningIcon from '@mui/icons-material/TakeoutDining';
 import './homePage.css'; // Adjust the path as needed
 import { NearMe, DinnerDining, RiceBowl, Icecream } from '@mui/icons-material'; // Replace with actual icons
-import Button from 'react-bootstrap/esm/Button';
+import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
 
 function CategoryLayout(props) {
@@ -44,8 +44,7 @@ function CategoryLayout(props) {
 
   const navigate = useNavigate();
   const { searchedLocation } = useSelector((state) => state.searching);
-  const {setOpen}=props
-
+  const { setOpen } = props;
 
   const handleFilter = (filterData) => {
     if (filterData !== 'Near me') {
@@ -53,13 +52,12 @@ function CategoryLayout(props) {
     } else {
       if (searchedLocation) {
         navigate(`/search?&searchedLocation=${searchedLocation}`);
-      }else{
-        setOpen(true)
+      } else {
+        setOpen(true);
       }
     }
   };
-console.log('searchLocat', searchedLocation)
- 
+
   return (
     <div>
       <div className="category-container">
@@ -67,7 +65,6 @@ console.log('searchLocat', searchedLocation)
           <Button
             onClick={() => handleFilter(category.name)}
             variant="grey"
-            to={`/${category.name.replace(/ /g, '-').toLowerCase()}`}
             key={index}
             className={`category-item text-white bt  fw-bold `}
             style={category.position}

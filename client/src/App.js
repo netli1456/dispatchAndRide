@@ -17,7 +17,6 @@ import Navbar from './navSection/Navbar';
 import { useState } from 'react';
 import LocationPage from './dalle/LocationPage';
 import OtpVerification from './signUp/OtpVerification';
-import CategoryLayout from './homeSection/CategoryLayout';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -75,7 +74,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/test" element={<Testss />} />
-            <Route path="/cat" element={<CategoryLayout/>} />
+           
             <Route
               path="/verification/:url/auth"
               element={<OtpVerification />}
