@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import './homePage.css';
 import HomeFeatures from './HomeFeatures';
 import Footer from '../footerSection/Footer';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import EastIcon from '@mui/icons-material/East';
 
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -16,6 +14,8 @@ import { api } from '../utils/apiConfig';
 import { Box, Skeleton } from '@mui/material';
 import LetsDoItTogether from './LetsDoItTogether';
 import CategoryLayout from './CategoryLayout';
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
+import { toast } from 'react-toastify';
 
 function HomePage(props) {
   const [data, setData] = useState([]);
@@ -26,7 +26,6 @@ function HomePage(props) {
   const { cartItems } = useSelector((state) => state.cart);
   const userId = cartItems.length > 0 ? cartItems[0].userId : '';
   const [loading, setLoading] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,11 +38,10 @@ function HomePage(props) {
         setData(productResponse.data);
         setLoading(false);
       } catch (error) {
-        console.log('Error fetching data:', error);
+        toast.error('something went wrong', { toastId: 'unique-toast-id' });
         setLoading(false);
       }
     };
-
     fetchData();
   }, [userId]);
 
@@ -58,25 +56,18 @@ function HomePage(props) {
         setCarouselData(userResponse.data);
       } catch (error) {
         setLoading(false);
-        console.log('Error fetching data');
+        toast.error('something went wrong', { toastId: 'unique-toast-id' });
+
       }
     };
 
     fetchData();
   }, []);
 
-  const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? data.length - 1 : currentSlide - 1);
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide(currentSlide === data.length - 1 ? 0 : currentSlide + 1);
-  };
-
   return (
-    <div style={{overflowX:"hidden", backgroundColor:"" }}>
+    <div style={{ overflowX: 'hidden', backgroundColor: '' }}>
       <Map setOpen={setOpen} />
-      
+
       <div className="my-5 d-flex justify-content-center">
         {' '}
         <h3 className="border-bottom border-secondary">
@@ -89,50 +80,54 @@ function HomePage(props) {
           Recommended Items from the store in your cart
         </span>
       )}
-      <div
-        className="d-flex gap-3 justify-content-cente align-items-center my-5 "
-        style={{ overflowX: 'hidden', position: 'relative' }}
-      >
-        {(loading ? Array.from(new Array(5)) : data).map((item, index) => (
-          <Link
-            to={`/kitchen/${item?.userId}`}
-            key={`${index}`}
-            className="box text-decoration-none "
-            style={{
-              height: '270px',
-              minWidth: '200px',
-              transform:
-                currentSlide.length !== currentSlide.length - 1 &&
-                `translateX(-${currentSlide * 100}px)`,
-            }}
-          >
-            {' '}
-            {item ? (
-              <Cards loading={loading} item={item} />
-            ) : (
-              <div>
-                <Skeleton variant="rectangular" width={'100%'} height={118} />
-                <Box sx={{ pt: 0.5 }}>
-                  <Skeleton />
-                  <Skeleton width="60%" />
-                </Box>
-              </div>
-            )}
-          </Link>
-        ))}
-        <div className="icons">
-          <div onClick={prevSlide} className="icon border border-white">
-            <KeyboardBackspaceIcon className="text-white" />
-          </div>
-          <div onClick={nextSlide} className="icon border border-white">
-            <EastIcon className="text-white" />
-          </div>
-        </div>
+      <div>
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{
+            250: 1,
+            300: 2,
+            520: 3,
+            815: 4,
+            1000: 5,
+            1200: 6,
+          }}
+        >
+          <Masonry gutter="10px">
+            {(loading ? Array.from(new Array(5)) : data).map((item, index) => (
+              <Link
+                to={`/kitchen/${item?.userId}`}
+                key={`${index}`}
+                className="bo  text-decoration-none "
+                style={{
+                  height: '270px',
+              
+                }}
+              >
+                {' '}
+                {item ? (
+                  <Cards loading={loading} item={item} />
+                ) : (
+                  <div>
+                    <Skeleton
+                      variant="rectangular"
+                      width={'100%'}
+                      height={118}
+                    />
+                    <Box sx={{ pt: 0.5 }}>
+                      <Skeleton />
+                      <Skeleton width="60%" />
+                    </Box>
+                  </div>
+                )}
+              </Link>
+            ))}
+          </Masonry>
+        </ResponsiveMasonry>
       </div>
-      <div className='text-center'><h1>Browse our categories</h1>
-        <CategoryLayout setOpen={setOpen}/>
+      <div className="text-center  my-5">
+        <h1 className='pb-3'>Browse our categories</h1>
+        <CategoryLayout setOpen={setOpen} />
       </div>
-      <div className="d-flex justify-content-center text-secondary border-top border-grey py-3">
+      <div className="d-flex justify-content-center text-secondary  py-3">
         <div className="d-flex my-5 flex-column">
           <Link
             to="/search"
@@ -151,8 +146,8 @@ function HomePage(props) {
       <div className="rowParent2   ">
         <HomeFeatures loading={loading} carouselData={carouselData} />
       </div>
-      <div style={{marginTop:"120px"}}></div>
-      <div  className='my-5'>
+      <div style={{ marginTop: '120px' }}></div>
+      <div className="my-5">
         <LetsDoItTogether />
       </div>
 

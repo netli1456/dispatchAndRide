@@ -16,6 +16,7 @@ import Rating from '../component/Rating';
 import { api } from '../utils/apiConfig';
 import { Box, Skeleton } from '@mui/material';
 import Error from '../utils/Error';
+import LoadingBox from '../LoadingBox';
 
 function Order() {
   const params = useParams();
@@ -112,274 +113,290 @@ function Order() {
     }
   };
 
-  console.log(data.products);
   return (
     <div>
-      {data?.products?.length > 0 ? (
+      {loading ? (
+        <div style={{ height: '70vh' , maxHeight:"70vh", overflow:'hidden'}}>
+          <LoadingBox />
+        </div>
+      ) : (
         <>
-          <Container className="my-3">
-            <div>
-              <div className="fw-bold fs-5 text-center text-success">
-                Order Details({data && data?.products?.length} items)
-              </div>
-              <div className="d-flex  p-3 border   justify-content-between ">
-                {loading ? (
-                  <Box sx={{ pt: 0.5 }}>
-                    <Skeleton />
-                    <Skeleton />
-                    <Skeleton width="60%" />
-                    <Skeleton width="80vw" />
-                    <Skeleton width={'60%'} height={200} />
-                  </Box>
-                ) : (
-                  <div className="d-flex flex-column ">
-                    <div>
-                      <h3 className="d-none d-md-flex">
-                        Order ID: {data?.details?._id}
-                      </h3>
-                      <h6 className="d-md-none">
-                        Order ID: {data?.details?._id}
-                      </h6>
-                    </div>
-                    <div className="d-flex flex-wrap  flex-column text-capitalize">
-                      <div className="d-flex flex-wrap  gap-2">
-                        <strong>Name: </strong>
-                        <span className="font">
-                          {data?.details?.shippingAddress?.name}
-                        </span>
-                      </div>
-                      <div className="d-flex  gap-2">
-                        <strong>phone number: </strong>
-                        <span className="font">
-                          {data.details?.shippingAddress?.phoneNumber}
-                        </span>
-                      </div>
-                      <div className="d-flex flex-wrap  gap-1">
-                        <strong>Address:</strong>
+          {data?.products?.length > 0 ? (
+            <>
+              <Container className="my-3">
+                <div>
+                  <div className="fw-bold fs-5 text-center text-success">
+                    Order Details({data && data?.products?.length} items)
+                  </div>
+                  <div className="d-flex  p-3 border   justify-content-between ">
+                    {loading ? (
+                      <Box sx={{ pt: 0.5 }}>
+                        <Skeleton />
+                        <Skeleton />
+                        <Skeleton width="60%" />
+                        <Skeleton width="80vw" />
+                        <Skeleton width={'60%'} height={200} />
+                      </Box>
+                    ) : (
+                      <div className="d-flex flex-column ">
                         <div>
-                          {' '}
-                          <span className="font">
-                            {data.details?.shippingAddress?.street}{' '}
-                            {data.details?.shippingAddress?.localGvt},{' '}
-                            {data.details?.shippingAddress?.state}{' '}
-                            {data.details?.shippingAddress?.country}
-                          </span>
+                          <h3 className="d-none d-md-flex">
+                            Order ID: {data?.details?._id}
+                          </h3>
+                          <h6 className="d-md-none">
+                            Order ID: {data?.details?._id}
+                          </h6>
                         </div>
-                      </div>
-                    </div>
-                    {data?.products &&
-                      data?.products[0]?.businessId !== false &&
-                      data?.details?.isCancelled === false && (
-                        <>
-                          {data?.details && !data?.details?.isTaken ? (
+                        <div className="d-flex flex-wrap  flex-column text-capitalize">
+                          <div className="d-flex flex-wrap  gap-2">
+                            <strong>Name: </strong>
+                            <span className="font">
+                              {data?.details?.shippingAddress?.name}
+                            </span>
+                          </div>
+                          <div className="d-flex  gap-2">
+                            <strong>phone number: </strong>
+                            <span className="font">
+                              {data.details?.shippingAddress?.phoneNumber}
+                            </span>
+                          </div>
+                          <div className="d-flex flex-wrap  gap-1">
+                            <strong>Address:</strong>
                             <div>
-                              {!cancelWarning && (
-                                <div className="d-flex align-items-center mt-2 gap-3">
-                                  <Button
-                                    variant="success"
-                                    className="fw-bold d-flex align-items-center"
-                                    onClick={() =>
-                                      takeOrder(
-                                        data?.details?.businessId,
-                                        data?.details?._id
-                                      )
-                                    }
-                                  >
-                                    Accept
-                                  </Button>
-                                  <Button
-                                    variant="danger"
-                                    className="fw-bold d-flex align-items-center"
-                                    onClick={() => setCancelWarning(true)}
-                                  >
-                                    Refund & Cancel
-                                  </Button>
-                                </div>
-                              )}
-                              {cancelWarning && (
-                                <div
-                                  className="d-flex p-2 align-items-center flex-column my-2 border rounded errors"
-                                  style={{ width: 'fit-content' }}
-                                >
-                                  <span className="text-white fw-bold">
-                                    Are you sure you want cancel this order now?
-                                  </span>
-                                  <div className="d-flex align-items-center mt-2 gap-3">
-                                    <Button
-                                      variant="light"
-                                      className="fw-bold d-flex align-items-center border border-danger"
-                                      onClick={() => setCancelWarning(false)}
-                                    >
-                                      No
-                                    </Button>
-                                    <Button
-                                      variant="success"
-                                      className="fw-bold d-flex align-items-center"
-                                      onClick={() =>
-                                        refundAndCancelOrder(data?.details?._id)
-                                      }
-                                    >
-                                      Yes
-                                    </Button>
-                                  </div>
-                                </div>
-                              )}
+                              {' '}
+                              <span className="font">
+                                {data.details?.shippingAddress?.street}{' '}
+                                {data.details?.shippingAddress?.localGvt},{' '}
+                                {data.details?.shippingAddress?.state}{' '}
+                                {data.details?.shippingAddress?.country}
+                              </span>
                             </div>
-                          ) : (
+                          </div>
+                        </div>
+                        {data?.products &&
+                          data?.products[0]?.businessId !== false &&
+                          data?.details?.isCancelled === false && (
                             <>
-                              {userInfo?.user?._id !==
-                                data?.details?.buyerId && (
-                                <div className="font1bg my-3 p-2 border border-rounded">
-                                  <span>
-                                    Note: this order has been comfirmed, for
-                                    futher enquiries or help, kindly report
-                                    below{' '}
-                                  </span>
-
-                                  <Button
-                                    variant="white"
-                                    className="fw-bold text-danger border-danger mt-1 d-flex align-items-center"
-                                  >
-                                    Report/dispute
-                                  </Button>
+                              {data?.details && !data?.details?.isTaken ? (
+                                <div>
+                                  {!cancelWarning && (
+                                    <div className="d-flex align-items-center mt-2 gap-3">
+                                      <Button
+                                        variant="success"
+                                        className="fw-bold d-flex align-items-center"
+                                        onClick={() =>
+                                          takeOrder(
+                                            data?.details?.businessId,
+                                            data?.details?._id
+                                          )
+                                        }
+                                      >
+                                        Accept
+                                      </Button>
+                                      <Button
+                                        variant="danger"
+                                        className="fw-bold d-flex align-items-center"
+                                        onClick={() => setCancelWarning(true)}
+                                      >
+                                        Refund & Cancel
+                                      </Button>
+                                    </div>
+                                  )}
+                                  {cancelWarning && (
+                                    <div
+                                      className="d-flex p-2 align-items-center flex-column my-2 border rounded errors"
+                                      style={{ width: 'fit-content' }}
+                                    >
+                                      <span className="text-white fw-bold">
+                                        Are you sure you want cancel this order
+                                        now?
+                                      </span>
+                                      <div className="d-flex align-items-center mt-2 gap-3">
+                                        <Button
+                                          variant="light"
+                                          className="fw-bold d-flex align-items-center border border-danger"
+                                          onClick={() =>
+                                            setCancelWarning(false)
+                                          }
+                                        >
+                                          No
+                                        </Button>
+                                        <Button
+                                          variant="success"
+                                          className="fw-bold d-flex align-items-center"
+                                          onClick={() =>
+                                            refundAndCancelOrder(
+                                              data?.details?._id
+                                            )
+                                          }
+                                        >
+                                          Yes
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
+                              ) : (
+                                <>
+                                  {userInfo?.user?._id !==
+                                    data?.details?.buyerId && (
+                                    <div className="font1bg my-3 p-2 border border-rounded">
+                                      <span>
+                                        Note: this order has been comfirmed, for
+                                        futher enquiries or help, kindly report
+                                        below{' '}
+                                      </span>
+
+                                      <Button
+                                        variant="white"
+                                        className="fw-bold text-danger border-danger mt-1 d-flex align-items-center"
+                                      >
+                                        Report/dispute
+                                      </Button>
+                                    </div>
+                                  )}
+                                </>
                               )}
                             </>
                           )}
-                        </>
-                      )}
 
-                    {data?.details &&
-                      data?.details?.isCancelled === false &&
-                      data?.details?.buyerId === userInfo?.user?._id && (
-                        <div className="font1bg my-3 p-2 border border-rounded">
-                          <span>
-                            Note: this order has been comfirmed, for futher
-                            enquiries or help, kindly report below{' '}
-                          </span>
-                          <Button
-                            variant="white"
-                            className="fw-bold text-danger border-danger mt-1 d-flex align-items-center"
-                          >
-                            Report/dispute
-                          </Button>
-                          <div className="d-flex flex-column mt-2">
-                            <span>
-                              Date {data?.details?.createdAt.slice(0, 10)}
-                            </span>
-                            <span>
-                              Time {data?.details?.createdAt.slice(11, 16)}
-                            </span>
+                        {data?.details &&
+                          data?.details?.isCancelled === false &&
+                          data?.details?.buyerId === userInfo?.user?._id && (
+                            <div className="font1bg my-3 p-2 border border-rounded">
+                              <span>
+                                Note: this order has been comfirmed, for futher
+                                enquiries or help, kindly report below{' '}
+                              </span>
+                              <Button
+                                variant="white"
+                                className="fw-bold text-danger border-danger mt-1 d-flex align-items-center"
+                              >
+                                Report/dispute
+                              </Button>
+                              <div className="d-flex flex-column mt-2">
+                                <span>
+                                  Date {data?.details?.createdAt.slice(0, 10)}
+                                </span>
+                                <span>
+                                  Time {data?.details?.createdAt.slice(11, 16)}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                        {data?.details && data?.details?.isCancelled && (
+                          <div className="bg-danger text-white my-3 p-2 border rounded">
+                            {data?.details?.businessId ===
+                            userInfo?.user?._id ? (
+                              <strong>
+                                Note: you cancelled this order and payment has
+                                been refunded to the customer
+                              </strong>
+                            ) : (
+                              <strong>
+                                Your order was cancelled and your balance
+                                refunded
+                              </strong>
+                            )}
                           </div>
-                        </div>
-                      )}
-
-                    {data?.details && data?.details?.isCancelled && (
-                      <div className="bg-danger text-white my-3 p-2 border rounded">
-                        {data?.details?.businessId === userInfo?.user?._id ? (
-                          <strong>
-                            Note: you cancelled this order and payment has been
-                            refunded to the customer
-                          </strong>
-                        ) : (
-                          <strong>
-                            Your order was cancelled and your balance refunded
-                          </strong>
                         )}
                       </div>
                     )}
+                    <div>
+                      <Button
+                        onClick={() => navigate(`/profile/${userInfo._id}`)}
+                        variant="success"
+                        className="bg-success text-white fw-bold"
+                      >
+                        See All Orders
+                      </Button>
+                    </div>
                   </div>
-                )}
-                <div>
-                  <Button
-                    onClick={()=>navigate(`/profile/${userInfo._id}`)}
-                    variant="success"
-                    className="bg-success text-white fw-bold"
-                  >
-                    See All Orders
-                  </Button>
-                </div>
-              </div>
-              <div>
-                <div className="fs-4 fw-bold text-center my-3">
-                  {loading ? <Skeleton /> : 'Items'}
-                </div>
-                <Row>
-                  <Col md={8} className="mb-3">
-                    <OrderDetails
-                      loading={loading}
-                      data={data}
-                      smallScreen={smallScreen}
-                    />
-                  </Col>
-                  <Col md={4}>
-                    <ListGroup>
-                      {loading ? (
-                        <div>
-                          {' '}
-                          <Skeleton />
-                          <Skeleton />
-                          <Skeleton />
-                          <Skeleton />
-                        </div>
-                      ) : (
-                        <div>
-                          <strong>Total:N{data?.details?.total}</strong>
-                          <ListGroup.Item className="font1bg">
-                            {items(data)}
-                          </ListGroup.Item>
-                          <ListGroup.Item className="font1bg">
-                            <div className="d-grid">
-                              <Button variant="light">
-                                {userInfo?.user?._id ===
-                                data?.details?.buyerId ? (
-                                  <div>
-                                    <div className="d-flex  flex-column text-start">
-                                      <span className="fw-bold">
-                                        {' '}
-                                        Business Details
-                                      </span>
-                                      <span>
-                                        Name: {data?.details?.businessName}
-                                      </span>
-                                      <span>
-                                        Reputation:{' '}
-                                        <Rating product={data?.details} />{' '}
-                                      </span>
-                                      <Link
-                                        className="fw-bold"
-                                        to={`/kitchen/${data.details.businessId}`}
-                                      >
-                                        check store{' '}
-                                      </Link>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <span className="d-flex flex-column text-start">
-                                      Customer Details:
-                                      <span>
-                                        Name: {data?.details?.buyerName}
-                                      </span>
-                                      <span>Reputation: Average</span>
-                                      <span>Id: {data?.details?.buyerId}</span>
-                                    </span>
-                                  </div>
-                                )}
-                              </Button>
+                  <div>
+                    <div className="fs-4 fw-bold text-center my-3">
+                      {loading ? <Skeleton /> : 'Items'}
+                    </div>
+                    <Row>
+                      <Col md={8} className="mb-3">
+                        <OrderDetails
+                          loading={loading}
+                          data={data}
+                          smallScreen={smallScreen}
+                        />
+                      </Col>
+                      <Col md={4}>
+                        <ListGroup>
+                          {loading ? (
+                            <div>
+                              {' '}
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
+                              <Skeleton />
                             </div>
-                          </ListGroup.Item>
-                        </div>
-                      )}
-                    </ListGroup>
-                  </Col>
-                </Row>
-              </div>
-            </div>
-          </Container>
+                          ) : (
+                            <div>
+                              <strong>Total:N{data?.details?.total}</strong>
+                              <ListGroup.Item className="font1bg">
+                                {items(data)}
+                              </ListGroup.Item>
+                              <ListGroup.Item className="font1bg">
+                                <div className="d-grid">
+                                  <Button variant="light">
+                                    {userInfo?.user?._id ===
+                                    data?.details?.buyerId ? (
+                                      <div>
+                                        <div className="d-flex  flex-column text-start">
+                                          <span className="fw-bold">
+                                            {' '}
+                                            Business Details
+                                          </span>
+                                          <span>
+                                            Name: {data?.details?.businessName}
+                                          </span>
+                                          <span>
+                                            Reputation:{' '}
+                                            <Rating product={data?.details} />{' '}
+                                          </span>
+                                          <Link
+                                            className="fw-bold"
+                                            to={`/kitchen/${data.details.businessId}`}
+                                          >
+                                            check store{' '}
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        <span className="d-flex flex-column text-start">
+                                          Customer Details:
+                                          <span>
+                                            Name: {data?.details?.buyerName}
+                                          </span>
+                                          <span>Reputation: Average</span>
+                                          <span>
+                                            Id: {data?.details?.buyerId}
+                                          </span>
+                                        </span>
+                                      </div>
+                                    )}
+                                  </Button>
+                                </div>
+                              </ListGroup.Item>
+                            </div>
+                          )}
+                        </ListGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                </div>
+              </Container>
+            </>
+          ) : (
+            <div>{!loading && <Error />}</div>
+          )}
         </>
-      ) : (
-        <Error />
       )}
     </div>
   );

@@ -22,7 +22,6 @@ import LoadingBox from '../LoadingBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCart } from '../redux/cartSlice';
 import Button from 'react-bootstrap/esm/Button';
-import Reviews from '../reviews/Reviews';
 
 function Kitchen() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -135,11 +134,11 @@ function Kitchen() {
   return (
     <div>
       {loading ? (
-        <div style={{ height: '500px', overflow: 'hidden' }}>
+        <div style={{ height: '85vh', overflow:'hidden' }}>
           <LoadingBox />{' '}
         </div>
       ) : (
-        <div>
+        <div style={{ height: 'auto',  }} >
           <div style={{ position: 'relative' }}>
             <div
               style={{
@@ -148,6 +147,7 @@ function Kitchen() {
                 position: 'relative',
                 top: '0',
               }}
+              className=''
             >
               <img
                 src={
@@ -158,8 +158,8 @@ function Kitchen() {
                   )
                 }
                 alt=""
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                className="blur-on-hover"
+                style={{ width: '100%', height: '100%', objectFit: 'cover',  }}
+                className="blur-on-hover bod"
               />
             </div>
 
@@ -386,9 +386,7 @@ function Kitchen() {
                                
                               </div>
                             )}
-                             {/* <ListGroup.Item>
-                                  <Reviews id={kitchenData._id}/>
-                                </ListGroup.Item> */}
+                           
                           </ListGroup>
                         </div>
                       </div>

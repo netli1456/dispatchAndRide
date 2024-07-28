@@ -5,6 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 function AcctHistory(props) {
   const { history, userInfo, loadings } = props;
   return (
+    <div>
     <ListGroup
       variant="flush"
       className="bg-white px-3 border border-grey rounded"
@@ -21,7 +22,7 @@ function AcctHistory(props) {
         <>
           {history && history?.length > 0 ? (
             history?.map((item, index) => (
-              <ListGroup.Item className="mb-2">
+              <ListGroup.Item className="mb-2 d-flex flex-column">
                 <span
                   key={index}
                   className={
@@ -34,17 +35,22 @@ function AcctHistory(props) {
                     ? `-N${item?.amount?.toFixed(2)}`
                     : `+N${item?.amount?.toFixed(2)}`}{' '}
                   {item?.buyerId === userInfo?.user?._id
-                    ? `order successfully sent to  ${
-                        item?.businessName?.length > 9
-                          ? `${item?.businessName.slice(0, 7)}...`
+                    ? `order -  ${
+                        item?.businessName?.length > 20
+                          ? `${item?.businessName.slice(0, 20)}...`
                           : `${item?.businessName}`
                       } `
-                    : `received ${
+                    : `received from ${
                         item?.buyerName?.length > 9
                           ? `${item?.buyerName?.slice(0, 7)}...`
                           : `${item?.buyerName}`
                       }`}
+
                 </span>
+                <span>
+                ordered at {item.createdAt.slice(11, 16)} /  Date {item?.createdAt.slice(0, 10)}
+                            </span>
+                            
               </ListGroup.Item>
             ))
           ) : (
@@ -55,6 +61,7 @@ function AcctHistory(props) {
         </>
       )}
     </ListGroup>
+    </div>
   );
 }
 

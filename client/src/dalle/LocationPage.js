@@ -97,8 +97,8 @@ function LocationPage(props) {
             toastId: 'unique-toast-id',
           });
         } else {
-          toast.error('failed loading suggestions ' + error, {
-            autoClose: 3000,
+          toast.error('failed loading suggestions ', {
+            
             theme: 'light',
             toastId: 'unique-toast-id',
           });
@@ -134,16 +134,14 @@ function LocationPage(props) {
 
         if (storeExist.data === 'store exist') {
           dispatch(searchAddress(display_name));
-          navigate(
-            `/search?searchedLocation=${display_name}`
-          );
+          navigate(`/search?searchedLocation=${display_name}`);
           setExist(storeExist.data);
-          setOpen(false)
+          setOpen(false);
         } else {
           setExist(storeExist.data);
         }
       } catch (error) {
-        console.error('Error checking store existence:', error);
+        toast.error('something went wrong');
       }
     }
   };
@@ -179,12 +177,11 @@ function LocationPage(props) {
     setExist('');
     setSuggestions([]);
     setZoomMapData('');
-    
   };
 
-  const handleClear=()=>{
-    dispatch(clearLocation())
-  }
+  const handleClear = () => {
+    dispatch(clearLocation());
+  };
 
   return (
     <div
@@ -279,21 +276,28 @@ function LocationPage(props) {
           </div>
         </Col>
         <Col md={6}>
-          {searchedLocation.length > 0 && <div
-            style={{ width: '90%', margin: 'auto' }}
-            className="d-flex   text-secondary"
-          >
-            <div
-              className="border border-success rounded py-1 d-flex justify-content-center mb-3"
-              style={{ width: '90%' }}
-            >
-              <strong className="text-uppercase text-secondary">
-                {searchedLocation.length > 0 && searchedLocation}
-              </strong>
+          {searchedLocation.length > 0 && (
+            <div className="text-center ">
+              <span>current-location</span>
+              <div
+                style={{ width: '90%', margin: 'auto' }}
+                className="d-flex   text-secondary "
+              >
+                <div
+                  className="border border-success rounded py-1 d-flex justify-content-center mb-3"
+                  style={{ width: '90%' }}
+                >
+                  <strong className="text-uppercase text-secondary">
+                    {searchedLocation.length > 0 && searchedLocation}
+                  </strong>
+                </div>
+                <CloseIcon
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleClear}
+                />
+              </div>
             </div>
-            <CloseIcon style={{cursor:"pointer"}} onClick={handleClear}/>
-            
-          </div>}
+          )}
 
           <div style={{ height: '70%' }} className="">
             <MapContainer

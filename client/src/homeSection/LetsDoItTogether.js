@@ -46,13 +46,13 @@ function LetsDoItTogether() {
             </Button>
           </div>
           <Col md={6} style={{ width: '' }} className="">
-            <h4 className="text-outline">Register here as a food vendor</h4>
+            <h4 className="text-outline bg-success">Register here as a food vendor</h4>
             <div className="d-flex flex-column">
               {' '}
               <strong className="text-outline ">
                 join the fastest growing community and take  your business
                 online. <br/>
-                register today and win bonus. register as a food vendor
+                register today and win bonuses. register as a food vendor
                 or agent and get <br/> bonuses for every sales. <br/>you can also get up to
                 20% bonus of your monthly sales.{' '}
               </strong>
@@ -65,10 +65,10 @@ function LetsDoItTogether() {
           </Col>
           <Col md={6}>
             {' '}
-            <h4 className="text-outline">Register here as a dispatch rider</h4>
+            <h4 className="text-outline bg-success">Register here as a dispatch rider</h4>
             <div className="d-flex flex-column">
               <strong className="text-outline ">
-              Fast and reliable delivery is our top priority. join our dispatch riders <br/> today and  ride to your favorite destinations. 
+              Fast and reliable delivery is our top priority. <br/> join our dispatch riders today and  ride to your <br/> favorite destinations. 
                 <br/>
                 register today and win up to 10,000 naira bonuses <br/> for your first 10 rides. 
                 {' '}

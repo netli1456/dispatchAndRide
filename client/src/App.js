@@ -12,7 +12,6 @@ import Order from './orderPage/Order';
 import SignIn from './signIn/SignIn';
 import SignUp from './signUp/Signup';
 import { ToastContainer } from 'react-toastify';
-import Testss from './component/Testss';
 import Navbar from './navSection/Navbar';
 import { useState } from 'react';
 import LocationPage from './dalle/LocationPage';
@@ -23,7 +22,6 @@ function App() {
   return (
     <BrowserRouter>
       <div
-        
         style={{
           width: '100%',
           position: open ? 'relative' : '',
@@ -46,9 +44,9 @@ function App() {
           pauseOnFocusLoss
           pauseOnHover
         />
-      
-          {open === true && (
-            <div
+
+        {open === true && (
+          <div
             style={{
               width: '100%',
               position: 'absolute',
@@ -56,32 +54,30 @@ function App() {
               height: '100vh',
             }}
             className=" d-flex justify-content-center align-items-center locationBg"
-            >
-              <LocationPage setOpen={setOpen} />
-            </div>
-          )}
-  
-          <Routes >
-            <Route path="/" element={<HomePage setOpen={setOpen} />} />
-            <Route path="/product/:id" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/kitchen/:id" element={<Kitchen />} />
-            <Route path="/search" element={<SearchScreen />} />
-            <Route path="/riders" element={<RidersPage />} />
-            <Route path="/rider/:id" element={<RiderCard />} />
-            <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/order/:id" element={<Order />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/test" element={<Testss />} />
-           
-            <Route
-              path="/verification/:url/auth"
-              element={<OtpVerification />}
-            />
-          </Routes>
-        </div>
-     
+          >
+            <LocationPage setOpen={setOpen} />
+          </div>
+        )}
+
+        <Routes>
+          <Route path="/" element={<HomePage setOpen={setOpen} />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/kitchen/:id" element={<Kitchen />} />
+          <Route
+            path="/search"
+            element={<SearchScreen setOpenLocation={setOpen} />}
+          />
+          <Route path="/riders" element={<RidersPage />} />
+          <Route path="/rider/:id" element={<RiderCard />} />
+          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/order/:id" element={<Order />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          <Route path="/verification/:url/auth" element={<OtpVerification />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

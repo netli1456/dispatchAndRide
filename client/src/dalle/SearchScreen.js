@@ -27,7 +27,7 @@ import YoutubeSearchedForIcon from '@mui/icons-material/YoutubeSearchedFor';
 import { toast } from 'react-toastify';
 import LoadingBox from '../LoadingBox';
 
-function SearchScreen() {
+function SearchScreen(props) {
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const query = sp.get('query') || '';
@@ -38,6 +38,8 @@ function SearchScreen() {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
+  const { setOpenLocation } = props;
 
   const locationQuery = searchedLocation === undefined ? '' : searchedLocation;
 
@@ -82,14 +84,22 @@ function SearchScreen() {
   }, []);
 
   const handleFilter = (filterData) => {
-    navigate(
-      `/search?searchedLocation=${locationQuery}&popularFilter=${filterData}`
-    );
+    if (filterData !== 'Near me') {
+      navigate(
+        `/search?searchedLocation=${locationQuery}&popularFilter=${filterData}`
+      );
+    } else {
+      if (searchedLocation) {
+        navigate(`/search?&searchedLocation=${searchedLocation}`);
+      } else {
+        setOpenLocation(true);
+      }
+    }
   };
-  const handleFilters = async () => {
-    // navigate(`/search?searchedLocation=${locationQuery}&&rating=${rate}`);
-    const { data } = await axios.post(`${api}/api/users/m`);
-  };
+  // const handleFilters = async () => {
+  //   // navigate(`/search?searchedLocation=${locationQuery}&&rating=${rate}`);
+  //   const { data } = await axios.post(`${api}/api/users/m`);
+  // };
 
   return (
     <div>
@@ -115,18 +125,17 @@ function SearchScreen() {
           <Row className="my-3">
             <Col
               md={isSmallScreen ? 12 : 3}
-              className={
-                isSmallScreen ? 'mb-3 ' : 'scrollable-column'
-              }
+              className={isSmallScreen ? 'mb-3 ' : 'scrollable-column'}
             >
               <ListGroup
                 variant="flush"
                 className={isSmallScreen ? 'border-bottom' : ''}
               >
                 <ListGroup.Item className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
-                  <strong>Sort</strong>
+                  <strong>Sort by:</strong>
                 </ListGroup.Item>
-                <ListGroup.Item
+                <ListGroup.Item 
+                  onClick={() => handleFilter('Near me')}
                   className={!isSmallScreen ? 'mb-3 hovering ' : 'd-none'}
                 >
                   <span className="d-flex align-items-center gap-3">
@@ -136,7 +145,6 @@ function SearchScreen() {
                 </ListGroup.Item>
                 <ListGroup.Item
                   className={!isSmallScreen ? 'mb-3 hovering' : 'd-none'}
-                  onClick={() => handleFilters(1)}
                 >
                   {' '}
                   <span className="d-flex align-items-center gap-3">
@@ -236,14 +244,23 @@ function SearchScreen() {
               <div className={!isSmallScreen ? 'mb-3 ' : 'd-none'}>
                 <strong className="">More filters</strong>
                 <ListGroup variant="flush" className="mt-3">
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering ">
+                  <ListGroup.Item
+                    onClick={() => handleFilter('desert')}
+                    className={popularFilter === 'desert' ? 'active "d-flex align-items gap-3 hovering "' : '"d-flex align-items gap-3 hovering "'}
+                  >
                     <RiceBowlIcon className="text-success" /> Desert
                   </ListGroup.Item>
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering">
+                  <ListGroup.Item
+                    onClick={() => handleFilter('ice cream')}
+                    className={popularFilter === 'ice cream' ? 'active d-flex align-items gap-3 hovering ' : 'd-flex align-items gap-3 hovering '}
+                  >
                     <IcecreamIcon className="text-success" />
                     Ice cream
                   </ListGroup.Item>
-                  <ListGroup.Item className="d-flex align-items gap-3 hovering">
+                  <ListGroup.Item
+                    onClick={() => handleFilter('sea food')}
+                    className={popularFilter === 'sea food' ? 'active d-flex  gap-3 hovering ' : 'd-flex  gap-3 hovering '}
+                  >
                     <SetMealIcon className="text-success" /> sea foods
                   </ListGroup.Item>
                 </ListGroup>
@@ -291,23 +308,21 @@ function SearchScreen() {
                         <SearchedItems item={item} />
                       </Link>
                     ))}
-
-                    
                 </Masonry>
               </ResponsiveMasonry>
             </Col>
           </Row>
-          {/* )} */}
+       
         </Container>
       )}
 
-      {products?.length > 0 && (
-        <div className="navigation-button">
-          <Button onClick={handleFilters} className="button1">
-            see more
-          </Button>
-        </div>
-      )}
+      {!loading &&
+        products?.length >
+          0 &&(
+            <div className="navigation-button">
+              <Button className="button1">see more</Button>
+            </div>
+          )}
       <Footer />
     </div>
   );

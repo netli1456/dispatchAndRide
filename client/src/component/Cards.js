@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 function Cards({ item }) {
   const location = useLocation();
   return (
-    <div className="border rounded kitchhov" style={{ minHeight: '100%', width:"100%" }}>
+    <div className="border rounded kitchhov" style={{ minHeight: '100%', width:"" }}>
       
         <div className="cardBox" >
          

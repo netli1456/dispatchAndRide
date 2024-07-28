@@ -159,6 +159,8 @@ p {
 .scrollable-column {
   max-height: 80vh; 
   overflow-y: auto;
+  position:sticky;
+  top:120
 }
 
 .scrollable-column::-webkit-scrollbar {
