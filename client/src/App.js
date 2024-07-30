@@ -13,27 +13,26 @@ import SignIn from './signIn/SignIn';
 import SignUp from './signUp/Signup';
 import { ToastContainer } from 'react-toastify';
 import Navbar from './navSection/Navbar';
-import { useState } from 'react';
 import LocationPage from './dalle/LocationPage';
 import OtpVerification from './signUp/OtpVerification';
+import { useOpen } from './utils/isOpenState';
 
 function App() {
-  const [open, setOpen] = useState(false);
+  const { isOpen, toggle } = useOpen();
   return (
     <BrowserRouter>
       <div
         style={{
           width: '100%',
-          position: open ? 'relative' : '',
-          height: open ? '100vh' : '',
-          overflow: open ? 'hidden' : '',
+          position: isOpen ? 'relative' : '',
+          height: isOpen ? '100vh' : '',
+          overflow: isOpen ? 'hidden' : '',
         }}
       >
         <div style={{ position: 'sticky', width: '', top: 0, zIndex: 9 }}>
           {' '}
-          <Navbar openNow={open} setOpenNow={setOpen} />
+          <Navbar openNow={isOpen} setOpenNow={toggle} />
         </div>
-
         <ToastContainer
           position="bottom-center"
           autoClose={5000}
@@ -45,7 +44,7 @@ function App() {
           pauseOnHover
         />
 
-        {open === true && (
+        {isOpen && (
           <div
             style={{
               width: '100%',
@@ -55,19 +54,19 @@ function App() {
             }}
             className=" d-flex justify-content-center align-items-center locationBg"
           >
-            <LocationPage setOpen={setOpen} />
+            <LocationPage setOpen={toggle} />
           </div>
         )}
-
         <Routes>
-          <Route path="/" element={<HomePage setOpen={setOpen} />} />
+          <Route path="/" element={<HomePage setOpen={toggle}/>} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/kitchen/:id" element={<Kitchen />} />
           <Route
             path="/search"
-            element={<SearchScreen setOpenLocation={setOpen} />}
+            element={<SearchScreen setOpenLocation={toggle} />}
           />
+
           <Route path="/riders" element={<RidersPage />} />
           <Route path="/rider/:id" element={<RiderCard />} />
           <Route path="/profile/:id" element={<Profile />} />

@@ -5,13 +5,14 @@ import Button from 'react-bootstrap/Button';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useOpen } from '../utils/isOpenState';
 
 function SearchBar(props) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const location = useLocation();
 
-  const { setOpen, bg } = props;
+  const {  bg, setOpen} = props;
   const { searchedLocation } = useSelector((state) => state.searching);
 
   const locationQuery = searchedLocation === undefined ? '' : searchedLocation;
@@ -28,6 +29,8 @@ function SearchBar(props) {
       );
     }
   };
+
+  
 
   return (
     <div style={{ width: '100%', position: 'relative' }} className="">
@@ -50,7 +53,7 @@ function SearchBar(props) {
             onChange={(e) => setQuery(e.target.value)}
             className="border border-success"
             readOnly={location.pathname === '/'}
-            onClick={() => location.pathname === '/' && setOpen(true)}
+            onClick={() => location.pathname === '/' && setOpen()}
           />
           <Button
             onClick={handleSearch}
@@ -79,7 +82,7 @@ function SearchBar(props) {
             onChange={(e) => setQuery(e.target.value)}
             className="border border-success"
             readOnly={location.pathname === '/'}
-            onClick={() => location.pathname === '/' && setOpen(true)}
+            onClick={() => location.pathname === '/' && setOpen()}
           />
           <Button
             onClick={handleSearch}

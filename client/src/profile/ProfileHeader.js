@@ -118,7 +118,7 @@ function ProfileHeader(props) {
                   <Button
                     variant="success"
                     className="fw-bold d-flex gap-1 align-items-center"
-                    onClick={() => setOpen(true)}
+                    onClick={() => setOpen()}
                   >
                     <AddCardIcon />
                     Create wallet
@@ -139,7 +139,7 @@ function ProfileHeader(props) {
                       <Button
                         variant="white"
                         className="border-danger"
-                        onClick={() => setOpen(false)}
+                        onClick={() => setOpen()}
                       >
                         Cancel
                       </Button>
@@ -187,7 +187,7 @@ function ProfileHeader(props) {
                 <Button
                   onClick={() => {
                     handleWalletDetails();
-                    setOpenWallet(true);
+                    setOpenWallet();
                   }}
                   variant="success"
                   className="fw-bold"

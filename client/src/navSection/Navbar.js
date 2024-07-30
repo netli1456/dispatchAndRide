@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import MenuIcon from '@mui/icons-material/Menu';
-import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Button from 'react-bootstrap/Button';
 import { clearLocation } from '../redux/searchSlice';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { useOpen } from '../utils/isOpenState';
 
 function Navbar(props) {
   const navigate = useNavigate();
@@ -23,7 +24,6 @@ function Navbar(props) {
   const { userInfo } = useSelector((state) => state.user);
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const [open, setOpen] = useState();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { searchedLocation } = useSelector((state) => state.searching);
   const { setOpenNow, } = props;
@@ -49,9 +49,10 @@ function Navbar(props) {
   }, []);
 
   const handleLocationOpen = () => {
-    setOpenNow(true);
+    setOpenNow();
   };
 
+  const {isOpen, toggle} =useOpen()
 
   return (
     <div className="bg-success py-2" style={{ width: '100%' ,  }}>
@@ -108,7 +109,7 @@ function Navbar(props) {
             >
               <div
                 className="d-flex align-items-center"
-                onClick={() => setOpen(!open)}
+                onClick={() => toggle()}
               >
                 {' '}
                 <AccountCircleIcon className="fs-2 fw-bold" />
@@ -116,7 +117,7 @@ function Navbar(props) {
                   {userInfo?.user?.firstname} <ArrowDropDownIcon />
                 </span>
               </div>
-              {open && (
+              {isOpen && (
                 <ListGroup
                   style={{
                     position: 'absolute',
@@ -130,7 +131,7 @@ function Navbar(props) {
                     <Link
                       to={`/profile/${userInfo?.user?._id}`}
                       className="text-decoration-none text-success fw-bold d-flex flex-column align-items-center px-3"
-                      onClick={()=>setOpen(false)}
+                      onClick={()=>toggle()}
                     >
                       Account
                     </Link>
